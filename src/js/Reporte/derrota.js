@@ -49,7 +49,7 @@ const BuscarDatos = async (evento) => {
                 { data : 'id',
                 width: '9.37%',
                 'render': (data, type, row, meta) => {
-                    return`<button class='btn btn-success'  onclick='ApiDerrota("${row['ope_id']}", "${row['ope_identificador']}" )' > <i class='bi bi-cursor'></i></button>` 
+                    return`<button class='btn btn-success' data-bs-id='${data}' data-bs-toggle='modal' data-bs-target='#modalDetalle1'><i class='bi bi-cursor'></i></button>`
                 } },
                 
                 { 
@@ -108,17 +108,5 @@ const BuscarDatos = async (evento) => {
         console.log(error);
     }
 }
-
-
-window.ApiDerrota = (ope_id, ope_identificador) => {
-    // construir la URL con el parámetro de consulta "id" codificado en base64
-    var url = `./reporte/derrota?id=${btoa(ope_id)}`;
-    
-    // redirigir el navegador a la URL
-    window.location.href = url;
-  }
-
-
-
 
 BuscarDatos()

@@ -3,6 +3,8 @@
         <h1>Reportes</h1>
     </div>
 </div>
+
+
 <div class="row justify-content-around">
     <div class="col-lg-4">
         <div id="reader" width="100%"></div>
