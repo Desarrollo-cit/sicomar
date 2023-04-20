@@ -18,7 +18,7 @@
             </button>
             <a class="navbar-brand" href="/ejemplo/">
                 <img src="<?= asset('./images/madena.png') ?>" width="35px'" alt="cit" >
-                SICOMAR2
+                SICOMAR
             </a>
             <div class="collapse navbar-collapse" id="navbarToggler">
                 
