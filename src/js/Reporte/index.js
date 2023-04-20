@@ -49,7 +49,7 @@ const BuscarDatos = async (evento) => {
                 { data : 'id',
                 width: '9.37%',
                 'render': (data, type, row, meta) => {
-                    return`<button class='btn btn-success'  onclick='ApiDerrota("${row['ope_id']}", "${row['ope_identificador']}" )' > <i class='bi bi-cursor'></i></button>` 
+                    return`<button class='btn btn-success'  onclick='ApiDerrota("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )' > <i class='bi bi-cursor'></i></button>` 
                 } },
                 
                 { 
@@ -110,14 +110,23 @@ const BuscarDatos = async (evento) => {
 }
 
 
-window.ApiDerrota = (ope_id, ope_identificador) => {
-    // construir la URL con el parámetro de consulta "id" codificado en base64
-    var url = `./reporte/derrota?id=${btoa(ope_id)}`;
+// window.ApiDerrota = (ope_id, ope_identificador) => {
+//     // construir la URL con el parámetro de consulta "id" codificado en base64
+//     var url = `./reporte/derrota?id=${btoa(ope_id)}`;
+    
+//     // redirigir el navegador a la URL
+//     window.location.href = url;
+//   }
+
+
+  window.ApiDerrota = (ope_id, ope_identificador, ope_fecha_zarpe) => {
+    // construir la URL con los parámetros de consulta "id" y "identificador" codificados en base64
+    var url = `./reporte/derrota?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;
     
     // redirigir el navegador a la URL
     window.location.href = url;
   }
-
+  
 
 
 

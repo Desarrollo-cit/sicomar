@@ -1,112 +1,164 @@
-import { Dropdown } from "bootstrap";
-import { validarFormulario, Toast } from "../funciones";
-import Datatable from 'datatables.net-bs5';
-import { lenguaje } from "../lenguaje";
-import Swal from "sweetalert2";
-
-const divTabla = document.getElementById('divTabla');
-let tablaReporte = new Datatable('#TablaReporte');
-
-const BuscarDatos = async (evento) => {
-    evento && evento.preventDefault();
+import { Dropdown, Tooltip, Modal, Alert } from "bootstrap";
+import L from "leaflet"
+import 'leaflet-easyprint'
+import { Toast } from '../funciones';
 
 
-    try {
-        const url = '/sicomar/API/reporte/BusDatos'
-        const headers = new Headers();
-        headers.append("X-requested-With", "fetch");
-
-        const config = {
-            method : 'GET',
-        }
-
-        const respuesta = await fetch(url, config);
-        const data = await respuesta.json();
-
-     console.log(data);
+const modalPuntos = new Modal(document.getElementById('modalPuntos'), {})
+const formPuntos = document.querySelector('#formPuntos')
+let puntos = [];
+let distancia = 0;
+const tablePuntos = document.querySelector('#tablePuntos');
+const spanDistancia = document.querySelector('#distancia');
+const formulario = document.querySelector('#formInternacional')
 
 
-        
-     tablaReporte.destroy();
-        let contador = 1;
-        tablaReporte = new Datatable('#TablaReporte', {
-            language : lenguaje,
-            data : data,
-            columns : [
-                { 
-                    data : 'id',
-                    width: '5%',
-                    render : () => {      
-                        return contador++;
-                    }
-                },
-             
-                {
-                     data : 'ope_identificador',
-                     width: '20%'
-                    
-                },
-                { data : 'id',
-                width: '9.37%',
-                'render': (data, type, row, meta) => {
-                    return`<button class='btn btn-success' data-bs-id='${data}' data-bs-toggle='modal' data-bs-target='#modalDetalle1'><i class='bi bi-cursor'></i></button>`
-                } },
-                
-                { 
-                    data : 'id',
-                    width: '9.37%',
-                    'render': (data, type, row, meta) => {
-                        return `<button class='btn btn-outline-info' data-unidad=" data-operacion="${row.id}" data-bs-toggle='modal' data-bs-target='#modalDetalle2'><i class='bi bi-gear-wide-connected'></i></button>`
-                    } 
-                },
-                { 
-                    data : 'id',
-                    width: '9.37%',
-                    'render': (data, type, row, meta) => {
-                        return  `<button class='btn btn-outline-info' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalDetalle3'><i class='bi bi-boxes'></i></button>`
-                    } 
-                },
-                { 
-                    data : 'id',
-                    width: '9.37%',
-                    'render': (data, type, row, meta) => {
-                        return `<button class='btn btn-outline-info' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalDetalle4'><i class='bi bi-broadcast-pin'></i></button>`
-                    } 
-                },
-                { 
-                    data : 'id',
-                    width: '9.37%',
-                    'render': (data, type, row, meta) => {
-                        return `<button class='btn btn-outline-info' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalDetalle5'><i class='bi bi-file-earmark-ruled'></i></button>`
-                    } 
-                },
-                { 
-                    data : 'id',
-                    width: '9.37%',
-                    'render': (data, type, row, meta) => {
-                        return  `<button class='btn btn-outline-info' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalDetalle6'><i class='bi bi-file-earmark-text'></i></button>`
-                    } 
-                },
-                { 
-                    data : 'id',
-                    width: '9.37%',
-                    'render': (data, type, row, meta) => {
-                        return `<button class='btn btn-outline-info' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalDetalle7'><i class='bi bi-binoculars'></i></button>`
-                    } 
-                },
-                { 
-                    data : 'id',
-                    width: '9.37%',
-                    'render': (data, type, row, meta) => {
-                        return `<button class='btn btn-success' data-operacion="${data}" onclick='entregarReporte(${data})' ><i class='bi bi-arrow-right-circle'></i></button>`
-                    } 
-                },
-            ]
-        })
 
-    } catch (error) {
-        console.log(error);
-    }
+const map = L.map('map', {
+    center: [15.825158, -89.72959],
+    zoom: 7.5
+})
+const markers = L.layerGroup();
+const LimpiarMapa = () => {
+    map.eachLayer(layer => { markers.removeLayer(layer) })
+
 }
 
-BuscarDatos()
+const grayScale = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 100,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoiZGFuaWVsZmo5NzUiLCJhIjoiY2tpcWNlbHM0MXZmbDJ6dTZvdDV3NGticiJ9.7ciIi1FKO5-BqgE0zz5UFw'
+}).addTo(map);
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl))
+
+})
+
+L.easyPrint({
+    title: 'Imprimir vista actual',
+    position: 'topright',
+    sizeModes: ['A4Portrait', 'A4Landscape']
+}).addTo(map);
+
+const onMapClick = e =>{
+    const { lat, lng } = e.latlng;
+    formPuntos.reset();
+    formPuntos.latitud.value = lat;
+    formPuntos.longitud.value = lng;
+    modalPuntos.show();
+}
+
+
+
+map.on("click", onMapClick)
+
+const agregarPunto = (e) => {
+    e.preventDefault();
+    puntos = [...puntos,[
+        formPuntos.latitud.value,
+        formPuntos.longitud.value
+    ]]
+
+    agregarPuntos(puntos)
+    agrearPuntosTabla(puntos)
+    modalPuntos.hide();
+}
+
+
+
+const agregarPuntos = (puntos) => {
+    LimpiarMapa();
+    distancia = 0;
+
+    for (let index = 0; index < puntos.length; index++) {
+        let marker = L.marker(puntos[index], {icon} ).addTo(markers);
+        marker.bindPopup(`<b>Punto ${index + 1}</b><br>Latitud: ${puntos[index][0]}<br>Longitud: ${puntos[index][1]}`)
+        marker.addEventListener('contextmenu', (e)=>deletePunto(e, index) )
+
+        
+    }
+   
+    var polyline = L.polyline(puntos, {color: 'teal'}).addTo(markers);
+    markers.addTo(map)
+
+    
+    for (let i = 0; i < puntos.length - 1; i++) {
+ 
+
+        distancia += getDistancia(puntos[i][0],puntos[i][1],puntos[i+1][0],puntos[i+1][1])
+        
+    }
+    spanDistancia.innerText = `${distancia} MN`
+}
+
+// const LimpiarMapa = (puntos) => {
+//     map.eachLayer(layer =>{markers.removeLayer(layer)})
+
+// }
+
+const LimpiarFormulario = () => {
+    spanText.textContent = ''
+    puntos = [];
+    catalogoValido = false;
+    distancia = 0;
+    agregarPuntos(puntos)
+    agrearPuntosTabla(puntos)
+    btnModificar.parentElement.style.display = 'none'
+    btnGuardar.parentElement.style.display = ''
+    btnBuscar.parentElement.style.display = ''
+    btnGuardar.disabled = false
+    map.setView(new L.LatLng(15.525158, -90.32959),7);
+}
+
+const deletePunto = (e, id) => {
+    puntos.splice(id, 1);
+    agregarPuntos(puntos)
+    agrearPuntosTabla(puntos)
+    // console.log(id);
+}
+const agrearPuntosTabla = (puntos) => {
+    let tbodyPuntos = document.getElementById('tbodyPuntos');
+    let fragment = document.createDocumentFragment();
+    tbodyPuntos.innerHTML = '';
+    let index = 0;
+   
+
+    if(puntos.length > 0){
+        puntos.forEach(punto => {
+            let tr = document.createElement('tr');
+            let tdLatitud = document.createElement('td');
+            let tdLongitud = document.createElement('td');
+    
+    
+            tdLatitud.innerText = punto[0];
+            tdLongitud.innerText = punto[1];
+    
+    
+    
+            tr.appendChild(tdLatitud)
+            tr.appendChild(tdLongitud)
+            fragment.appendChild(tr)
+            ++index;
+        })
+
+    }else{
+        let tr = document.createElement('tr');
+        let tdLatitud = document.createElement('td');
+        tdLatitud.colSpan = 2;
+        tdLatitud.innerText = 'Los puntos ingresados se visualizaran acá'
+        tr.appendChild(tdLatitud)
+        fragment.appendChild(tr)
+    }
+
+    tbodyPuntos.appendChild(fragment)
+}
+
+
+formPuntos.addEventListener('submit', agregarPunto )
+formulario.addEventListener('submit', guardarInternacional )

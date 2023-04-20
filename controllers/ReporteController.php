@@ -20,7 +20,10 @@ class ReporteController{
 
         try {
             getHeadersApi();
-            $datos = Reporte::fetchArray("SELECT ope_id, ope_identificador, ope_sit  from codemar_asig_personal inner join codemar_operaciones on asi_operacion = ope_id where asi_catalogo = user and asi_sit = 1 and ope_sit = 1 and ope_nacional = 'N'");
+            $datos = Reporte::fetchArray("
+            SELECT ope_id, ope_identificador, ope_sit, ope_fecha_zarpe
+            from codemar_asig_personal inner join codemar_operaciones on asi_operacion = ope_id
+             where asi_catalogo = user and asi_sit = 1 and ope_sit = 1 and ope_nacional = 'N'");
             echo json_encode($datos);     
             
             
