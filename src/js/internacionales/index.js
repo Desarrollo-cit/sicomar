@@ -137,7 +137,7 @@ const agrearPuntosTabla = (puntos) => {
         let tr = document.createElement('tr');
         let tdLatitud = document.createElement('td');
         tdLatitud.colSpan = 2;
-        tdLatitud.innerText = 'Los puntos ingresados se visualizaran acá'
+        tdLatitud.innerText = 'Los puntos ingresados se visualizaran acás'
         tr.appendChild(tdLatitud)
         fragment.appendChild(tr)
     }
