@@ -8,6 +8,8 @@ class ActiveRecord {
     protected static $tabla = '';
     protected static $columnasDB = [];
 
+    protected static $idTabla = '';
+
     // Alertas y Mensajes
     protected static $alertas = [];
     
@@ -74,7 +76,7 @@ class ActiveRecord {
     // SQL para Consultas Avanzadas.
     public static function SQL($consulta) {
         $query = $consulta;
-        $resultado = self::consultarSQL($query);
+        $resultado = self::$db->query($query);
         return $resultado;
     }
 
@@ -158,6 +160,17 @@ class ActiveRecord {
         return $data;
     }
 
+        
+    public static function fetchFirst($query){
+        $resultado = self::$db->query($query);
+        $respuesta = $resultado->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($respuesta as $value) {
+            $data[] = array_change_key_case( array_map( 'utf8_encode', $value) ); 
+        }
+        $resultado->closeCursor();
+        return array_shift($data);
+    }
+
     protected static function crearObjeto($registro) {
         $objeto = new static;
 
@@ -178,7 +191,7 @@ class ActiveRecord {
         $atributos = [];
         foreach(static::$columnasDB as $columna) {
             $columna = strtolower($columna);
-            if($columna === 'id') continue;
+            if($columna === 'id' || $columna === static::$idTabla) continue;
             $atributos[$columna] = $this->$columna;
         }
         return $atributos;

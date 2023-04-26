@@ -6,11 +6,21 @@ import { Toast } from '../funciones';
 
 const modalPuntos = new Modal(document.getElementById('modalPuntos'), {})
 const formPuntos = document.querySelector('#formPuntos')
+const spanDistancia = document.querySelector('#distancia');
+const btnLimpiar = document.querySelector('#btnLimpiar');
+const btnModificar = document.querySelector('#btnModificar');
+const btnBuscar = document.querySelector('#btnBuscar');
+const btnGuardar = document.querySelector('#btnGuardar');
+const formulario = document.querySelector('#formDerrota')
 let puntos = [];
 let distancia = 0;
-const tablePuntos = document.querySelector('#tablePuntos');
-const spanDistancia = document.querySelector('#distancia');
-const formulario = document.querySelector('#formInternacional')
+
+
+const iniciarModulo = ()=> {
+    // buscarPaises();
+    // btnModificar.style.display = 'none'
+    btnModificar.parentElement.style.display = 'none'
+}
 
 
 
@@ -23,6 +33,14 @@ const LimpiarMapa = () => {
     map.eachLayer(layer => { markers.removeLayer(layer) })
 
 }
+
+
+const icon = L.icon({
+    iconUrl: '../images/barquito.png',
+    iconSize:     [35,48],
+    iconAnchor:   [12, 28],
+});
+
 
 const grayScale = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -54,23 +72,32 @@ const onMapClick = e =>{
     modalPuntos.show();
 }
 
-
-
-map.on("click", onMapClick)
-
 const agregarPunto = (e) => {
     e.preventDefault();
+
+    const fecha = document.getElementById('fecha').value;
+   // console.log(fecha)
+if (fecha )
+{
     puntos = [...puntos,[
         formPuntos.latitud.value,
-        formPuntos.longitud.value
+        formPuntos.longitud.value,
+        formPuntos.fecha.value.replace("T", " ")
     ]]
-
+//console.log(puntos)
     agregarPuntos(puntos)
     agrearPuntosTabla(puntos)
     modalPuntos.hide();
+}else{
+    console.log('vaginas')
+    Toast.fire({
+        icon : 'warning',
+        title : 'Debe ingresar una fecha'
+    })
+
 }
 
-
+}
 
 const agregarPuntos = (puntos) => {
     LimpiarMapa();
@@ -97,31 +124,6 @@ const agregarPuntos = (puntos) => {
     spanDistancia.innerText = `${distancia} MN`
 }
 
-// const LimpiarMapa = (puntos) => {
-//     map.eachLayer(layer =>{markers.removeLayer(layer)})
-
-// }
-
-const LimpiarFormulario = () => {
-    spanText.textContent = ''
-    puntos = [];
-    catalogoValido = false;
-    distancia = 0;
-    agregarPuntos(puntos)
-    agrearPuntosTabla(puntos)
-    btnModificar.parentElement.style.display = 'none'
-    btnGuardar.parentElement.style.display = ''
-    btnBuscar.parentElement.style.display = ''
-    btnGuardar.disabled = false
-    map.setView(new L.LatLng(15.525158, -90.32959),7);
-}
-
-const deletePunto = (e, id) => {
-    puntos.splice(id, 1);
-    agregarPuntos(puntos)
-    agrearPuntosTabla(puntos)
-    // console.log(id);
-}
 const agrearPuntosTabla = (puntos) => {
     let tbodyPuntos = document.getElementById('tbodyPuntos');
     let fragment = document.createDocumentFragment();
@@ -134,15 +136,20 @@ const agrearPuntosTabla = (puntos) => {
             let tr = document.createElement('tr');
             let tdLatitud = document.createElement('td');
             let tdLongitud = document.createElement('td');
+            let tdFecha = document.createElement('td');
     
     
             tdLatitud.innerText = punto[0];
             tdLongitud.innerText = punto[1];
+            tdFecha.innerText = punto[2];
+           // tdFecha.innerText = punto[2].replace("T", " ");
+
     
     
     
             tr.appendChild(tdLatitud)
             tr.appendChild(tdLongitud)
+            tr.appendChild(tdFecha)
             fragment.appendChild(tr)
             ++index;
         })
@@ -151,7 +158,7 @@ const agrearPuntosTabla = (puntos) => {
         let tr = document.createElement('tr');
         let tdLatitud = document.createElement('td');
         tdLatitud.colSpan = 2;
-        tdLatitud.innerText = 'Los puntos ingresados se visualizaran acá'
+        tdLatitud.innerText = 'Los puntos ingresados se visualizaran acás'
         tr.appendChild(tdLatitud)
         fragment.appendChild(tr)
     }
@@ -159,6 +166,81 @@ const agrearPuntosTabla = (puntos) => {
     tbodyPuntos.appendChild(fragment)
 }
 
+const deletePunto = (e, id) => {
+    puntos.splice(id, 1);
+    agregarPuntos(puntos)
+    agrearPuntosTabla(puntos)
+     console.log(id);
 
+
+
+
+     
+}
+
+
+const getDistancia = (lat1,lon1,lat2,lon2) => {
+    window.rad = function(x) {return x*Math.PI/180;}
+    let R = 6378.137; //Radio de la tierra en km
+    let dLat = rad( lat2 - lat1 );
+    let dLong = rad( lon2 - lon1 );
+    let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    let d = R * c;
+    let dmillas = d * 1.852
+    return dmillas; //Retorna tres decimales
+}
+
+
+
+
+const guardarDerrota = async e => {
+    e.preventDefault();
+    try {
+        
+        if(puntos.length > 0){
+
+            const url = '/sicomar/API/reporte/derrota/GuardarDatos'
+
+            const body = new FormData(formulario);
+              const headers = new Headers();
+               
+            body.append('distancia', distancia)
+            for (let i = 0; i < puntos.length; i++) {
+                body.append('puntos[]', puntos[i]);
+            }
+            headers.append("X-Requested-With", "fetch");
+    
+            const config = {
+                method: 'POST',
+                headers,
+                body
+            }
+    
+            const respuesta = await fetch(url, config);
+            const data = await respuesta.json();
+            //console.log(data);   
+            if (data.codigo == 7){
+                Toast.fire({
+                    icon : 'success',
+                    title : 'Derrota Guardada'
+                })
+
+            }else if (codigo == 2){
+                Toast.fire({
+                    icon : 'error',
+                    title : 'Verifique sus datos'
+                })
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+iniciarModulo();
+map.on("click", onMapClick)
 formPuntos.addEventListener('submit', agregarPunto )
-formulario.addEventListener('submit', guardarInternacional )
+formulario.addEventListener('submit', guardarDerrota )
+

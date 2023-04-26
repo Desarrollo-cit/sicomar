@@ -21,8 +21,8 @@ $router->get('/API/reporte/BusDatos', [ReporteController::class, 'BuscarDatosAPI
 
 
 
-$router->get('/reporte/derrota', [derrotaController::class,'index']);
+$router->get('/reporte/derrota', [DerrotaController::class,'index']);
+$router->post('/API/reporte/derrota/GuardarDatos', [DerrotaController::class,'GuardarAPI']);
 
 
-// Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

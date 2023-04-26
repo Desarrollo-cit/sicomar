@@ -15,7 +15,7 @@ $ope_fecha_zarpe = base64_decode($ope_fecha_zarpe);
 <div class="container-fluid text-center ">
 
     <div class="row justify-content-center mb-3">
-        <form class="col-lg-10  border bg-light rounded" id="formInternacional" enctype="multipart/form-data" autocomplete="off">
+        <form class="col-lg-10  border bg-light rounded" id="formDerrota" enctype="multipart/form-data" autocomplete="off">
             <div class="row justify-content-center">
                 <div class="col-12 mb-3">
                     <h1>Informacion Derrota<i class="mdi mdi-distribute-horizontal-left:"></i></h1>
@@ -74,6 +74,7 @@ $ope_fecha_zarpe = base64_decode($ope_fecha_zarpe);
                     <tr>
                         <th>LATITUD</th>
                         <th>LONGITUD</th>
+                        <th>FECHA</th>
                     </tr>
                 </thead>
                 <tbody id="tbodyPuntos">
@@ -120,7 +121,12 @@ $ope_fecha_zarpe = base64_decode($ope_fecha_zarpe);
                         <label for="longitud">Longitud</label>
                         <input type="number" name="longitud" id="longitud" class="form-control">
                     </div>
+                    <div class="col-lg-12">
+                        <label for="fecha">fecha</label>
+                        <input type="datetime-local" name="fecha" id="fecha" class="form-control">
+                    </div>
                 </div>
+                
             </form>
             <div class="modal-footer">
                 <button type="submit" form="formPuntos" class="btn btn-success" id="buttonLimpiar"><i class="bi bi-save me-2"></i>Guardar</button>
