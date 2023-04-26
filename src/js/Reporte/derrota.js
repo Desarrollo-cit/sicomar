@@ -175,7 +175,7 @@ const deletePunto = (e, id) => {
 
 
 
-     
+
 }
 
 
@@ -239,6 +239,63 @@ const guardarDerrota = async e => {
 }
 
 
+
+const colocarInformacion = async (evento) => {
+    evento && evento.preventDefault();
+
+    const url = `operacion.php?id=${id}`
+    const config = { method : "GET" }
+    const llevar = document.getElementById('id').value;
+
+    try {
+        const url = `/sicomar/API/reporte/derrota/BusDerrota?id=${llevar}`
+        const headers = new Headers();
+        headers.append("X-requested-With", "fetch");
+
+        const config = {
+            method : 'GET',
+        }
+
+        const respuesta = await fetch(url, config);
+        const data = await respuesta.json();
+
+     console.log(data);
+     return
+
+    // try {
+    //     const response = await fetch(url, config);
+    //     const info = await response.json()
+    //      console.log(info);
+    //     const { catalogo, atraque, zarpe , pais, id , puntosDerrota } = info
+    //     formulario.catalogo.value = catalogo;
+    //     formulario.atraque.value = atraque;
+    //     formulario.zarpe.value = zarpe;
+    //     formulario.pais.value = pais;
+    //     formulario.codigo.value = id;
+    //     puntos = info.puntosDerrota
+    //     // console.log(puntosDerrota);
+    //     agregarPuntos(puntos)
+    //     agrearPuntosTabla(puntos)
+    //     if(puntos.length){
+    //         map.setView(new L.LatLng(puntos[0][0] ,puntos[0][1]),8);
+            
+    //     }else{
+    //         map.setView(new L.LatLng(15.525158,-90.32959),7);
+
+    //     }
+    //     modalInternacionales.hide();
+    //     btnModificar.parentElement.style.display = ''
+    //     btnGuardar.parentElement.style.display = 'none'
+    //     btnBuscar.parentElement.style.display = 'none'
+    //     btnGuardar.disabled = true
+    //     getCatalogo();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+colocarInformacion()
 iniciarModulo();
 map.on("click", onMapClick)
 formPuntos.addEventListener('submit', agregarPunto )

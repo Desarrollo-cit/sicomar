@@ -23,6 +23,7 @@ $router->get('/API/reporte/BusDatos', [ReporteController::class, 'BuscarDatosAPI
 
 $router->get('/reporte/derrota', [DerrotaController::class,'index']);
 $router->post('/API/reporte/derrota/GuardarDatos', [DerrotaController::class,'GuardarAPI']);
+$router->get('/API/reporte/derrota/BusDerrota', [DerrotaController::class, 'BuscarDerrotas'] );
 
 
 $router->comprobarRutas();

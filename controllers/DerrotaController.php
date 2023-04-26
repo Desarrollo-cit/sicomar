@@ -14,7 +14,32 @@ class DerrotaController{
     }
 
 
+public static function BuscarDerrotas(){
+    getHeadersApi();
+$valor = $_GET['id'];
+try {
+    getHeadersApi();
+    $datos = Derrota::fetchArray("
+    SELECT * FROM codemar_derrota  WHERE der_ope = 38 AND der_situacion = 1");
+    echo json_encode($datos);     
+    
+foreach ($datos as $vuelta) {
+    $puntos [] = [
+        $vuelta['der_latitud'],
+        $vuelta['der_longitud'],
+    ];
 
+ 
+}
+
+
+    
+} catch (Exception $e) {
+    echo json_encode(["error"=>$e->getMessage()]);
+}
+
+
+}
 
 public static function GuardarAPI(){
 
