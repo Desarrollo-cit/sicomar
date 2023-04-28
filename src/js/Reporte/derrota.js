@@ -13,6 +13,7 @@ const btnBuscar = document.querySelector('#btnBuscar');
 const btnGuardar = document.querySelector('#btnGuardar');
 const formulario = document.querySelector('#formDerrota')
 let puntos = [];
+let idDerrota = [];
 let distancia = 0;
 
 
@@ -74,7 +75,8 @@ const onMapClick = e =>{
 
 const agregarPunto = (e) => {
     e.preventDefault();
-
+    
+    console.log(puntos)
     const fecha = document.getElementById('fecha').value;
    // console.log(fecha)
 if (fecha )
@@ -84,7 +86,6 @@ if (fecha )
         formPuntos.longitud.value,
         formPuntos.fecha.value.replace("T", " ")
     ]]
-//console.log(puntos)
     agregarPuntos(puntos)
     agrearPuntosTabla(puntos)
     modalPuntos.hide();
@@ -208,6 +209,7 @@ const guardarDerrota = async e => {
             body.append('distancia', distancia)
             for (let i = 0; i < puntos.length; i++) {
                 body.append('puntos[]', puntos[i]);
+                body.append('der_id[]', idDerrota[i]);
             }
             headers.append("X-Requested-With", "fetch");
     
@@ -219,7 +221,7 @@ const guardarDerrota = async e => {
     
             const respuesta = await fetch(url, config);
             const data = await respuesta.json();
-            //console.log(data);   
+            console.log(data);   
             if (data.codigo == 7){
                 Toast.fire({
                     icon : 'success',
@@ -258,31 +260,29 @@ const colocarInformacion = async (evento) => {
 
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
-
-     console.log(data);
-     return
-
-    // try {
-    //     const response = await fetch(url, config);
-    //     const info = await response.json()
-    //      console.log(info);
-    //     const { catalogo, atraque, zarpe , pais, id , puntosDerrota } = info
-    //     formulario.catalogo.value = catalogo;
-    //     formulario.atraque.value = atraque;
-    //     formulario.zarpe.value = zarpe;
-    //     formulario.pais.value = pais;
-    //     formulario.codigo.value = id;
-    //     puntos = info.puntosDerrota
-    //     // console.log(puntosDerrota);
-    //     agregarPuntos(puntos)
-    //     agrearPuntosTabla(puntos)
-    //     if(puntos.length){
-    //         map.setView(new L.LatLng(puntos[0][0] ,puntos[0][1]),8);
+console.log(data);
+        if(data!= null){
             
-    //     }else{
-    //         map.setView(new L.LatLng(15.525158,-90.32959),7);
+            const {  puntosDerrota, id } = data
+            data.forEach(element => {
+                puntos = element.puntosDerrota
+                idDerrota = [...idDerrota,element.id]
+            });
+            
+            // console.log(idDerrota);
+  
+            agregarPuntos(puntos)
+             agrearPuntosTabla(puntos)
+        }
 
-    //     }
+        
+         if(puntos.length){
+             map.setView(new L.LatLng(puntos[0][0] ,puntos[0][1]),8);
+            
+         }else{
+             map.setView(new L.LatLng(15.525158,-90.32959),7);
+
+         }
     //     modalInternacionales.hide();
     //     btnModificar.parentElement.style.display = ''
     //     btnGuardar.parentElement.style.display = 'none'

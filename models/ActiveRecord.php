@@ -34,7 +34,7 @@ class ActiveRecord {
     // Registros - CRUD
     public function guardar() {
         $resultado = '';
-        if(!is_null($this->id)) {
+        if(!is_null($this->idTabla)) {
             // actualizar
             $resultado = $this->actualizar();
         } else {
