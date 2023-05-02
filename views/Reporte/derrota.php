@@ -90,9 +90,7 @@ $ope_fecha_zarpe = base64_decode($ope_fecha_zarpe);
         <div class="col-lg-3 mb-lg-0 mb-2">
             <button type="submit" class="btn w-100 btn-success" id="btnGuardar"><i class="bi bi-save me-2"></i>Guardar</button>
         </div>
-        <div class="col-lg-3 mb-lg-0 mb-2">
-            <button type="button" class="btn w-100 btn-info" id="btnBuscar"><i class="bi bi-search me-2"></i>Buscar</button>
-        </div>
+
         <div class="col-lg-3 mb-lg-0 mb-2">
             <button type="button" class="btn w-100 btn-warning" id="btnModificar"><i class="bi bi-pencil-square me-2"></i>Modificar</button>
         </div>

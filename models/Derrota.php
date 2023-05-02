@@ -5,7 +5,7 @@ namespace Model;
 class Derrota extends ActiveRecord{
     protected static $idTabla = 'der_id';
     protected static $tabla = 'codemar_derrota'; //nombre de la tablaX
-    protected static $columnasDB = ['DER_ID', 'DER_OPE', 'DER_LATITUD', 'DER_LONGITUD', 'DER_FECHA','DER_SITUACION'];
+    protected static $columnasDB = [ 'DER_OPE', 'DER_LATITUD', 'DER_LONGITUD', 'DER_FECHA','DER_SITUACION'];
 
     public $der_id;
     public $der_ope;
