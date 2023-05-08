@@ -9,6 +9,7 @@ use MVC\Router;
 use Controllers\AppController;
 use Controllers\ReporteController;
 use Controllers\DerrotaController;
+use Controllers\MotoresController;
 $router = new Router();
 $router->setBaseURL('/' . $_ENV['APP_NAME']);
 
@@ -25,5 +26,7 @@ $router->get('/reporte/derrota', [DerrotaController::class,'index']);
 $router->post('/API/reporte/derrota/GuardarDatos', [DerrotaController::class,'GuardarAPI']);
 $router->get('/API/reporte/derrota/BusDerrota', [DerrotaController::class, 'BuscarDerrotas'] );
 
+// motores
+$router->get('/reporte/motores', [MotoresController::class,'index']);
 
 $router->comprobarRutas();

@@ -46,17 +46,17 @@ const BuscarDatos = async (evento) => {
                      width: '20%'
                     
                 },
-                { data : 'id',
+                { data : 'derrota',
                 width: '9.37%',
                 'render': (data, type, row, meta) => {
                     return`<button class='btn btn-success'  onclick='ApiDerrota("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )' > <i class='bi bi-cursor'></i></button>` 
                 } },
                 
                 { 
-                    data : 'id',
+                    data : 'motores',
                     width: '9.37%',
                     'render': (data, type, row, meta) => {
-                        return `<button class='btn btn-outline-info' data-unidad=" data-operacion="${row.id}" data-bs-toggle='modal' data-bs-target='#modalDetalle2'><i class='bi bi-gear-wide-connected'></i></button>`
+                        return `<button class='btn btn-outline-info' onclick='ApiMotores("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )' ><i class='bi bi-gear-wide-connected'></i></button>`
                     } 
                 },
                 { 
@@ -127,6 +127,13 @@ const BuscarDatos = async (evento) => {
     window.location.href = url;
   }
   
+  window.ApiMotores = (ope_id, ope_identificador, ope_fecha_zarpe) => {
+    // construir la URL con los parámetros de consulta "id" y "identificador" codificados en base64
+    var url = `./reporte/motores?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;
+    
+    // redirigir el navegador a la URL
+    window.location.href = url;
+  }
 
 
 
