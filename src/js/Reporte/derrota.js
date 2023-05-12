@@ -249,8 +249,7 @@ const guardarDerrota = async e => {
 const colocarInformacion = async (evento) => {
     evento && evento.preventDefault();
 
-    const url = `operacion.php?id=${id}`
-    const config = { method: "GET" }
+  
     const llevar = document.getElementById('id').value;
 
     try {

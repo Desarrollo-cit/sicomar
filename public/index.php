@@ -28,5 +28,11 @@ $router->get('/API/reporte/derrota/BusDerrota', [DerrotaController::class, 'Busc
 
 // motores
 $router->get('/reporte/motores', [MotoresController::class,'index']);
+$router->get('/API/reporte/motores/BusMotor', [MotoresController::class, 'BuscarMotores'] );
+$router->get('/API/reporte/motores/BusTrabajo', [MotoresController::class, 'BuscarTrabajo'] );
+$router->post('/API/reporte/motores/GuardarTrabajo', [MotoresController::class, 'GuardarTrabajoAPI'] );
+
+
+
 
 $router->comprobarRutas();
