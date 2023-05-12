@@ -1,18 +1,21 @@
 import { Dropdown, Tooltip, Modal, Alert } from "bootstrap";
 import L from "leaflet"
 import 'leaflet-easyprint'
-import { Toast } from '../funciones';
+import { Toast, validarFormulario  } from '../funciones';
 
-
+const formulario = document.querySelector('#formInternacional')
 const modalPuntos = new Modal(document.getElementById('modalPuntos'), {})
 const formPuntos = document.querySelector('#formPuntos')
+const spanText = document.querySelector('#textNombre');
 const spanDistancia = document.querySelector('#distancia');
 const btnLimpiar = document.querySelector('#btnLimpiar');
 const btnModificar = document.querySelector('#btnModificar');
 const btnBuscar = document.querySelector('#btnBuscar');
 const btnGuardar = document.querySelector('#btnGuardar');
+
 let puntos = [];
 let distancia = 0;
+let catalogoValido = false;
 
 
 const iniciarModulo = ()=> {
@@ -137,7 +140,7 @@ const agrearPuntosTabla = (puntos) => {
         let tr = document.createElement('tr');
         let tdLatitud = document.createElement('td');
         tdLatitud.colSpan = 2;
-        tdLatitud.innerText = 'Los puntos ingresados se visualizaran acás'
+        tdLatitud.innerText = 'Los puntos ingresados se visualizaran acá'
         tr.appendChild(tdLatitud)
         fragment.appendChild(tr)
     }
@@ -165,9 +168,162 @@ const getDistancia = (lat1,lon1,lat2,lon2) => {
     return dmillas; //Retorna tres decimales
 }
 
+const getCatalogo = async () => {
+    let catalogo = formulario.catalogo.value;
 
 
+    
+    if( catalogo.length < 6 ){
+        spanText.textContent = "CATÁLOGO MUY CORTO";
+        spanText.classList.add('text-danger');
+        spanText.classList.remove('text-success');
+        catalogoValido = false;
+        return;
+    }
+    
+    
+    try {
+        const url = `/sicomar/API/internacionales/catalogo?catalogo=${catalogo}`
+        const config = { method : "GET" }
+        const response = await fetch(url, config);
+        
+        const info = await response.json()
+        console.log(info);
+  
+        
+        if(info !=""){
+
+            info.forEach(i => {
+
+                spanText.textContent = i.grado + " " + i.nombre
+                spanText.classList.remove('text-danger');
+                spanText.classList.add('text-success');
+                catalogoValido = true;
+                
+            });
+        
+        }else{
+            spanText.textContent = "CATÁLOGO NO VÁLIDO"
+            spanText.classList.add('text-danger');
+            spanText.classList.remove('text-success');
+            catalogoValido = false;
+        }
+    } catch (error) {
+        console.log(error);         
+        spanText.classList.add('text-danger');
+        spanText.classList.remove('text-success');
+        catalogoValido = false;
+    }
+
+
+}
+
+const LimpiarFormulario = () => {
+    spanText.textContent = ''
+    puntos = [];
+    catalogoValido = false;
+    distancia = 0;
+    agregarPuntos(puntos)
+    agrearPuntosTabla(puntos)
+    btnModificar.parentElement.style.display = 'none'
+    btnGuardar.parentElement.style.display = ''
+    btnBuscar.parentElement.style.display = ''
+    btnGuardar.disabled = false
+    map.setView(new L.LatLng(15.525158, -90.32959),7);
+}
+
+
+const guardarInternacional = async (evento) => {
+    evento.preventDefault();
+
+    if(validarFormulario(formulario, ['codigo']) && catalogoValido  && puntos.length > 0){
+
+        try {
+            //Crear el cuerpo de la consulta
+            const url = `/sicomar/API/internacionales/guardar`
+            const body = new FormData(formulario);
+            body.delete('codigo');
+            body.append('distancia', distancia)
+            for (let i = 0; i < puntos.length; i++) {
+                body.append('puntos[]', puntos[i]);
+            }
+            const headers = new Headers();
+            headers.append("X-Requested-With", "fetch");
+    
+            const config = {
+                method: 'POST',
+                headers,
+                body
+            }
+    
+            const respuesta = await fetch(url, config);
+            const data = await respuesta.json();
+            console.log(data);
+      
+
+
+    
+      
+            const { mensaje, codigo, detalle } = data;
+            // const resultado = data.resultado;
+            let icon = "";
+            switch (codigo) {
+                case 1:
+                    icon = "success"
+                    LimpiarFormulario();
+                    formulario.reset();
+                    
+                 
+                   
+                    break;
+                case 2:
+                    icon = "warning"
+                   formulario.reset();
+           
+    
+                    break;
+                case 3:
+                    icon = "error"
+                   formulario.reset();
+    
+                    break;
+                case 4:
+                    icon = "error"
+       
+                    console.log(detalle)
+                   formulario.reset();
+                   
+    
+                    break;
+    
+                default:
+                    break;
+            }
+    
+            Toast.fire({
+                icon: icon,
+                title: mensaje,
+            })
+    
+    
+            
+    
+        } catch (error) {
+            console.log(error);
+        }
+
+
+    }
+
+
+  
+
+
+}
 iniciarModulo();
 map.on("click", onMapClick)
 formPuntos.addEventListener('submit', agregarPunto )
+formulario.catalogo.addEventListener('change', getCatalogo );
+formulario.addEventListener('reset', LimpiarFormulario )
+formulario.addEventListener('submit', guardarInternacional )
 

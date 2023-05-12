@@ -16,7 +16,14 @@
                     </div>
                     <div class="col-lg-6">
                         <label for="pais">País</label>
-                        <select name="pais" id="pais" class="form-control"></select>
+                        <select name="pais" id="pais" class="form-control">
+                        <option value="">SELECCIONE...</option>
+                            <?php foreach ($paises as $fila) { ?>
+                                <option value="<?= $fila['pai_codigo']  ?>"><?= $fila['pai_desc_lg']  ?></option>
+                            <?php  }  ?>
+
+
+                        </select>
                     </div>
                 </div>
                 <div class="row justify-content-center mb-3">

@@ -8,6 +8,8 @@ class ActiveRecord {
     protected static $tabla = '';
     protected static $columnasDB = [];
 
+    protected static $idTabla = '';
+
     // Alertas y Mensajes
     protected static $alertas = [];
     
@@ -32,7 +34,8 @@ class ActiveRecord {
     // Registros - CRUD
     public function guardar() {
         $resultado = '';
-        if(!is_null($this->id)) {
+        $id = static::$idTabla ?? 'id';
+        if(!is_null($this->$id)) {
             // actualizar
             $resultado = $this->actualizar();
         } else {
@@ -52,7 +55,8 @@ class ActiveRecord {
 
     // Busca un registro por su id
     public static function find($id) {
-        $query = "SELECT * FROM " . static::$tabla  ." WHERE id = ${id}";
+        $idQuery = static::$idTabla ?? 'id';
+        $query = "SELECT * FROM " . static::$tabla  ." WHERE $idQuery = ${id}";
         $resultado = self::consultarSQL($query);
         return array_shift( $resultado ) ;
     }
@@ -74,7 +78,7 @@ class ActiveRecord {
     // SQL para Consultas Avanzadas.
     public static function SQL($consulta) {
         $query = $consulta;
-        $resultado = self::consultarSQL($query);
+        $resultado = self::$db->query($query);
         return $resultado;
     }
 
@@ -92,6 +96,8 @@ class ActiveRecord {
         
 
         // debuguear($query);
+        // echo json_encode($query);
+        // exit;
 
         // Resultado de la consulta
         $resultado = self::$db->exec($query);
@@ -111,14 +117,16 @@ class ActiveRecord {
         foreach($atributos as $key => $value) {
             $valores[] = "{$key}={$value}";
         }
+        $id = static::$idTabla ?? 'id';
 
         $query = "UPDATE " . static::$tabla ." SET ";
         $query .=  join(', ', $valores );
-        $query .= " WHERE id = " . self::$db->quote($this->id) . " ";
+        $query .= " WHERE " . $id . " = " . self::$db->quote($this->$id) . " ";
 
         // debuguear($query);
 
         $resultado = self::$db->exec($query);
+    
         return [
             'resultado' =>  $resultado,
         ];
@@ -156,6 +164,17 @@ class ActiveRecord {
         }
         $resultado->closeCursor();
         return $data;
+    }
+
+        
+    public static function fetchFirst($query){
+        $resultado = self::$db->query($query);
+        $respuesta = $resultado->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($respuesta as $value) {
+            $data[] = array_change_key_case( array_map( 'utf8_encode', $value) ); 
+        }
+        $resultado->closeCursor();
+        return array_shift($data);
     }
 
     protected static function crearObjeto($registro) {
