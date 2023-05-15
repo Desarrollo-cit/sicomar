@@ -14,7 +14,7 @@ let inputsMotores = 0;
 const traerMotores = async (evento) => {
     evento && evento.preventDefault();
 
-    const llevar = document.getElementById('id').value;
+    const llevar = document.getElementById('ope_id').value;
 
     try {
         const url = `/sicomar/API/reporte/motores/BusMotor?id=${llevar}`
@@ -68,7 +68,7 @@ const guardarTrabajos= async e => {
 
     try {
         
-        const llevar = document.getElementById('id').value;
+        const llevar = document.getElementById('ope_id').value;
         if (validarFormulario(formMotores)) {
             let horas = [], rpm = [], fallas = [], observaciones = [], ids = [];
         
@@ -94,7 +94,7 @@ const guardarTrabajos= async e => {
             inputsIds.forEach(input => {
                 ids = [...ids, input.value]
             })
-
+//console.log(ids)
             const url = '/sicomar/API/reporte/motores/GuardarTrabajo'
             const body = new FormData();
             const headers = new Headers();
@@ -103,7 +103,8 @@ const guardarTrabajos= async e => {
             body.append('rpm', rpm)
             body.append('fallas', fallas)
             body.append('observaciones', observaciones)
-            body.append('ids', ids)            
+            body.append('ids', ids)    
+            body.append('id_ope', llevar)        
             headers.append("X-Requested-With", "fetch");
     
             const config = {
@@ -115,6 +116,35 @@ const guardarTrabajos= async e => {
             const respuesta = await fetch(url, config);
             const data = await respuesta.json();
             console.log(data);
+            const { mensaje, codigo, detalle } = data;
+            let icon = "";
+            switch (codigo) {
+                case 1:
+                    icon = "success"
+                    traerMotores
+                    break;
+               
+                case 0:
+                    icon = "error"
+        
+                    break;
+                case 4:
+                    icon = "error"
+                    console.log(detalle)
+                    // buscarTipo();
+        
+                    break;
+        
+                default:
+                    break;
+            }
+        
+            Toast.fire({
+                icon: icon,
+                title: mensaje,
+            })
+
+            
     
     
         } else {
