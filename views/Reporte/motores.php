@@ -28,7 +28,7 @@ $ope_fecha_zarpe = base64_decode($ope_fecha_zarpe);
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="hidden" class="form-control" id="id" name="id" value="<?php echo $decoded_id; ?>">
+                                    <input type="text" class="form-control" id="ope_id" name="id_ope" value="<?php echo $decoded_id; ?>">
 
                                 </div>
                             </div>
@@ -39,7 +39,7 @@ $ope_fecha_zarpe = base64_decode($ope_fecha_zarpe);
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="identificador" name="identificador" value="<?php echo $decoded_identificador; ?>">
+                                    <input type="text" class="form-control" id="ope_identificador" name="ope_identificador" value="<?php echo $decoded_identificador; ?>">
 
                                 </div>
                             </div>

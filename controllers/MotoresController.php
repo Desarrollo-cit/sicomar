@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Model\Derrota;
+use Model\Trabajo_motores;
 
 use MVC\Router;
 use Exception;
@@ -59,114 +60,80 @@ class MotoresController
 
         getHeadersApi();
 
-        echo json_encode($_POST);
-        exit;
-
-
         try {
-
-
-            $der_coodigo = $_POST['id'];
-            //$der_coodigos = $_POST['puntos'];
-            $der_ope = $_POST['puntos'];
-
-
-            $datos = Derrota::fetchArray("SELECT * FROM codemar_derrota  WHERE der_ope = $der_coodigo AND der_situacion = 1");
+            $fallas = $_POST['fallas'];
+            $horas = $_POST['horas'];
+            $id_ope = $_POST['id_ope'];
+            $ids = $_POST['ids'];
+            $observaciones = $_POST['observaciones'];
+            $rpm = $_POST['rpm'];
+            // descomponer arrays    
+            $fallas_array = explode(",", $fallas);
+            $horas_array = explode(",", $horas);
+            $ids_array = explode(",", $ids);
+            $observaciones_array = explode(",", $observaciones);
+            $rpm_array = explode(",", $rpm);
+                
+            $num_elementos = count($ids_array);
+       
+            $datos = Trabajo_motores::fetchArray("SELECT * FROM codemar_trabajo_motores WHERE tra_operacion = $id_ope");        
             if ($datos) {
+               
                 foreach ($datos as $key => $value) {
-
-                    $cambio = new Derrota([
-
-                        'der_id' => $value['der_id'],
-                        'der_ope' => $value['der_ope'],
-                        'der_latitud' => $value['der_latitud'],
-                        'der_longitud' => $value['der_longitud'],
-                        'der_fecha' => $value['der_fecha'],
-                        'der_situacion' =>  "0"
-
+                    $cambio = new Trabajo_motores([
+                        'tra_id' => $value['tra_id'],
+                        'tra_operacion' => $value['tra_operacion'],
+                        'tra_motor' => $value['tra_motor'],
+                        'tra_horas' => $value['tra_horas'],
+                        'tra_rpm' => $value['tra_rpm'],
+                        'tra_fallas' => $value['tra_fallas'],
+                        'tra_observacion' => $value['tra_observacion'],
+                        'tra_situacion' =>  "0"
                     ]);
                     $cambiar = $cambio->guardar();
                 }
             }
 
 
-            foreach ($der_ope as $val) {
-                $datos = explode(',', $val);
-                $latitud = $datos[0];
-                $longitud = $datos[1];
-                $fecha = $datos[2];
 
-                $Ingreso = new Derrota([
+            for ($i = 0; $i < $num_elementos; $i++) {
 
-                    'der_ope' =>        $der_coodigo,
-                    'der_latitud' =>    $latitud,
-                    'der_longitud' =>   $longitud,
-                    'der_fecha' =>      $fecha,
-                    'der_situacion' =>  "1"
+                $valor_fallas = $fallas_array[$i];
+                $valor_horas = $horas_array[$i];
+                $valor_ids = $ids_array[$i];
+                $valor_observaciones = $observaciones_array[$i];
+                $valor_rpm = $rpm_array[$i];
+            
 
+                $trabajo_motor = new Trabajo_motores([
+                    'tra_fallas' => $valor_fallas,
+                    'tra_horas' => $valor_horas,
+                    'tra_motor' => $valor_ids,
+                    'tra_observacion' => $valor_observaciones,
+                    'tra_rpm' => $valor_rpm,
+                    'tra_operacion' => $id_ope,
+                    'tra_situacion' =>  "1"
                 ]);
-                $guardado = $Ingreso->guardar();
-            }
+            
 
+                $guardado = $trabajo_motor->guardar();
+            
+        
+              
+            }
             if ($guardado) {
-
-                echo json_encode([
-
-                    "codigo" => 7,
+                echo json_encode([   
+                    "mensaje" => "Trabajo de los motores guardado",
+                    "codigo" => 1,
                 ]);
-            } else {
-                echo json_encode([
+                } else {
+                    echo json_encode([   
+                        "mensaje" => "Error, Verifique sus datos",
+                        "codigo" => 0,
+                    ]);
+                }
 
-                    "codigo" => 2,
-                ]);
-            }
-
-            //     $der_coodigo = $_POST['id'];
-            //     //$der_coodigos = $_POST['puntos'];
-            //     $der_ope =$_POST['puntos'];
-            //     $der_id =$_POST['der_id'];
-            // $cuantosId = count($der_id);
-
-            // $val_id = 0;
-            // for ($i=0; $i < $cuantosId; $i++) { 
-            //     # code...
-            // foreach ($der_ope as $val) {
-            //     $datos = explode(',', $val);
-            //     $latitud = $datos[0];
-            //     $longitud = $datos[1];
-            //     $fecha = $datos[2];
-            // // echo json_encode($der_id[$i]);
-            // // exit;
-
-            //     $Ingreso = new Derrota([
-            //         'der_id' => $der_id[$i],
-            //         'der_ope' =>        $der_coodigo,
-            //         'der_latitud' =>    $latitud,
-            //         'der_longitud' =>   $longitud,
-            //         'der_fecha' =>      $fecha,
-            //         'der_situacion' =>  "1"
-
-            //     ]);
-            //     $guardado = $Ingreso->guardar(); 
-
-
-            // }
-            // }
-            // if ($guardado) {
-
-            //     echo json_encode([
-
-            //         "codigo" => 7,
-            //     ]);
-
-            // } else {
-            //     echo json_encode([
-
-            //         "codigo" => 2,
-            //     ]);
-            // }
-
-
+ 
 
         } catch (Exception $e) {
             echo json_encode([
