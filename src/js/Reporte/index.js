@@ -33,6 +33,7 @@ const BuscarDatos = async (evento) => {
             language : lenguaje,
             data : data,
             columns : [
+                
                 { 
                     data : 'id',
                     width: '5%',
@@ -60,10 +61,10 @@ const BuscarDatos = async (evento) => {
                     } 
                 },
                 { 
-                    data : 'id',
+                    data : 'consumos',
                     width: '9.37%',
                     'render': (data, type, row, meta) => {
-                        return  `<button class='btn btn-outline-info' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalDetalle3'><i class='bi bi-boxes'></i></button>`
+                        return  `<button class='btn btn-outline-info' onclick='ApiConsumos("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )'><i class='bi bi-boxes'></i></button>`
                     } 
                 },
                 { 
@@ -130,6 +131,14 @@ const BuscarDatos = async (evento) => {
   window.ApiMotores = (ope_id, ope_identificador, ope_fecha_zarpe) => {
     // construir la URL con los parámetros de consulta "id" y "identificador" codificados en base64
     var url = `./reporte/motores?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;
+    
+    // redirigir el navegador a la URL
+    window.location.href = url;
+  }
+
+  window.ApiConsumos = (ope_id, ope_identificador, ope_fecha_zarpe) => {
+    // construir la URL con los parámetros de consulta "id" y "identificador" codificados en base64
+    var url = `./reporte/consumos?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;
     
     // redirigir el navegador a la URL
     window.location.href = url;
