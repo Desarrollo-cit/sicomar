@@ -37,6 +37,7 @@ $router->post('/API/reporte/motores/GuardarTrabajo', [MotoresController::class, 
 $router->get('/reporte/consumos', [ConsumosController::class,'index']);
 $router->get('/API/reporte/consumos/BusConsumos', [ConsumosController::class, 'BuscarConsumos'] );
 $router->get('/API/reporte/consumos/BusInsumos', [ConsumosController::class, 'BuscarInsumos'] );
+$router->post('/API/reporte/consumos/GuardarCons', [ConsumosController::class, 'GuardarConsumoAPI'] );
 
 
 $router->comprobarRutas();

@@ -62,8 +62,8 @@ $ope_fecha_zarpe = base64_decode($ope_fecha_zarpe);
                 </div>
                 <div class="card-body">
                     <form id="formConsumos">
-                        <input type="hidden" name="codigoOperacion2" id="codigoOperacion2">
-                 
+                     
+
                         <div class="row justify-content-start mb-3">
                             <div class="col-lg-10">
                                 <p class="lead">Agregue campos según la cantidad de insumos consumidos</p>
@@ -76,13 +76,13 @@ $ope_fecha_zarpe = base64_decode($ope_fecha_zarpe);
                             </div>
                         </div>
                         <div id="divConsumos">
-                            <!-- Aquí se agregarán los campos adicionales de insumos consumidos dinámicamente -->
+                           
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="submit" form="formConsumos" class="btn btn-success me-2" id="buttonLimpiar">
                                 <i class="bi bi-save me-2"></i>Guardar
                             </button>
-                         
+
                         </div>
                     </form>
                 </div>

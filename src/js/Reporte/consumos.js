@@ -28,7 +28,7 @@ const traer_consumo = async (evento) => {
 
         const respuesta = await fetch(url, config);
         const consumos = await respuesta.json();
-        console.log(consumos)
+       // console.log(consumos)
 
     while (inputConsumos > 0) {
         quitarInputsConsumos();
@@ -86,7 +86,7 @@ const agregarInputsConsumos = async (e, insumo = '', cantidad = '' ) => {
 
         const respuesta = await fetch(url, config);
         const insumos = await respuesta.json();
-        console.log(insumos)
+        //console.log(insumos)
 
     
 
@@ -125,13 +125,13 @@ const quitarInputsConsumos = e => {
     }
 }
 
-const guardarConsumos = (event) => {
-    event.preventDefault();
-
-    if(validarFormulario(formConsumos, ['codigoOperacion2']) && inputConsumos > 0){
+const guardarConsumos = async e => {
+    e.preventDefault();
+    const llevar = document.getElementById('ope_id').value;
+    if(validarFormulario(formConsumos) && inputConsumos > 0){
 
         let insumos = [], cantidades = [];
-        let operacion = formConsumos.codigoOperacion2.value
+       
 
 
         let inputInsumos = document.querySelectorAll("[id^='insumo']");
@@ -142,11 +142,30 @@ const guardarConsumos = (event) => {
         inputCantidades.forEach(input => {
             cantidades = [...cantidades, input.value ]
         })
+   
+        const url = '/sicomar/API/reporte/consumos/GuardarCons'
+        const body = new FormData();
+        const headers = new Headers();
 
-        xajax_guardarConsumos(insumos,cantidades, operacion);
+        body.append('insumos', insumos)
+        body.append('cantidades', cantidades)
+        body.append('id_ope', llevar)        
+        headers.append("X-Requested-With", "fetch");
 
+        const config = {
+            method: 'POST',
+            headers,
+            body
+        }
+
+        const respuesta = await fetch(url, config);
+        const data = await respuesta.json();
+        console.log(data);
+
+       
     }else{
-        alertToast("warning", "Debe ingresar todos los campos")
+        console.log('no')
+        // alertToast("warning", "Debe ingresar todos los campos")
     }
 }
 

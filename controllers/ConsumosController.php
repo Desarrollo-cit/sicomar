@@ -3,7 +3,8 @@
 namespace Controllers;
 
 use Model\Derrota;
-use Model\Trabajo_motores;
+use Model\Consumos;
+
 
 use MVC\Router;
 use Exception;
@@ -65,73 +66,53 @@ class ConsumosController
 
 
 
-    public static function Buscartrabajo()
-    {
-        getHeadersApi();
 
-        try {
-            $operacion = $_GET['id'];
-            $motor = $_GET['motor'];
 
-            $datos = Derrota::fetchArray(" SELECT * FROM codemar_trabajo_motores where tra_operacion = $operacion and tra_motor = $motor and tra_situacion = 1");
-           
-            echo json_encode($datos);
-        } catch (Exception $e) {
-            echo json_encode(["error" => $e->getMessage()]);
-        }
-    }
-
-    public static function GuardarTrabajoAPI()
+    public static function GuardarConsumoAPI()
     {
 
         getHeadersApi();
 
+        // echo json_encode($_POST);
+        // exit;
+
         try {
-            $fallas = $_POST['fallas'];
-            $horas = $_POST['horas'];
+            $cantidades = $_POST['cantidades'];
+            $insumos = $_POST['insumos'];
             $id_ope = $_POST['id_ope'];
-            $ids = $_POST['ids'];
-            $observaciones = $_POST['observaciones'];
-            $rpm = $_POST['rpm'];
+           
             // descomponer arrays    
-            $fallas_array = explode(",", $fallas);
-            $horas_array = explode(",", $horas);
-            $ids_array = explode(",", $ids);
-            $observaciones_array = explode(",", $observaciones);
-            $rpm_array = explode(",", $rpm);
+            $cantidades_array = explode(",", $cantidades);
+            $insumos_array = explode(",", $insumos);
+        
                 
-            $num_elementos = count($ids_array);
+            $num_elementos = count($cantidades_array);
        
-            $datos = Trabajo_motores::fetchArray("SELECT * FROM codemar_trabajo_motores WHERE tra_operacion = $id_ope");        
+            $datos = Consumos::fetchArray("SELECT * FROM codemar_consumos where con_operacion = $id_ope and con_situacion = 1");  
+
             if ($datos) {
                
                 foreach ($datos as $key => $value) {
-                    $cambio = new Trabajo_motores([
-                        'tra_id' => $value['tra_id'],
-                        'tra_operacion' => $value['tra_operacion'],
-                        'tra_motor' => $value['tra_motor'],
-                        'tra_horas' => $value['tra_horas'],
-                        'tra_rpm' => $value['tra_rpm'],
-                        'tra_fallas' => $value['tra_fallas'],
-                        'tra_observacion' => $value['tra_observacion'],
-                        'tra_situacion' =>  "0"
+                    $cambio = new Consumos([
+                        'con_id' => $value['con_id'],
+                        'con_operacion' => $value['con_operacion'],
+                        'con_insumo' => $value['con_insumo'],
+                        'con_cantidad' => $value['con_cantidad'],
+                        'con_situacion' =>  "0"
                     ]);
                     $cambiar = $cambio->guardar();
                 }
             }
-
-
+    
 
             for ($i = 0; $i < $num_elementos; $i++) {
 
-                $valor_fallas = $fallas_array[$i];
-                $valor_horas = $horas_array[$i];
-                $valor_ids = $ids_array[$i];
-                $valor_observaciones = $observaciones_array[$i];
-                $valor_rpm = $rpm_array[$i];
+                $valor_cantidades = $cantidades_array[$i];
+                $valor_insumos = $insumos_array[$i];
+           
             
 
-                $trabajo_motor = new Trabajo_motores([
+                $trabajo_motor = new Consumos([
                     'tra_fallas' => $valor_fallas,
                     'tra_horas' => $valor_horas,
                     'tra_motor' => $valor_ids,
