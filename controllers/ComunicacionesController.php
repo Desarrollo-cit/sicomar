@@ -4,11 +4,13 @@ namespace Controllers;
 
 use Model\Derrota;
 use Model\Consumos;
+
+
 use MVC\Router;
 use Exception;
 
 
-class ConsumosController
+class ComunicacionesController
 {
 
     public static function index(Router $router)
@@ -21,7 +23,7 @@ class ConsumosController
         $decoded_identificador = base64_decode($ope_identificador);
         $decoded_fecha_zarpe = base64_decode($ope_fecha_zarpe);
 
-        $router->render('Reporte/consumos', [
+        $router->render('Reporte/comunicaciones', [
             'decoded_id'            =>   $decoded_id,
             'decoded_identificador' =>   $decoded_identificador,
             'decoded_fecha_zarpe'   =>   $decoded_fecha_zarpe
@@ -29,7 +31,7 @@ class ConsumosController
     }
 
 
-    public static function BuscarInsumos()
+    public static function BuscarComun()
     {
         getHeadersApi();
 
@@ -39,7 +41,7 @@ class ConsumosController
 
 
 
-            $datos = Derrota::fetchArray("SELECT * FROM codemar_insumos_operaciones INNER JOIN codemar_unidades_medida on insumo_unidad = uni_id where insumo_situacion = 1 
+            $datos = Derrota::fetchArray("SELECT * FROM codemar_comunicaciones where com_operacion = $valor and com_situacion = 1 
             ");
 
 

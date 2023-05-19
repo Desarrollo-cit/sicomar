@@ -10,6 +10,7 @@ module.exports = {
     'js/Reporte/derrota' : './src/js/Reporte/derrota.js',
     'js/Reporte/motores' : './src/js/Reporte/motores.js',
     'js/Reporte/consumos' : './src/js/Reporte/consumos.js',
+    'js/Reporte/comunicaciones' : './src/js/Reporte/comunicaciones.js',
   },
   output: {
     filename: '[name].js',

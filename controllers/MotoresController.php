@@ -14,7 +14,19 @@ class MotoresController
 
     public static function index(Router $router)
     {
-        $router->render('Reporte/motores', []);
+        $ope_id = $_GET['id'];
+        $ope_identificador = $_GET['identificador'];
+        $ope_fecha_zarpe = $_GET['fecha_zarpe'];
+
+        $decoded_id = base64_decode($ope_id);
+        $decoded_identificador = base64_decode($ope_identificador);
+        $decoded_fecha_zarpe = base64_decode($ope_fecha_zarpe);
+        
+        $router->render('Reporte/motores', [
+            'decoded_id'            =>   $decoded_id,
+            'decoded_identificador' =>   $decoded_identificador,
+            'decoded_fecha_zarpe'   =>   $decoded_fecha_zarpe
+        ]);
     }
 
 

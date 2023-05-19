@@ -45,39 +45,34 @@
     </div>
 </div>
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <h3 class="card-title">Consumos realizados</h3>
-                </div>
-                <div class="card-body bg-light rounded">
-                    <form id="formConsumos">
-                     
+    <div class="card">
+        <div class="card-header text-white bg-dark">
+            <h5 class="card-title">Comunicaciones</h5>
+        </div>
+        <div class="card-body bg-light rounded">
+            <form id="formComunicacion">
+                <input type="hidden" name="codigoOperacion3" id="codigoOperacion3">
 
-                        <div class="row justify-content-start mb-3">
-                            <div class="col-lg-10">
-                                <p class="lead">Agregue campos según la cantidad de insumos consumidos</p>
-                            </div>
-                            <div class="col-lg-1">
-                                <button type="button" id="buttonAgregarConsumos" class="btn btn-primary mb-2 mb-lg-0 w-100"><i class="bi bi-plus-circle"></i></button>
-                            </div>
-                            <div class="col-lg-1">
-                                <button type="button" id="buttonQuitarConsumos" class="btn btn-danger w-100"><i class="bi bi-dash-circle"></i></button>
-                            </div>
-                        </div>
-                        <div id="divConsumos">
-                           
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" form="formConsumos" class="btn btn-success me-2" id="buttonLimpiar">
-                                <i class="bi bi-save me-2"></i>Guardar
-                            </button>
-
-                        </div>
-                    </form>
+                <div class="row justify-content-start mb-3">
+                    <div class="col-lg-1">
+                        <button type="button" id="buttonAgregarComunicacion" class="btn btn-primary mb-2 mb-lg-0 w-100"><i class="bi bi-plus-circle"></i></button>
+                    </div>
+                    <div class="col-lg-1">
+                        <button type="button" id="buttonQuitarComunicacion" class="btn btn-danger w-100"><i class="bi bi-dash-circle"></i></button>
+                    </div>
                 </div>
-            </div>
+                <div id="divComunicacion">
+                </div>
+
+                <div class="row justify-content-center mt-3">
+                    <div class="col-lg-2">
+                        <button type="submit" form="formComunicacion" class="btn btn-success"><i class="bi bi-save me-2"></i>Guardar</button>
+                    </div>
+                    <div class="col-lg-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -87,4 +82,5 @@
 
 
 
-<script src="<?= asset('/build/js/Reporte/consumos.js') ?>"></script>
+
+<script src="<?= asset('/build/js/Reporte/comunicaciones.js') ?>"></script>

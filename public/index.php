@@ -11,6 +11,7 @@ use Controllers\ReporteController;
 use Controllers\DerrotaController;
 use Controllers\MotoresController;
 use Controllers\ConsumosController;
+use Controllers\ComunicacionesController;
 $router = new Router();
 $router->setBaseURL('/' . $_ENV['APP_NAME']);
 
@@ -38,6 +39,11 @@ $router->get('/reporte/consumos', [ConsumosController::class,'index']);
 $router->get('/API/reporte/consumos/BusConsumos', [ConsumosController::class, 'BuscarConsumos'] );
 $router->get('/API/reporte/consumos/BusInsumos', [ConsumosController::class, 'BuscarInsumos'] );
 $router->post('/API/reporte/consumos/GuardarCons', [ConsumosController::class, 'GuardarConsumoAPI'] );
+
+//Comunicaciones
+$router->get('/reporte/comunicaciones', [ComunicacionesController::class,'index']);
+$router->get('/API/reporte/consumos/BusComuni', [ConsumosController::class, 'BuscarComun'] );
+
 
 
 $router->comprobarRutas();

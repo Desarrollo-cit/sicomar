@@ -161,12 +161,42 @@ const guardarConsumos = async e => {
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
         console.log(data);
+        const { mensaje, codigo, detalle } = data;
+        let icon = "";
+        switch (codigo) {
+            case 1:
+                icon = "success"
+           
+traer_consumo()
+                break;
+           
+            case 0:
+                icon = "error"
+    
+                break;
+            case 4:
+                icon = "error"
+                console.log(detalle)
+                // buscarTipo();
+    
+                break;
+    
+            default:
+                break;
+        }
+    
+        Toast.fire({
+            icon: icon,
+            title: mensaje,
+        })
 
-       
-    }else{
-        console.log('no')
-        // alertToast("warning", "Debe ingresar todos los campos")
+        
+
+
+    } else {
+        alertToast("warning", "Debe ingresar todos los campos")
     }
+
 }
 
 traer_consumo()

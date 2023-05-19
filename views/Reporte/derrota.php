@@ -1,15 +1,3 @@
-<?php
-$ope_id = $_GET['id'];
-$ope_identificador = $_GET['identificador'];
-$ope_fecha_zarpe = $_GET['fecha_zarpe'];
-
-$decoded_id = base64_decode($ope_id);
-$decoded_identificador = base64_decode($ope_identificador);
-$ope_fecha_zarpe = base64_decode($ope_fecha_zarpe);
-
-?>
-
-
 
 
 <div class="container-fluid text-center ">

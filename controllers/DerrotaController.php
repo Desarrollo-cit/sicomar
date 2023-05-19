@@ -10,7 +10,19 @@ use Model\Ingreso;
 class DerrotaController{
 
     public static function index(Router $router){
-        $router->render('Reporte/derrota',[]);
+        $ope_id = $_GET['id'];
+        $ope_identificador = $_GET['identificador'];
+        $ope_fecha_zarpe = $_GET['fecha_zarpe'];
+
+        $decoded_id = base64_decode($ope_id);
+        $decoded_identificador = base64_decode($ope_identificador);
+        $decoded_fecha_zarpe = base64_decode($ope_fecha_zarpe);
+
+        $router->render('Reporte/derrota',[
+            'decoded_id'            =>   $decoded_id,
+            'decoded_identificador' =>   $decoded_identificador,
+            'decoded_fecha_zarpe'   =>   $decoded_fecha_zarpe
+        ]);
     }
 
 
