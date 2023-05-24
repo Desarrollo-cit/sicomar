@@ -2,9 +2,12 @@ import { Dropdown, Tooltip, Modal, Alert } from "bootstrap";
 import L from "leaflet"
 import 'leaflet-easyprint'
 import { Toast, validarFormulario  } from '../funciones';
+import Datatable from 'datatables.net-bs5';
+import { lenguaje } from "../lenguaje";
 
 const formulario = document.querySelector('#formInternacional')
 const modalPuntos = new Modal(document.getElementById('modalPuntos'), {})
+const modalInternacionales = new Modal(document.getElementById('modalInternacionales'));
 const formPuntos = document.querySelector('#formPuntos')
 const spanText = document.querySelector('#textNombre');
 const spanDistancia = document.querySelector('#distancia');
@@ -12,6 +15,7 @@ const btnLimpiar = document.querySelector('#btnLimpiar');
 const btnModificar = document.querySelector('#btnModificar');
 const btnBuscar = document.querySelector('#btnBuscar');
 const btnGuardar = document.querySelector('#btnGuardar');
+let tablaOperaciones = new Datatable('#tablaOperaciones');
 
 let puntos = [];
 let distancia = 0;
@@ -88,11 +92,15 @@ const agregarPunto = (e) => {
 
 const agregarPuntos = (puntos) => {
     LimpiarMapa();
+
+    // console.log(puntos)
     distancia = 0;
 
     for (let index = 0; index < puntos.length; index++) {
+        // console.log(puntos[index]['der_latitud'])
+        // console.log(puntos[index]['der_longitud'])
         let marker = L.marker(puntos[index], {icon} ).addTo(markers);
-        marker.bindPopup(`<b>Punto ${index + 1}</b><br>Latitud: ${puntos[index][0]}<br>Longitud: ${puntos[index][1]}`)
+        marker.bindPopup(`<b>Punto ${index + 1}</b><br>Latitud: ${puntos[index][0]}<br>Longitud: ${puntos[index][0]}`)
         marker.addEventListener('contextmenu', (e)=>deletePunto(e, index) )
 
         
@@ -320,10 +328,276 @@ const guardarInternacional = async (evento) => {
 
 
 }
+const infoInternacionales= async () => {
+
+
+
+
+    try {
+        const url = `/sicomar/API/internacionales/buscar`
+        const headers = new Headers();
+        headers.append("X-Requested-With", "fetch");
+
+        const config = {
+            method: 'GET',
+            headers
+        }
+
+        const respuesta = await fetch(url, config);
+        const data = await respuesta.json();
+
+        console.log(data)
+
+
+
+        tablaOperaciones.destroy();
+        let contador = 1;
+        tablaOperaciones = new Datatable('#tablaOperaciones', {
+            language: lenguaje,
+            data: data,
+            columns: [
+                
+                { data: 'pai_desc_lg' },
+
+                { data: 'ope_fecha_zarpe' },
+
+
+                { data: 'ope_fecha_atraque' },
+
+
+
+
+                {
+                    data : "ope_sit",
+                    render : data => {
+                        switch (data) {
+                            case '1':
+                                return "Ingresado"
+                                break;
+                        
+                            default:
+                                return "hola"
+                                break;
+                        }
+                    }
+                },
+
+
+                {
+                    data : "ope_id",
+                    render : (data, type, row, meta) => {
+                        return `
+                            <div class="btn-group" role="group">
+                                <a href='${row['int_documento']}' target='_blank' class='btn btn-info'><i class='bi bi-file-post'></i></a>
+                                <button onclick="colocarInformacion(${data})" type="button" class="btn btn-warning"><i class='bi bi-pencil-square'></i></button>
+                                <button onclick="borrarRegistro(${data})" type="button" class="btn btn-danger"><i class='bi bi-trash'></i></button>
+                            </div>
+                        `
+                    }
+                },
+            ]
+        })
+
+    } catch (error) {
+        console.log(error);
+    }
+
+
+    modalInternacionales.show();
+
+
+
+  
+
+
+}
+
+
+
+
+window.colocarInformacion= async (id) => {
+
+    //    alert(id)
+    // //    modalInternacionales.hide()
+    //    return
+
+    try {
+        const url = `/sicomar/API/internacionales/colocarInfo?id=${id}`
+        const headers = new Headers();
+        headers.append("X-Requested-With", "fetch");
+
+        const config = {
+            method: 'GET',
+            headers
+        }
+
+        const respuesta = await fetch(url, config);
+        const data = await respuesta.json();
+
+
+        console.log(data)
+        const {operacion}= data
+        puntos = data.puntos
+
+
+        if(operacion){
+            formulario.codigo.value = id;
+
+            operacion.forEach(o => {
+
+                formulario.catalogo.value = o.asi_catalogo;
+        formulario.atraque.value = o.ope_fecha_atraque;
+        formulario.zarpe.value = o.ope_fecha_zarpe;
+        formulario.pais.value = o.int_pais;
+     
+
+                
+            })
+            agregarPuntos(puntos)
+            agrearPuntosTabla(puntos)
+   
+
+
+            if(puntos.length){
+                map.setView(new L.LatLng(puntos[0][0] ,puntos[0][1]),8);
+                
+            }else{
+                map.setView(new L.LatLng(15.525158,-90.32959),7);
+    
+            }
+
+            
+            btnModificar.parentElement.style.display = ''
+            btnModificar.disabled = false
+            btnGuardar.parentElement.style.display = 'none'
+            btnBuscar.parentElement.style.display = 'none'
+            btnGuardar.disabled = true
+            getCatalogo();
+            modalInternacionales.hide();
+        }
+
+
+
+        
+
+
+
+       
+    } catch (error) {
+        console.log(error);
+    }
+
+
+    modalInternacionales.show();
+
+
+
+
+
+}
+
+const modificarInternacional = async () => {
+
+
+
+    if(validarFormulario(formulario, ['codigo','documento'])  && catalogoValido  ){
+
+
+
+
+    
+
+        try {
+            //Crear el cuerpo de la consulta
+            const url = `/sicomar/API/internacionales/modificar`
+            const body = new FormData(formulario);
+
+            body.append('distancia', distancia)
+            for (let i = 0; i < puntos.length; i++) {
+                body.append('puntos[]', puntos[i]);
+            }
+            const headers = new Headers();
+            headers.append("X-Requested-With", "fetch");
+    
+            const config = {
+                method: 'POST',
+                headers,
+                body
+            }
+    
+            const respuesta = await fetch(url, config);
+            const data = await respuesta.json();
+            console.log(data);
+      
+
+
+    
+      
+            const { mensaje, codigo, detalle } = data;
+            // const resultado = data.resultado;
+            let icon = "";
+            switch (codigo) {
+                case 1:
+                    icon = "success"
+                    LimpiarFormulario();
+                    formulario.reset();
+                    
+                 
+                   
+                    break;
+                case 2:
+                    icon = "warning"
+                   formulario.reset();
+           
+    
+                    break;
+                case 3:
+                    icon = "error"
+                   formulario.reset();
+    
+                    break;
+                case 4:
+                    icon = "error"
+       
+                    console.log(detalle)
+                   formulario.reset();
+                   
+    
+                    break;
+    
+                default:
+                    break;
+            }
+    
+            Toast.fire({
+                icon: icon,
+                title: mensaje,
+            })
+    
+    
+            
+    
+        } catch (error) {
+            console.log(error);
+        }
+
+
+    }else{
+
+        alert('no esta entrando')
+        
+    }
+}
+
+
+
+
 iniciarModulo();
 map.on("click", onMapClick)
 formPuntos.addEventListener('submit', agregarPunto )
 formulario.catalogo.addEventListener('change', getCatalogo );
 formulario.addEventListener('reset', LimpiarFormulario )
 formulario.addEventListener('submit', guardarInternacional )
+btnBuscar.addEventListener('click', infoInternacionales )
+btnModificar.addEventListener('click', modificarInternacional)
 

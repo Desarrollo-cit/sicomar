@@ -15,6 +15,10 @@ $router->get('/', [AppController::class,'index']);
 $router->get('/internacionales', [InternacionalesController::class,'index']);
 $router->get('/API/internacionales/catalogo', [InternacionalesController::class,'getCatalogo']);
 $router->post('/API/internacionales/guardar', [InternacionalesController::class,'guardar']);
+$router->post('/API/internacionales/modificar', [InternacionalesController::class,'modificar']);
+$router->get('/API/internacionales/buscar', [InternacionalesController::class,'buscarAPI']);
+$router->get('/API/internacionales/colocarInfo', [InternacionalesController::class,'colocarInfo']);
+
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

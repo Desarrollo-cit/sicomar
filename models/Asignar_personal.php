@@ -5,7 +5,7 @@ namespace Model;
 class Asignar_personal extends ActiveRecord{
     protected static $tabla = 'codemar_asig_personal'; //nombre de la tablaX
     protected static $columnasDB = ['ASI_OPERACION','ASI_CATALOGO', 'ASI_SIT'];
-    protected static $idTabla = 'ASI_ID';
+    protected static $idTabla = 'asi_id';
 
 
     public $asi_id;
@@ -21,4 +21,8 @@ class Asignar_personal extends ActiveRecord{
         $this->asi_sit = $args['asi_sit'] ?? '1';
 
     }
+
+  
+
+
 }

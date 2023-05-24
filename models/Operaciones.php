@@ -5,7 +5,7 @@ namespace Model;
 class Operaciones extends ActiveRecord{
     protected static $tabla = 'codemar_operaciones'; //nombre de la tablaX
     protected static $columnasDB = ['OPE_TIPO', 'OPE_FECHA_ZARPE', 'OPE_FECHA_ATRAQUE','OPE_SITUACION','OPE_MISION','OPE_EJECUCION','OPE_IDENTIFICADOR','OPE_DEPENDENCIA','OPE_REUTILIZAR','OPE_DISTANCIA','OPE_NACIONAL','OPE_SIT'];
-    protected static $idTabla = 'OPE_ID';
+    protected static $idTabla = 'ope_id';
 
     public $ope_id;
     public $ope_tipo;
@@ -42,5 +42,22 @@ class Operaciones extends ActiveRecord{
         $sql = "SELECT first 1 ope_id as id from codemar_operaciones where ope_dependencia = (select org_dependencia from mper inner join morg on per_plaza = org_plaza where per_catalogo = USER) and ope_sit != 0 order by ope_id desc";
         $resultado = $this->fetchArray($sql);
         return $resultado[0]['id']; 
+    }
+
+    public function getIdasi($id){
+        $sql = "SELECT asi_id from codemar_asig_personal where asi_operacion = $id";
+        $resultado = $this->fetchArray($sql);
+        return $resultado[0]['asi_id']; 
+    }
+
+    public function getIdderrota($id){
+        $sql = "SELECT der_id from codemar_derrota where der_ope = $id";
+        $resultado = $this->fetchArray($sql);
+        $arrayResultados = array();
+        // foreach ($resultado as $fila) {
+        //     $arrayResultados[] = $fila['der_id'];
+        // }
+        
+        return $resultado;
     }
 }
