@@ -28,23 +28,23 @@ const traer_consumo = async (evento) => {
 
         const respuesta = await fetch(url, config);
         const consumos = await respuesta.json();
-       // console.log(consumos)
+        // console.log(consumos)
 
-    while (inputConsumos > 0) {
-        quitarInputsConsumos();
+        while (inputConsumos > 0) {
+            quitarInputsConsumos();
+        }
+        if (consumos) {
+            consumos.forEach(consumo => {
+                agregarInputsConsumos(null, consumo.con_insumo, consumo.con_cantidad)
+            });
+        }
+    } catch (error) {
+        console.log(error);
     }
-    if(consumos){
-        consumos.forEach(consumo => {
-            agregarInputsConsumos(null, consumo.con_insumo, consumo.con_cantidad)
-        });
-    }
-} catch (error) {
-    console.log(error);
-}
 }
 
 
-const agregarInputsConsumos = async (e, insumo = '', cantidad = '' ) => {
+const agregarInputsConsumos = async (e, insumo = '', cantidad = '') => {
     inputConsumos++;
     const fragment = document.createDocumentFragment();
     const divRow = document.createElement('div');
@@ -60,8 +60,8 @@ const agregarInputsConsumos = async (e, insumo = '', cantidad = '' ) => {
     select.appendChild(option)
 
 
-    divRow.classList.add("row", "justify-content-center" ,"border" ,"rounded", "py-2" ,"mb-2");
-   
+    divRow.classList.add("row", "justify-content-center", "border", "rounded", "py-2", "mb-2");
+
     divCol1.classList.add("col-lg-6");
     divCol2.classList.add("col-lg-6");
     input.classList.add("form-control")
@@ -77,18 +77,18 @@ const agregarInputsConsumos = async (e, insumo = '', cantidad = '' ) => {
 
 
     const url = `/sicomar/API/reporte/consumos/BusInsumos`
-        const headers = new Headers();
-        headers.append("X-requested-With", "fetch");
+    const headers = new Headers();
+    headers.append("X-requested-With", "fetch");
 
-        const config = {
-            method: 'GET',
-        }
+    const config = {
+        method: 'GET',
+    }
 
-        const respuesta = await fetch(url, config);
-        const insumos = await respuesta.json();
-        //console.log(insumos)
+    const respuesta = await fetch(url, config);
+    const insumos = await respuesta.json();
+    //console.log(insumos)
 
-    
+
 
     insumos.forEach(insumo => {
         const option = document.createElement('option')
@@ -117,10 +117,10 @@ const agregarInputsConsumos = async (e, insumo = '', cantidad = '' ) => {
 
 const quitarInputsConsumos = e => {
     e && e.preventDefault();
-    if(inputConsumos > 0){
+    if (inputConsumos > 0) {
         inputConsumos--
         divConsumos.removeChild(divConsumos.lastElementChild);
-    }else{
+    } else {
         alertToast('warning', 'Debe ingresar al menos un insumo')
     }
 }
@@ -128,28 +128,28 @@ const quitarInputsConsumos = e => {
 const guardarConsumos = async e => {
     e.preventDefault();
     const llevar = document.getElementById('ope_id').value;
-    if(validarFormulario(formConsumos) && inputConsumos > 0){
+    if (validarFormulario(formConsumos) && inputConsumos > 0) {
 
         let insumos = [], cantidades = [];
-       
+
 
 
         let inputInsumos = document.querySelectorAll("[id^='insumo']");
         inputInsumos.forEach(input => {
-            insumos = [...insumos, input.value ]
+            insumos = [...insumos, input.value]
         })
         let inputCantidades = document.querySelectorAll("[id^='cantidad']");
         inputCantidades.forEach(input => {
-            cantidades = [...cantidades, input.value ]
+            cantidades = [...cantidades, input.value]
         })
-   
+
         const url = '/sicomar/API/reporte/consumos/GuardarCons'
         const body = new FormData();
         const headers = new Headers();
 
         body.append('insumos', insumos)
         body.append('cantidades', cantidades)
-        body.append('id_ope', llevar)        
+        body.append('id_ope', llevar)
         headers.append("X-Requested-With", "fetch");
 
         const config = {
@@ -166,43 +166,46 @@ const guardarConsumos = async e => {
         switch (codigo) {
             case 1:
                 icon = "success"
-           
-traer_consumo()
+
+                traer_consumo()
                 break;
-           
+
             case 0:
                 icon = "error"
-    
+
                 break;
             case 4:
                 icon = "error"
                 console.log(detalle)
                 // buscarTipo();
-    
+
                 break;
-    
+
             default:
                 break;
         }
-    
+
         Toast.fire({
             icon: icon,
             title: mensaje,
         })
 
-        
+
 
 
     } else {
-        alertToast("warning", "Debe ingresar todos los campos")
+        Toast.fire({
+            icon: 'warning',
+            title: 'Debe llenar todos los Campos, verifique sus datos'
+        })
     }
 
 }
 
 traer_consumo()
-buttonAgregarConsumos.addEventListener('click', agregarInputsConsumos );
-buttonQuitarConsumos.addEventListener('click', quitarInputsConsumos );
-formConsumos.addEventListener('submit', guardarConsumos )
+buttonAgregarConsumos.addEventListener('click', agregarInputsConsumos);
+buttonQuitarConsumos.addEventListener('click', quitarInputsConsumos);
+formConsumos.addEventListener('submit', guardarConsumos)
 
 
 

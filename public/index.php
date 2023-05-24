@@ -12,6 +12,8 @@ use Controllers\DerrotaController;
 use Controllers\MotoresController;
 use Controllers\ConsumosController;
 use Controllers\ComunicacionesController;
+use Controllers\NovedadesController;
+
 $router = new Router();
 $router->setBaseURL('/' . $_ENV['APP_NAME']);
 
@@ -42,8 +44,15 @@ $router->post('/API/reporte/consumos/GuardarCons', [ConsumosController::class, '
 
 //Comunicaciones
 $router->get('/reporte/comunicaciones', [ComunicacionesController::class,'index']);
-$router->get('/API/reporte/consumos/BusComuni', [ConsumosController::class, 'BuscarComun'] );
+$router->get('/API/reporte/comunicaciones/BusComuni', [ComunicacionesController::class, 'BuscarComun'] );
+$router->get('/API/reporte/comunicaciones/BusMedios', [ComunicacionesController::class, 'BuscarMedios'] );
+$router->get('/API/reporte/comunicaciones/BusReceptores', [ComunicacionesController::class, 'BuscarReceptores'] );
+$router->post('/API/reporte/comunicaciones/GuardarCom', [ComunicacionesController::class, 'GuardarComunicacionesAPI'] );
 
+//Novedades
+$router->get('/reporte/novedades', [NovedadesController::class,'index']);
+$router->get('/API/reporte/novedades/BusNovedades', [NovedadesController::class, 'BuscarNovedades'] );
+$router->post('/API/reporte/novedades/GuardarNov', [NovedadesController::class, 'GuardarNovedadesAPI'] );
 
 
 $router->comprobarRutas();

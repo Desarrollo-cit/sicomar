@@ -46,33 +46,29 @@
     <div class="container">
         <div class="card">
             <div class="card-header text-white bg-dark">
-                <h5 class="card-title">Comunicaciones</h5>
+                <h5 class="card-title">Novedades</h5>
             </div>
             <div class="card-body bg-light rounded">
-                <form id="formComunicacion">
-
-
+                <form id="formNovedades">
                     <div class="row justify-content-start mb-3">
                         <div class="col-lg-10">
-                            <p class="lead">Agregue campos según las Comunicaciones emitidas durante la Operacion</p>
+                            <p class="lead">Agregue campos según las Novedades ocurridas durante la Operacion</p>
                         </div>
                         <div class="col-lg-1">
-                            <button type="button" id="buttonAgregarComunicacion" class="btn btn-primary mb-2 mb-lg-0 w-100"><i class="bi bi-plus-circle"></i></button>
+                        <button type="button" id="buttonAgregarNovedades" class="btn btn-primary mb-2 mb-lg-0 w-100"><i class="bi bi-plus-circle"></i></button>
                         </div>
                         <div class="col-lg-1">
-                            <button type="button" id="buttonQuitarComunicacion" class="btn btn-danger w-100"><i class="bi bi-dash-circle"></i></button>
+                        <button type="button" id="buttonQuitarNovedades" class="btn btn-danger w-100"><i class="bi bi-dash-circle"></i></button>
                         </div>
                     </div>
-                    <div id="divComunicacion">
-                    </div>
+                    <div id="divNovedades">
+                        </div>
 
                     <div class="row justify-content-center mt-3">
                         <div class="col-lg-2">
-                            <button type="submit" form="formComunicacion" class="btn btn-success"><i class="bi bi-save me-2"></i>Guardar</button>
+                            <button type="submit" form="formNovedades" class="btn btn-success"><i class="bi bi-save me-2"></i>Guardar</button>
                         </div>
-                        <div class="col-lg-2">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
+                      
                     </div>
                 </form>
             </div>
@@ -85,4 +81,4 @@
 
 
 
-    <script src="<?= asset('/build/js/Reporte/comunicaciones.js') ?>"></script>
+    <script src="<?= asset('/build/js/Reporte/novedades.js') ?>"></script>

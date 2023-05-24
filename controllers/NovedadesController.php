@@ -3,14 +3,14 @@
 namespace Controllers;
 
 use Model\Derrota;
-use Model\Consumos;
+use Model\Novedades;
 
 
 use MVC\Router;
 use Exception;
 use Model\Comunicaciones;
 
-class ComunicacionesController
+class NovedadesController
 {
 
     public static function index(Router $router)
@@ -23,7 +23,7 @@ class ComunicacionesController
         $decoded_identificador = base64_decode($ope_identificador);
         $decoded_fecha_zarpe = base64_decode($ope_fecha_zarpe);
 
-        $router->render('Reporte/comunicaciones', [
+        $router->render('Reporte/novedades', [
             'decoded_id'            =>   $decoded_id,
             'decoded_identificador' =>   $decoded_identificador,
             'decoded_fecha_zarpe'   =>   $decoded_fecha_zarpe
@@ -31,7 +31,7 @@ class ComunicacionesController
     }
 
 
-    public static function BuscarComun()
+    public static function BuscarNovedades()
     {
         getHeadersApi();
             $valor = $_GET['id'];
@@ -39,7 +39,7 @@ class ComunicacionesController
             // exit;
         try {
 
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_comunicaciones where com_operacion = $valor and com_situacion = 1 ");
+        $datos = Derrota::fetchArray("SELECT * FROM codemar_novedades where nov_operacion = $valor and nov_situacion = 1 order by nov_fechahora asc");
 
             if($datos ){
 
@@ -97,7 +97,7 @@ class ComunicacionesController
 
 
 
-    public static function GuardarComunicacionesAPI()
+    public static function GuardarNovedadesAPI()
     {
 
         getHeadersApi();
@@ -106,50 +106,41 @@ class ComunicacionesController
         // exit;
 
         try {
-            $medios = $_POST['medios'];
-            $calidades = $_POST['calidades'];
-            $receptores = $_POST['receptores'];
-            $observaciones = $_POST['observaciones'];
+            $fechas = $_POST['fechas'];
+            $novedades = $_POST['novedades'];
             $id_ope = $_POST['id_ope'];
     
             // descomponer arrays
-            $medios_array = explode(",", $medios);
-            $calidades_array = explode(",", $calidades);
-            $receptores_array = explode(",", $receptores);
-            $observaciones_array = explode(",", $observaciones);
-    
-            $num_elementos = count($medios_array);
+            $novedades_array = explode(",", $novedades);
+            $fechas_array = explode(",", str_replace('T', ' ', $fechas));
 
-            $datos = Comunicaciones::fetchArray("SELECT * from codemar_comunicaciones where com_situacion = 1 and com_operacion = $id_ope");
+       
+            $num_elementos = count($novedades_array);
+
+            $datos = Novedades::fetchArray("SELECT * FROM codemar_novedades where nov_operacion = 38 and nov_situacion = 1 and nov_operacion =  $id_ope order by nov_fechahora asc 
+           ");
             if ($datos) {
                 foreach ($datos as $key => $value) {
-                    $cambio = new Comunicaciones([
-                        'com_id' => $value['com_id'],
-                        'com_operacion' => $value['com_operacion'],
-                        'com_medio' => $value['com_medio'],
-                        'com_receptor' => $value['com_receptor'],
-                        'com_calidad' => $value['com_calidad'],
-                        'com_obserevacion' => $value['com_observacion'],
-                        'com_situacion' => "0"
+                    $cambio = new Novedades([
+                        'nov_id' => $value['nov_id'],
+                        'nov_operacion' => $value['nov_operacion'],
+                        'nov_fechahora' => $value['nov_fechahora'],
+                        'nov_novedad' => $value['nov_novedad'],
+                        'nov_situacion' => "0"
                     ]);
                     $cambiar = $cambio->guardar();
                 }
             }
 
 for ($i = 0; $i < $num_elementos; $i++) {
-            $valor_medio = $medios_array[$i];
-            $valor_calidad = $calidades_array[$i];
-            $valor_receptor = $receptores_array[$i];
-            $valor_observacion = $observaciones_array[$i];
+            $valor_novedad = $novedades_array[$i];
+            $valor_fechas = $fechas_array[$i];
+      
 
-            $consumos = new Comunicaciones([
-                'com_operacion' => $id_ope,
-                'com_insumo' => $valor_medio,
-                'com_cantidad' => $valor_calidad,
-                'com_medio' => $valor_medio,
-                'com_calidad' => $valor_calidad,
-                'com_receptor' => $valor_receptor,
-                'com_observacion' => $valor_observacion,
+            $consumos = new Novedades([
+                'nov_operacion' => $id_ope,
+                'nov_novedad' => $valor_novedad,
+                'nov_fechahora' => $valor_fechas,
                 'com_situacion' => "1"
             ]);
 
@@ -158,7 +149,7 @@ for ($i = 0; $i < $num_elementos; $i++) {
 
         if ($guardado) {
             echo json_encode([
-                "mensaje" => "Consumos guardados",
+                "mensaje" => "Novedades guardadadas",
                 "codigo" => 1,
             ]);
         } else {

@@ -92,7 +92,7 @@ const agregarPunto = (e) => {
         agrearPuntosTabla(puntos)
         modalPuntos.hide();
     } else {
-        console.log('vaginas')
+        //console.log('vaginas')
         Toast.fire({
             icon: 'warning',
             title: 'Debe ingresar una fecha'

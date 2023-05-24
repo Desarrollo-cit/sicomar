@@ -148,7 +148,10 @@ const guardarTrabajos= async e => {
     
     
         } else {
-            alertToast("warning", "Debe ingresar todos los campos")
+            Toast.fire({
+                icon: 'warning',
+                title: 'Debe llenar todos los Campos, verifique sus datos'
+            })
         }
 
     } catch (error) {

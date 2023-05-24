@@ -77,10 +77,10 @@ const BuscarDatos = async (evento) => {
                     }
                 },
                 {
-                    data: 'id',
+                    data: 'novedades',
                     width: '9.37%',
                     'render': (data, type, row, meta) => {
-                        return `<button class='btn btn-outline-info' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalDetalle5'><i class='bi bi-file-earmark-ruled'></i></button>`
+                        return `<button class='btn btn-outline-info' onclick='ApiNovedades("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )'><i class='bi bi-file-earmark-ruled'></i></button>`
                     }
                 },
                 {
@@ -121,6 +121,11 @@ window.ApiDerrota = (ope_id, ope_identificador, ope_fecha_zarpe) => {
     window.location.href = url;
 }
 
+
+window.ApiNovedades = (ope_id, ope_identificador, ope_fecha_zarpe) => {
+    var url = `./reporte/novedades?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;
+    window.location.href = url;
+}
 window.ApiMotores = (ope_id, ope_identificador, ope_fecha_zarpe) => {
     var url = `./reporte/motores?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;
     window.location.href = url;

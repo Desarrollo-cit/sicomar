@@ -14,9 +14,9 @@ let inputComunicacion = 0;
 const traerComunicaciones = async (evento) => {
     evento && evento.preventDefault();
     const llevar = document.getElementById('ope_id').value;
-  console.log(llevar)
+    //console.log(llevar)
     try {
-        const url = `/sicomar/API/reporte/consumos/BusComuni?id=${llevar}`
+        const url = `/sicomar/API/reporte/comunicaciones/BusComuni?id=${llevar}`
         const headers = new Headers();
         headers.append("X-requested-With", "fetch");
 
@@ -26,25 +26,31 @@ const traerComunicaciones = async (evento) => {
 
         const respuesta = await fetch(url, config);
         const comunicaciones = await respuesta.json();
-        console.log(consumos)
-return
-
-    if(comunicaciones){
-        comunicaciones.forEach(comunicacion => {
-            agregarInputsComunicaciones(null,comunicacion.COM_MEDIO, comunicacion.COM_RECEPTOR, comunicacion.COM_CALIDAD, comunicacion.COM_OBSERVACION )
-        });
+       // console.log(comunicaciones)
+      
+       while(inputComunicacion > 0){
+        quitarInputsComunicacion();
+    }
     
-}
-} catch (error) {
-    console.log(error);
-}
+  
+        if (comunicaciones) {
+        
+            comunicaciones.forEach(comunicacion => {
+                agregarInputsComunicaciones(null, comunicacion.com_medio, comunicacion.com_receptor, comunicacion.com_calidad, comunicacion.com_observacion)
+            });
+
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 
 
-const agregarInputsComunicaciones = async (e, mediobd = '', receptorbd = '' ,calidadbd = '', observacionbd = '') => {
+const agregarInputsComunicaciones = async (e, mediobd = '', receptorbd = '', calidadbd = '', observacionbd = '') => {
     inputComunicacion++;
-    console.log(mediobd, receptorbd, calidadbd, observacionbd);
+   // console.log(mediobd, receptorbd, calidadbd, observacionbd);
+
     const fragment = document.createDocumentFragment();
     const divRow = document.createElement('div');
     const divCol1 = document.createElement('div');
@@ -73,8 +79,8 @@ const agregarInputsComunicaciones = async (e, mediobd = '', receptorbd = '' ,cal
     select3.appendChild(option3)
 
 
-    divRow.classList.add("row", "justify-content-center" ,"border" ,"rounded", "py-2" ,"mb-2");
-   
+    divRow.classList.add("row", "justify-content-center", "border", "rounded", "py-2", "mb-2");
+
     divCol1.classList.add("col-lg-3");
     divCol2.classList.add("col-lg-3");
     divCol3.classList.add("col-lg-3");
@@ -98,7 +104,7 @@ const agregarInputsComunicaciones = async (e, mediobd = '', receptorbd = '' ,cal
     select3.id = `calidad${inputComunicacion}`
     label3.innerText = `Calidad ${inputComunicacion}`
     label3.htmlFor = `calidad${inputComunicacion}`
-   
+
     textarea.classList.add("form-control")
     textarea.name = `observacion${inputComunicacion}`
     textarea.id = `observacion${inputComunicacion}`
@@ -106,43 +112,56 @@ const agregarInputsComunicaciones = async (e, mediobd = '', receptorbd = '' ,cal
     label4.htmlFor = `observacion${inputComunicacion}`
 
 
-    
-    let url = `medios.php`
-    let config = { method : "GET" }
-    let response = await fetch(url, config);
-    let medios = await response.json()
-    
+
+//medios
+const url = `/sicomar/API/reporte/comunicaciones/BusMedios`
+const headers = new Headers();
+headers.append("X-requested-With", "fetch");
+
+const config = {
+    method: 'GET',
+}
+
+const respuesta = await fetch(url, config);
+const medios = await respuesta.json();
+//console.log(medios)
 
     medios.forEach(medio => {
         const option = document.createElement('option')
-        option.value = medio.MEDIO_ID
-        option.innerText = `${medio.MEDIO_DESC}`
+        option.value = medio.medio_id
+        option.innerText = `${medio.medio_desc}`
         select1.appendChild(option)
     })
-    console.log(mediobd);
+   // console.log(mediobd);
     select1.value = mediobd;
+//receptores
+    const url1 = `/sicomar/API/reporte/comunicaciones/BusReceptores`
+    const headers1 = new Headers();
+    headers1.append("X-requested-With", "fetch");
     
+    const config1 = {
+        method: 'GET',
+    }
     
-    url = `receptores.php`
-    response = await fetch(url, config);
-    let receptores = await response.json()
-    
+    const respuesta1 = await fetch(url1, config1);
+    const receptores = await respuesta1.json();
+    //console.log(receptores)
 
     receptores.forEach(receptor => {
         const option = document.createElement('option')
-        option.value = receptor.REC_ID
-        option.innerText = `${receptor.REC_DESC}`
+        option.value = receptor.rec_id
+        option.innerText = `${receptor.rec_desc}`
         select2.appendChild(option)
     })
 
     select2.value = receptorbd;
-    
+
     for (let index = 1; index <= 5; index++) {
         const option = document.createElement('option')
         option.value = index
         option.innerText = `QRK ${index}`
         select3.appendChild(option)
-        
+
     }
     select3.value = calidadbd;
 
@@ -170,50 +189,109 @@ const agregarInputsComunicaciones = async (e, mediobd = '', receptorbd = '' ,cal
 
 
 }
+
+
+
 const quitarInputsComunicacion = e => {
     e && e.preventDefault();
-    if(inputComunicacion > 0){
+    if (inputComunicacion > 0) {
         inputComunicacion--
         divComunicacion.removeChild(divComunicacion.lastElementChild);
-    }else{
-        alertToast('warning', 'Debe ingresar al menos un insumo')
-    }
+    } 
 }
 
-const guardarComunicacion = (e) => {
+const guardarComunicacion  = async e => {
     e.preventDefault();
 
-    if(validarFormulario(formComunicacion)){
-        let idOperacion = formComunicacion.codigoOperacion3.value;
+    const llevar = document.getElementById('ope_id').value;
+    if (validarFormulario(formComunicacion)) {
+
         let medios = [];
         let inputMedios = formComunicacion.querySelectorAll("[id^='medio']");
         inputMedios.forEach(input => {
-            medios = [...medios, input.value ]
+            medios = [...medios, input.value]
         })
         let receptores = [];
         let inputReceptores = formComunicacion.querySelectorAll("[id^='receptor']");
         inputReceptores.forEach(input => {
-            receptores = [...receptores, input.value ]
+            receptores = [...receptores, input.value]
         })
         let calidades = [];
         let inputCalidades = formComunicacion.querySelectorAll("[id^='calidad']");
         inputCalidades.forEach(input => {
-            calidades = [...calidades, input.value ]
+            calidades = [...calidades, input.value]
         })
         let observaciones = [];
         let inputObservaciones = formComunicacion.querySelectorAll("[id^='observacion']");
         inputObservaciones.forEach(input => {
-            observaciones = [...observaciones, input.value ]
+            observaciones = [...observaciones, input.value]
+        })
+ 
+//inicia guardado
+        const url = '/sicomar/API/reporte/comunicaciones/GuardarCom'
+        const body = new FormData();
+        const headers = new Headers();
+
+        body.append('medios', medios)
+        body.append('receptores', receptores)
+        body.append('calidades', calidades)
+        body.append('observaciones', observaciones)
+        body.append('id_ope', llevar)        
+        headers.append("X-Requested-With", "fetch");
+
+        const config = {
+            method: 'POST',
+            headers,
+            body
+        }
+
+        const respuesta = await fetch(url, config);
+        const data = await respuesta.json();
+        console.log(data);
+
+        const { mensaje, codigo, detalle } = data;
+        let icon = "";
+        switch (codigo) {
+            case 1:
+                icon = "success"
+           
+                traerComunicaciones()
+                break;
+           
+            case 0:
+                icon = "error"
+    
+                break;
+            case 4:
+                icon = "error"
+                console.log(detalle)
+                // buscarTipo();
+    
+                break;
+    
+            default:
+                break;
+        }
+    
+        Toast.fire({
+            icon: icon,
+            title: mensaje,
         })
 
-        xajax_guardarComunicaciones(receptores,medios, calidades, observaciones, idOperacion);
-    }else{
-        alertToast("warning", "Debe ingresar todos los campos")
+        
+
+
+    } else {
+        Toast.fire({
+            icon: 'warning',
+            title: 'Debe llenar todos los Campos, verifique sus datos'
+        })
     }
+
 
 }
 
 traerComunicaciones()
-buttonAgregarComunicacion.addEventListener('click', e =>  agregarInputsComunicaciones(e) );
+buttonAgregarComunicacion.addEventListener('click', e => agregarInputsComunicaciones(e));
 buttonQuitarComunicacion.addEventListener('click', quitarInputsComunicacion)
 formComunicacion.addEventListener('submit', guardarComunicacion)
