@@ -5,7 +5,7 @@ namespace Model;
 class Internacionales extends ActiveRecord{
     protected static $idTabla = 'int_ope';
     protected static $tabla = 'codemar_internacionales'; //nombre de la tablaX
-    protected static $columnasDB = ['INT_PAIS', 'INT_DOCUMENTO', 'INT_SITUACION'];
+    protected static $columnasDB = ['INT_OPE','INT_PAIS', 'INT_DOCUMENTO', 'INT_SITUACION'];
 
 
 

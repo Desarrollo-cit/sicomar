@@ -7,7 +7,7 @@
                         <h1>Operaciones Internacionales</h1>
                     </div>
                 </div>
-                <input type="text" name="codigo" id="codigo">
+                <input type="hidden" name="codigo" id="codigo">
                 <div class="row  mb-3">
                     <div class="col-lg-6">
                         <label for="catalogo">Catálogo</label>
@@ -69,7 +69,7 @@
                         <button type="submit" class="btn w-100 btn-success" id="btnGuardar"><i class="bi bi-save me-2"></i>Guardar</button>
                     </div>
                     <div class="col-lg-3 mb-lg-0 mb-2">
-                        <button type="button" class="btn w-100 btn-info"  id="btnBuscar"><i class="bi bi-search me-2"></i>Buscar</button>
+                        <button type="button" class="btn w-100 btn-info" data-bs-toggle='modal' data-bs-target='#modalInternacionales' id="btnBuscar"><i class="bi bi-search me-2"></i>Buscar</button>
                     </div>
                     <div class="col-lg-3 mb-lg-0 mb-2">
                         <button type="button" class="btn w-100 btn-warning" id="btnModificar"><i class="bi bi-pencil-square me-2"></i>Modificar</button>

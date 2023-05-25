@@ -4,9 +4,11 @@ import 'leaflet-easyprint'
 import { Toast, validarFormulario  } from '../funciones';
 import Datatable from 'datatables.net-bs5';
 import { lenguaje } from "../lenguaje";
+import Swal from "sweetalert2";
 
 const formulario = document.querySelector('#formInternacional')
 const modalPuntos = new Modal(document.getElementById('modalPuntos'), {})
+const elementModal=document.getElementById('modalInternacionales')
 const modalInternacionales = new Modal(document.getElementById('modalInternacionales'));
 const formPuntos = document.querySelector('#formPuntos')
 const spanText = document.querySelector('#textNombre');
@@ -15,7 +17,56 @@ const btnLimpiar = document.querySelector('#btnLimpiar');
 const btnModificar = document.querySelector('#btnModificar');
 const btnBuscar = document.querySelector('#btnBuscar');
 const btnGuardar = document.querySelector('#btnGuardar');
-let tablaOperaciones = new Datatable('#tablaOperaciones');
+
+window.limpiar = () => {
+    tablaOperaciones.clear();
+}
+
+let  tablaOperaciones = new Datatable('#tablaOperaciones', {
+    language: lenguaje,
+    data: null,
+    columns: [
+        
+        { data: 'pai_desc_lg' },
+
+        { data: 'ope_fecha_zarpe' },
+
+
+        { data: 'ope_fecha_atraque' },
+
+
+
+
+        {
+            data : "ope_sit",
+            render : data => {
+                switch (data) {
+                    case '1':
+                        return "Ingresado"
+                        break;
+                
+                    default:
+                        return "hola"
+                        break;
+                }
+            }
+        },
+
+
+        {
+            data : "ope_id",
+            render : (data, type, row, meta) => {
+                return `
+                    <div class="btn-group" role="group">
+                        <a href='${row['int_documento']}' target='_blank' class='btn btn-info'><i class='bi bi-file-post'></i></a>
+                        <button onclick="colocarInformacion(${data})" type="button" class="btn btn-warning"><i class='bi bi-pencil-square'></i></button>
+                        <button onclick="borrarRegistro(${data})" type="button" class="btn btn-danger"><i class='bi bi-trash'></i></button>
+                    </div>
+                `
+            }
+        },
+    ]
+})
 
 let puntos = [];
 let distancia = 0;
@@ -328,6 +379,8 @@ const guardarInternacional = async (evento) => {
 
 
 }
+
+
 const infoInternacionales= async () => {
 
 
@@ -346,71 +399,33 @@ const infoInternacionales= async () => {
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
 
-        console.log(data)
+        console.log(data);
+        tablaOperaciones.clear().draw();
+        if(data){
+            // console.log(data)
+            tablaOperaciones.rows.add(data).draw();
+            
 
+        }
 
-
-        tablaOperaciones.destroy();
-        let contador = 1;
-        tablaOperaciones = new Datatable('#tablaOperaciones', {
-            language: lenguaje,
-            data: data,
-            columns: [
-                
-                { data: 'pai_desc_lg' },
-
-                { data: 'ope_fecha_zarpe' },
-
-
-                { data: 'ope_fecha_atraque' },
-
-
-
-
-                {
-                    data : "ope_sit",
-                    render : data => {
-                        switch (data) {
-                            case '1':
-                                return "Ingresado"
-                                break;
-                        
-                            default:
-                                return "hola"
-                                break;
-                        }
-                    }
-                },
-
-
-                {
-                    data : "ope_id",
-                    render : (data, type, row, meta) => {
-                        return `
-                            <div class="btn-group" role="group">
-                                <a href='${row['int_documento']}' target='_blank' class='btn btn-info'><i class='bi bi-file-post'></i></a>
-                                <button onclick="colocarInformacion(${data})" type="button" class="btn btn-warning"><i class='bi bi-pencil-square'></i></button>
-                                <button onclick="borrarRegistro(${data})" type="button" class="btn btn-danger"><i class='bi bi-trash'></i></button>
-                            </div>
-                        `
-                    }
-                },
-            ]
-        })
+     
+      
+       
 
     } catch (error) {
         console.log(error);
     }
+    // modalInternacionales.show();
 
 
-    modalInternacionales.show();
+   
 
-
-
-  
 
 
 }
+
+
+
 
 
 
@@ -488,7 +503,7 @@ window.colocarInformacion= async (id) => {
     }
 
 
-    modalInternacionales.show();
+    // modalInternacionales.show();
 
 
 
@@ -588,6 +603,56 @@ const modificarInternacional = async () => {
         
     }
 }
+window.borrarRegistro = (id) => {
+    Swal.fire({
+        title : 'Confirmación',
+        icon : 'warning',
+        text : '¿Esta seguro que desea eliminar este registro?',
+        showCancelButton : true,
+        confirmButtonColor : '#3085d6',
+        cancelButtonColor : '#d33',
+        confirmButtonText: 'Si, eliminar'
+    }).then( async (result) => {
+        if(result.isConfirmed){
+            const url = '/sicomar/API/internacionales/eliminar'
+            const body = new FormData();
+            body.append('codigo', id);
+            const headers = new Headers();
+            headers.append("X-Requested-With", "fetch");
+    
+            const config = {
+                method : 'POST',
+                headers,
+                body
+            }
+    
+            const respuesta = await fetch(url, config);
+            const data = await respuesta.json();
+            const {resultado} = data;
+
+            console.log(data);
+          
+            // const resultado = data.resultado;
+    
+            if(resultado == 1){
+                Toast.fire({
+                    icon : 'success',
+                    title : 'Registro eliminado'
+                })
+
+                modalInternacionales.hide()
+                infoInternacionales();
+                
+            }else{
+                Toast.fire({
+                    icon : 'error',
+                    title : 'Ocurrió un error'
+                })
+            }
+        }
+    })
+}
+
 
 
 
@@ -598,6 +663,7 @@ formPuntos.addEventListener('submit', agregarPunto )
 formulario.catalogo.addEventListener('change', getCatalogo );
 formulario.addEventListener('reset', LimpiarFormulario )
 formulario.addEventListener('submit', guardarInternacional )
-btnBuscar.addEventListener('click', infoInternacionales )
+// btnBuscar.addEventListener('click', infoInternacionales )
 btnModificar.addEventListener('click', modificarInternacional)
+elementModal.addEventListener('show.bs.modal', infoInternacionales)
 
