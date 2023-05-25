@@ -5,12 +5,12 @@ namespace Controllers;
 use Model\Derrota;
 use Model\Novedades;
 
-
+use Model\Lecciones;
 use MVC\Router;
 use Exception;
 use Model\Comunicaciones;
 
-class NovedadesController
+class InteligenciaController
 {
 
     public static function index(Router $router)
@@ -23,7 +23,7 @@ class NovedadesController
         $decoded_identificador = base64_decode($ope_identificador);
         $decoded_fecha_zarpe = base64_decode($ope_fecha_zarpe);
 
-        $router->render('Reporte/novedades', [
+        $router->render('Reporte/inteligencia', [
             'decoded_id'            =>   $decoded_id,
             'decoded_identificador' =>   $decoded_identificador,
             'decoded_fecha_zarpe'   =>   $decoded_fecha_zarpe
@@ -31,7 +31,7 @@ class NovedadesController
     }
 
 
-    public static function BuscarNovedades()
+    public static function Buscarinteligencia()
     {
         getHeadersApi();
             $valor = $_GET['id'];
@@ -39,7 +39,7 @@ class NovedadesController
             // exit;
         try {
 
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_novedades where nov_operacion = $valor and nov_situacion = 1 order by nov_fechahora asc");
+        $datos = Derrota::fetchArray("SELECT * FROM  codemar_informacion where info_operacion =  $valor and info_situacion = 1 ");
 
             if($datos ){
 
@@ -97,7 +97,7 @@ class NovedadesController
 
 
 
-    public static function GuardarNovedadesAPI()
+    public static function GuardarLeccionesAPI()
     {
 
         getHeadersApi();
@@ -106,50 +106,48 @@ class NovedadesController
         // exit;
 
         try {
-            $fechas = $_POST['fechas'];
-            $novedades = $_POST['novedades'];
+
+            $recomendaciones = $_POST['recomendaciones'];
             $id_ope = $_POST['id_ope'];
     
             // descomponer arrays
-            $novedades_array = explode(",", $novedades);
-            $fechas_array = explode(",", str_replace('T', ' ', $fechas));
+            $recomendaciones_array = explode(",", $recomendaciones);
+
 
        
-            $num_elementos = count($novedades_array);
+            $num_elementos = count($recomendaciones_array);
 
-            $datos = Novedades::fetchArray("SELECT * FROM codemar_novedades where nov_operacion = $id_ope and nov_situacion = 1  order by nov_fechahora asc 
+            $datos = Lecciones::fetchArray("SELECT * FROM codemar_recomendaciones where rec_operacion = $id_ope and rec_situacion = 1  
            ");
             if ($datos) {
                 foreach ($datos as $key => $value) {
-                    $cambio = new Novedades([
-                        'nov_id' => $value['nov_id'],
-                        'nov_operacion' => $value['nov_operacion'],
-                        'nov_fechahora' => $value['nov_fechahora'],
-                        'nov_novedad' => $value['nov_novedad'],
-                        'nov_situacion' => "0"
+                    $cambio = new Lecciones([
+                        'rec_id' => $value['rec_id'],
+                        'rec_operacion' => $value['rec_operacion'],
+                        'rec_recomendacion' => $value['rec_recomendacion'],
+                        'rec_situacion'  => "0"
                     ]);
                     $cambiar = $cambio->guardar();
                 }
             }
 
 for ($i = 0; $i < $num_elementos; $i++) {
-            $valor_novedad = $novedades_array[$i];
-            $valor_fechas = $fechas_array[$i];
+            $valor_recomendaciones = $recomendaciones_array[$i];
+      
       
 
-            $consumos = new Novedades([
-                'nov_operacion' => $id_ope,
-                'nov_novedad' => $valor_novedad,
-                'nov_fechahora' => $valor_fechas,
-                'com_situacion' => "1"
+            $recomendaciones = new Lecciones([
+                'rec_operacion' => $id_ope,
+                'rec_recomendacion' => $valor_recomendaciones,
+                'rec_situacion' => "1"
             ]);
 
-            $guardado = $consumos->guardar();
+            $guardado = $recomendaciones->guardar();
         }
 
         if ($guardado) {
             echo json_encode([
-                "mensaje" => "Novedades guardadadas",
+                "mensaje" => "Lecciones guardadadas",
                 "codigo" => 1,
             ]);
         } else {

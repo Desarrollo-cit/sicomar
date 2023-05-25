@@ -84,17 +84,17 @@ const BuscarDatos = async (evento) => {
                     }
                 },
                 {
-                    data: 'id',
+                    data: 'lecciones',
                     width: '9.37%',
                     'render': (data, type, row, meta) => {
-                        return `<button class='btn btn-outline-info' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalDetalle6'><i class='bi bi-file-earmark-text'></i></button>`
+                        return `<button class='btn btn-outline-info' onclick='ApiLecciones("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )'><i class='bi bi-file-earmark-text'></i></button>`
                     }
                 },
                 {
                     data: 'id',
                     width: '9.37%',
                     'render': (data, type, row, meta) => {
-                        return `<button class='btn btn-outline-info' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalDetalle7'><i class='bi bi-binoculars'></i></button>`
+                        return `<button class='btn btn-outline-info'onclick='ApiInteligencia("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )'><i class='bi bi-binoculars'></i></button>`
                     }
                 },
                 {
@@ -116,11 +116,20 @@ const BuscarDatos = async (evento) => {
 
 
 
+window.ApiInteligencia = (ope_id, ope_identificador, ope_fecha_zarpe) => {
+    var url = `./reporte/inteligencia?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;
+    window.location.href = url;
+}
+
 window.ApiDerrota = (ope_id, ope_identificador, ope_fecha_zarpe) => {
     var url = `./reporte/derrota?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;
     window.location.href = url;
 }
 
+window.ApiLecciones = (ope_id, ope_identificador, ope_fecha_zarpe) => {
+    var url = `./reporte/lecciones?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;
+    window.location.href = url;
+}
 
 window.ApiNovedades = (ope_id, ope_identificador, ope_fecha_zarpe) => {
     var url = `./reporte/novedades?id=${btoa(ope_id)}&identificador=${btoa(ope_identificador)}&fecha_zarpe=${btoa(ope_fecha_zarpe)}`;

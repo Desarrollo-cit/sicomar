@@ -12,7 +12,9 @@ use Controllers\DerrotaController;
 use Controllers\MotoresController;
 use Controllers\ConsumosController;
 use Controllers\ComunicacionesController;
+use Controllers\InteligenciaController;
 use Controllers\NovedadesController;
+use Controllers\LeccionesController;
 
 $router = new Router();
 $router->setBaseURL('/' . $_ENV['APP_NAME']);
@@ -53,6 +55,16 @@ $router->post('/API/reporte/comunicaciones/GuardarCom', [ComunicacionesControlle
 $router->get('/reporte/novedades', [NovedadesController::class,'index']);
 $router->get('/API/reporte/novedades/BusNovedades', [NovedadesController::class, 'BuscarNovedades'] );
 $router->post('/API/reporte/novedades/GuardarNov', [NovedadesController::class, 'GuardarNovedadesAPI'] );
+
+//lecciones
+$router->get('/reporte/lecciones', [LeccionesController::class,'index']);
+$router->get('/API/reporte/lecciones/BusLecciones', [LeccionesController::class, 'BuscarLecciones'] );
+$router->post('/API/reporte/lecciones/GuardarLec', [LeccionesController::class, 'GuardarLeccionesAPI'] );
+
+
+//Inteligencia
+$router->get('/reporte/inteligencia', [InteligenciaController::class,'index']);
+$router->get('/API/reporte/inteligencia/BusInteligencia', [InteligenciaController::class, 'Buscarinteligencia'] );
 
 
 $router->comprobarRutas();
