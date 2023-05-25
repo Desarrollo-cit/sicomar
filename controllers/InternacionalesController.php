@@ -199,7 +199,7 @@ class InternacionalesController {
    
 
         try {
-           $operaciones = Operaciones::fetchArray("SELECT * from codemar_operaciones inner join codemar_internacionales on ope_id = int_ope inner join codemar_asig_personal on ope_id = asi_operacion inner join paises on pai_codigo = int_pais where ope_nacional = 'I' and asi_catalogo = '644112' and ope_sit = 1");
+           $operaciones = Operaciones::fetchArray("SELECT * from codemar_operaciones inner join codemar_internacionales on ope_id = int_ope inner join codemar_asig_personal on ope_id = asi_operacion inner join paises on pai_codigo = int_pais where ope_nacional = 'I' and asi_catalogo = 'user' and ope_sit = 1");
 
            echo json_encode($operaciones);
 
