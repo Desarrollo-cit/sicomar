@@ -40,6 +40,9 @@ class InternacionalesController {
     }
 
     public static function guardar(){
+
+      
+        
        
         $_POST['atraque'] = str_replace('T', ' ', $_POST['atraque']);
         $_POST['zarpe'] = str_replace('T', ' ', $_POST['zarpe']);
@@ -68,8 +71,7 @@ class InternacionalesController {
 
         if($resultado['resultado'] == 1){
 
-            $id= $guardar->getIdUltimaOperacion();
-
+            $id= $resultado['id'];
             $asignar_personal = new Asignar_personal([
 
                 'asi_operacion' => $id,
@@ -112,11 +114,18 @@ class InternacionalesController {
 
                     if ($resultado3['resultado'] == 1){
 
+                
+
+                        
+
                         $uniqid = uniqid();
                         $ruta = 'storage/'. $uniqid. ".pdf";
+
                         $temporal = $_FILES['documento']['tmp_name'];
 
                         $subido = move_uploaded_file($temporal, $ruta);
+                                  
+                     
 
                         if($subido){
 
@@ -130,8 +139,13 @@ class InternacionalesController {
     
     
                             ]);
-    
-                            $resultado4 = $internacional->guardar();
+
+                            // echo json_encode($internacional);
+                            // exit;
+                  
+                            $resultado4 = $internacional->crear();
+                            
+                         
                         }else{
                             echo json_encode([
                                 "mensaje" => "Ocurrió  un error subiendo el archivo.",
@@ -248,6 +262,9 @@ class InternacionalesController {
 
     
     public static function modificar(){
+
+
+        
 
     
 
@@ -543,6 +560,105 @@ class InternacionalesController {
   
  
     }
+
+    public static function eliminar(){
+
+
+ 
+             try {
+              
+                    $operacion= Operaciones::find($_POST['codigo']);
+                    $operacion->ope_sit=0;
+                    $resultado= $operacion->actualizar();
+
+ 
+                 if($resultado['resultado'] == 1){
+
+                    $modificar= new Operaciones();
+         
+                   
+                     $idasi = $modificar->getIdasi($_POST['codigo']);
+
+                     $asi_personal= Asignar_personal::find($idasi);
+                     $asi_personal->asi_sit = 0;
+                     $resultado2= $asi_personal->actualizar();
+
+
+                     if($resultado2['resultado'] == 1){
+                         
+ 
+ 
+ 
+                         $idDerrota = $modificar->getIdderrota($_POST['codigo']);
+                         
+     
+                         foreach ($idDerrota as $key => $value) {
+                             
+                        
+ 
+                             $idDerrotas= Derrota::find($value['der_id']);
+                             $idDerrotas->der_situacion = '0';
+ 
+                            $resultado4= $idDerrotas->actualizar();
+ 
+ 
+ 
+                         }
+ 
+
+ 
+                             if ($resultado4['resultado'] == 1){
+     
+         
+ 
+                                     $nuevoDocumento = Internacionales::find( $_POST['codigo']);
+                                     $nuevoDocumento->int_situacion= 0;
+                                     $resultado5= $nuevoDocumento->actualizar();
+                                 
+         
+                             
+             
+                                     
+                                 
+         
+         
+         
+           
+                         }
+                   
+         
+         
+                     }
+         
+         
+                 }
+         
+         
+                 
+                 if($resultado5['resultado'] == 1){
+                     echo json_encode([
+                         "mensaje" => "Se elimino la operación exitosamente.",
+                         "resultado" => 1,
+                     ]);
+                     
+                 }else{
+                     echo json_encode([
+                         "mensaje" => "Ocurrió  un error.",
+                         "resultado" => 0,
+                     ]);
+         
+                 }
+             } catch (Exception $e) {
+                 echo json_encode([
+                     "detalle" => $e->getMessage(),       
+                     "mensaje" => "Ocurrió un error en base de datos",
+         
+                     "resultado" => 4,
+                 ]);
+             }
+             
+  
+     }
 
     
 
