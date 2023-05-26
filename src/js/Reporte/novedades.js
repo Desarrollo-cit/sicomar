@@ -9,6 +9,7 @@ const formNovedades = document.getElementById('formNovedades');
 const divNovedades = document.getElementById('divNovedades');
 const buttonAgregarNovedades = document.querySelector('#buttonAgregarNovedades');
 const buttonQuitarNovedades = document.querySelector('#buttonQuitarNovedades');
+const back = document.getElementById('back');
 let inputNovedades = 0;
 
 const traerNovedaes = async (evento) => {
@@ -195,7 +196,14 @@ const guardarNovedades = async e => {
     }
 }
 
+window.ApiIndex = () => {
+    var url = `/sicomar/reporte`;
+    window.location.href = url;
+}
+
+
 traerNovedaes()
 buttonAgregarNovedades.addEventListener('click', agregarInputsNovedades);
 buttonQuitarNovedades.addEventListener('click', quitarInputsNovedades)
 formNovedades.addEventListener('submit', guardarNovedades)
+back.addEventListener('click', ApiIndex );

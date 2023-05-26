@@ -7,7 +7,8 @@ import Swal from "sweetalert2";
 
 const formMotores = document.getElementById('formMotores');
 const divMotores = document.getElementById('divMotores');
-const formId = document.getElementById('formId')
+const back = document.getElementById('back');
+
 let inputsMotores = 0;
 
 
@@ -161,8 +162,6 @@ const guardarTrabajos= async e => {
 }
 
 const agregarInputsMotores = (nombre, id, data = []) => {
-   // console.log(data);
-
     inputsMotores++;
     const fragment = document.createDocumentFragment();
     const divRow = document.createElement('div');
@@ -172,51 +171,66 @@ const agregarInputsMotores = (nombre, id, data = []) => {
     const divCol4 = document.createElement('div');
     const divCol5 = document.createElement('div');
     const parrafoMotor = document.createElement('p');
-    const label1 = document.createElement('label')
-    const label2 = document.createElement('label')
-    const label3 = document.createElement('label')
-    const label4 = document.createElement('label')
-    const input1 = document.createElement('input')
-    const input2 = document.createElement('input')
-    const inputhidden = document.createElement('input')
-    const textarea1 = document.createElement('textarea')
-    const textarea2 = document.createElement('textarea')
+    const label1 = document.createElement('label');
+    const label2 = document.createElement('label');
+    const label3 = document.createElement('label');
+    const label4 = document.createElement('label');
+    const input1 = document.createElement('input');
+    const input2 = document.createElement('input');
+    const inputhidden = document.createElement('input');
+    const textarea1 = document.createElement('textarea');
+    const textarea2 = document.createElement('textarea');
 
     divRow.classList.add("row", "justify-content-center", "border", "rounded", "py-2", "mb-2");
-    inputhidden.type = "hidden"
-    inputhidden.value = id
-    inputhidden.id = `id${inputsMotores}`
+    inputhidden.type = "hidden";
+    inputhidden.value = id;
+    inputhidden.id = `id${inputsMotores}`;
 
-    // primer div
+    // Primer div
     divCol1.classList.add("col-lg-2", "d-flex", "align-items-end", "justify-content-center");
     parrafoMotor.classList.add("fw-bold");
-    parrafoMotor.innerText = nombre
+    parrafoMotor.innerText = nombre;
     divCol1.appendChild(parrafoMotor);
-    // segundo div
+
+    // Segundo div
     divCol2.classList.add("col-lg-2");
-    label1.setAttribute('for', `horas${inputsMotores}`)
-    label1.innerText = "Horas"
-    input1.type = "number"
-    input1.classList.add('form-control')
-    input1.name = `horas${inputsMotores}`
-    input1.id = `horas${inputsMotores}`
-    input1.value = data.length > 0 ? data[0].tra_horas : ''
+    label1.setAttribute('for', `horas${inputsMotores}`);
+    label1.innerText = "Horas";
+    input1.type = "number";
+    input1.classList.add('form-control');
+    input1.name = `horas${inputsMotores}`;
+    input1.id = `horas${inputsMotores}`;
+    input1.value = data.length > 0 ? data[0].tra_horas : '';
 
-    divCol2.appendChild(label1)
-    divCol2.appendChild(input1)
+    // Agregar evento de escucha para limitar la longitud del valor ingresado a 5 dígitos
+    input1.addEventListener('input', () => {
+        if (input1.value.length > 5) {
+            input1.value = input1.value.slice(0, 5);
+        }
+    });
 
-    // tercer div
+    divCol2.appendChild(label1);
+    divCol2.appendChild(input1);
+
+    // Tercer div
     divCol3.classList.add("col-lg-2");
-    label2.setAttribute('for', `rpm${inputsMotores}`)
-    label2.innerText = "R.P.M"
-    input2.type = "number"
-    input2.classList.add('form-control')
-    input2.name = `rpm${inputsMotores}`
-    input2.id = `rpm${inputsMotores}`
-    input2.value = data.length > 0 ? data[0].tra_rpm : ''
+    label2.setAttribute('for', `rpm${inputsMotores}`);
+    label2.innerText = "R.P.M";
+    input2.type = "number";
+    input2.classList.add('form-control');
+    input2.name = `rpm${inputsMotores}`;
+    input2.id = `rpm${inputsMotores}`;
+    input2.value = data.length > 0 ? data[0].tra_rpm : '';
 
-    divCol3.appendChild(label2)
-    divCol3.appendChild(input2)
+    // Agregar evento de escucha para limitar la longitud del valor ingresado a 5 dígitos
+    input2.addEventListener('input', () => {
+        if (input2.value.length > 5) {
+            input2.value = input2.value.slice(0, 5);
+        }
+    });
+
+    divCol3.appendChild(label2);
+    divCol3.appendChild(input2);
 
     // cuarto div
     divCol4.classList.add("col-lg-3");
@@ -257,21 +271,17 @@ const agregarInputsMotores = (nombre, id, data = []) => {
 
 }
 
-
-const quitarInputsMotores = e => {
-    e && e.preventDefault();
-    if (inputsMotores > 0) {
-        inputsMotores--
-        divMotores.removeChild(divMotores.lastElementChild);
-    } else {
-        alertToast('warning', 'Debe ingresar al menos un motor')
-    }
+window.ApiIndex = () => {
+    var url = `/sicomar/reporte`;
+    window.location.href = url;
 }
+
 
 
 traerMotores()
 
 formMotores.addEventListener('submit', guardarTrabajos);
+back.addEventListener('click', ApiIndex );
 
 
 

@@ -73,11 +73,6 @@ class ConsumosController
         }
     }
 
-
-
-
-
-
     public static function GuardarConsumoAPI()
     {
 

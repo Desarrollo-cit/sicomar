@@ -1,15 +1,14 @@
+<div class="row justify-content-center mb-3">
 
-<div class="container-fluid text-center">
-    <div class="row justify-content-center mb-3">
-        <div class="col-lg-4 border bg-light rounded">
-           
-                <div class="row justify-content-center">
-           
-                <div class="card-header bg-dark text-white">
-                    <h3 class="card-title">Informacion Derrota</h3>
-                </div>
+    <div class="card col-lg-4 border  rounded">
 
-            <div class="row align-items-center mb-1">
+        <div class="row justify-content-center">
+
+            <div class="card-header bg-dark text-white">
+                <h3 class="card-title">Informacion Derrota</h3>
+            </div>
+
+            <div class="card-body row align-items-center mb-1 bg-light">
                 <div class="col-md-6">
                     <form id="formId" enctype="multipart/form-data" autocomplete="off">
                         <div class="row mb-3">
@@ -23,7 +22,7 @@
                             <div class="col-md-12">
                                 <label for="identificador" class="form-label">Identificador:</label>
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="ope_identificador" name="ope_identificador" value="<?php echo $decoded_identificador; ?>">
+                                    <input type="text" class="form-control" id="ope_identificador" name="ope_identificador" value="<?php echo $decoded_identificador; ?>" readonly>
                                 </div>
                             </div>
                         </div>
@@ -31,22 +30,33 @@
                             <div class="col-md-12">
                                 <label for="fecha_zarpe" class="form-label">Fecha de zarpe:</label>
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="fecha_zarpe" name="fecha_zarpe" value="<?php echo $decoded_fecha_zarpe; ?>">
+                                    <input type="text" class="form-control" id="fecha_zarpe" name="fecha_zarpe" value="<?php echo $decoded_fecha_zarpe; ?>" readonly>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
+
                 <div class="col-md-6" id="imagen">
                     <img src="<?= asset('./images/mar.png') ?>" alt="Imagen" width="200">
                 </div>
             </div>
+            <div class="card-footer ">
+                <div class="row justify-content-center w-100">
+                    <div class="col-lg-12">
+
+                        <button type="button" name="back" id="back" class="btn btn-primary w-100"><i class="bi bi-skip-backward-fill"></i> Regresar</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
     </div>
 </div>
 <div class="container">
+
     <div class="row justify-content-center">
-        <div class="col-lg-10">
             <div class="card">
                 <div class="card-header bg-dark text-white">
                     <h3 class="card-title">Consumos realizados</h3>
@@ -69,14 +79,18 @@
                         <div id="divConsumos">
                            
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" form="formConsumos" class="btn btn-success me-2" id="buttonLimpiar">
-                                <i class="bi bi-save me-2"></i>Guardar
-                            </button>
-
-                        </div>
+               
                     </form>
                 </div>
+                <div class="card-footer bg-light">
+            <div class="row justify-content-center mt-1">
+                <div class="col-lg-2">
+                    <button type="submit" form="formConsumos" class="btn btn-success w-100"><i class="bi bi-save me-2"></i>Guardar</button>
+                </div>
+
+            </div>
+        </div>
+
             </div>
         </div>
     </div>

@@ -21,7 +21,7 @@ class MotoresController
         $decoded_id = base64_decode($ope_id);
         $decoded_identificador = base64_decode($ope_identificador);
         $decoded_fecha_zarpe = base64_decode($ope_fecha_zarpe);
-        
+
         $router->render('Reporte/motores', [
             'decoded_id'            =>   $decoded_id,
             'decoded_identificador' =>   $decoded_identificador,
@@ -48,9 +48,6 @@ class MotoresController
         }
     }
 
-
-
-
     public static function Buscartrabajo()
     {
         getHeadersApi();
@@ -60,7 +57,7 @@ class MotoresController
             $motor = $_GET['motor'];
 
             $datos = Derrota::fetchArray(" SELECT * FROM codemar_trabajo_motores where tra_operacion = $operacion and tra_motor = $motor and tra_situacion = 1");
-           
+
             echo json_encode($datos);
         } catch (Exception $e) {
             echo json_encode(["error" => $e->getMessage()]);
@@ -85,12 +82,12 @@ class MotoresController
             $ids_array = explode(",", $ids);
             $observaciones_array = explode(",", $observaciones);
             $rpm_array = explode(",", $rpm);
-                
+
             $num_elementos = count($ids_array);
-       
-            $datos = Trabajo_motores::fetchArray("SELECT * FROM codemar_trabajo_motores WHERE tra_operacion = $id_ope");        
+
+            $datos = Trabajo_motores::fetchArray("SELECT * FROM codemar_trabajo_motores WHERE tra_operacion = $id_ope");
             if ($datos) {
-               
+
                 foreach ($datos as $key => $value) {
                     $cambio = new Trabajo_motores([
                         'tra_id' => $value['tra_id'],
@@ -115,7 +112,7 @@ class MotoresController
                 $valor_ids = $ids_array[$i];
                 $valor_observaciones = $observaciones_array[$i];
                 $valor_rpm = $rpm_array[$i];
-            
+
 
                 $trabajo_motor = new Trabajo_motores([
                     'tra_fallas' => $valor_fallas,
@@ -126,27 +123,21 @@ class MotoresController
                     'tra_operacion' => $id_ope,
                     'tra_situacion' =>  "1"
                 ]);
-            
+
 
                 $guardado = $trabajo_motor->guardar();
-            
-        
-              
             }
             if ($guardado) {
-                echo json_encode([   
+                echo json_encode([
                     "mensaje" => "Trabajo de los motores guardado",
                     "codigo" => 1,
                 ]);
-                } else {
-                    echo json_encode([   
-                        "mensaje" => "Error, Verifique sus datos",
-                        "codigo" => 0,
-                    ]);
-                }
-
- 
-
+            } else {
+                echo json_encode([
+                    "mensaje" => "Error, Verifique sus datos",
+                    "codigo" => 0,
+                ]);
+            }
         } catch (Exception $e) {
             echo json_encode([
                 "detalle" => $e->getMessage(),

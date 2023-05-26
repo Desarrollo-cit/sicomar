@@ -2,13 +2,10 @@
 
 namespace Controllers;
 
-use Model\Derrota;
 use Model\Novedades;
-
-
 use MVC\Router;
 use Exception;
-use Model\Comunicaciones;
+
 
 class NovedadesController
 {
@@ -34,67 +31,21 @@ class NovedadesController
     public static function BuscarNovedades()
     {
         getHeadersApi();
-            $valor = $_GET['id'];
-            // echo json_encode($valor);
-            // exit;
+        $valor = $_GET['id'];
+        // echo json_encode($valor);
+        // exit;
         try {
 
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_novedades where nov_operacion = $valor and nov_situacion = 1 order by nov_fechahora asc");
+            $datos = Novedades::fetchArray("SELECT * FROM codemar_novedades where nov_operacion = $valor and nov_situacion = 1 order by nov_fechahora asc");
 
-            if($datos ){
+            if ($datos) {
 
                 echo json_encode($datos);
-
             }
-
         } catch (Exception $e) {
             echo json_encode(["error" => $e->getMessage()]);
         }
     }
-
-
-    
-    public static function BuscarMedios()
-    {
-        getHeadersApi();
-     
-        try {
-
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_medios_comunicacion where medio_situacion = 1  ");
-
-            if($datos ){
-
-                echo json_encode($datos);
-
-            }
-
-        } catch (Exception $e) {
-            echo json_encode(["error" => $e->getMessage()]);
-        }
-    }
-
-
-    
-    public static function BuscarReceptores()
-    {
-        getHeadersApi();
-     
-        try {
-
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_receptor_comunicacion where rec_situacion = 1 ");
-
-            if($datos ){
-
-                echo json_encode($datos);
-
-            }
-
-        } catch (Exception $e) {
-            echo json_encode(["error" => $e->getMessage()]);
-        }
-    }
-
-
 
 
     public static function GuardarNovedadesAPI()
@@ -109,12 +60,12 @@ class NovedadesController
             $fechas = $_POST['fechas'];
             $novedades = $_POST['novedades'];
             $id_ope = $_POST['id_ope'];
-    
+
             // descomponer arrays
             $novedades_array = explode(",", $novedades);
             $fechas_array = explode(",", str_replace('T', ' ', $fechas));
 
-       
+
             $num_elementos = count($novedades_array);
 
             $datos = Novedades::fetchArray("SELECT * FROM codemar_novedades where nov_operacion = $id_ope and nov_situacion = 1  order by nov_fechahora asc 
@@ -132,38 +83,38 @@ class NovedadesController
                 }
             }
 
-for ($i = 0; $i < $num_elementos; $i++) {
-            $valor_novedad = $novedades_array[$i];
-            $valor_fechas = $fechas_array[$i];
-      
+            for ($i = 0; $i < $num_elementos; $i++) {
+                $valor_novedad = $novedades_array[$i];
+                $valor_fechas = $fechas_array[$i];
 
-            $consumos = new Novedades([
-                'nov_operacion' => $id_ope,
-                'nov_novedad' => $valor_novedad,
-                'nov_fechahora' => $valor_fechas,
-                'com_situacion' => "1"
-            ]);
 
-            $guardado = $consumos->guardar();
-        }
+                $consumos = new Novedades([
+                    'nov_operacion' => $id_ope,
+                    'nov_novedad' => $valor_novedad,
+                    'nov_fechahora' => $valor_fechas,
+                    'com_situacion' => "1"
+                ]);
 
-        if ($guardado) {
+                $guardado = $consumos->guardar();
+            }
+
+            if ($guardado) {
+                echo json_encode([
+                    "mensaje" => "Novedades guardadadas",
+                    "codigo" => 1,
+                ]);
+            } else {
+                echo json_encode([
+                    "mensaje" => "Error, Verifique sus datos",
+                    "codigo" => 0,
+                ]);
+            }
+        } catch (Exception $e) {
             echo json_encode([
-                "mensaje" => "Novedades guardadadas",
-                "codigo" => 1,
-            ]);
-        } else {
-            echo json_encode([
-                "mensaje" => "Error, Verifique sus datos",
-                "codigo" => 0,
+                "detalle" => $e->getMessage(),
+                "mensaje" => "Ocurrió un error en la base de datos.",
+                "codigo" => 4,
             ]);
         }
-    } catch (Exception $e) {
-        echo json_encode([
-            "detalle" => $e->getMessage(),
-            "mensaje" => "Ocurrió un error en la base de datos.",
-            "codigo" => 4,
-        ]);
     }
-}
 }

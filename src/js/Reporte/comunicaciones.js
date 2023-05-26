@@ -8,6 +8,7 @@ const formComunicacion = document.getElementById('formComunicacion');
 const divComunicacion = document.getElementById('divComunicacion');
 const buttonAgregarComunicacion = document.querySelector('#buttonAgregarComunicacion');
 const buttonQuitarComunicacion = document.querySelector('#buttonQuitarComunicacion');
+const back = document.getElementById('back');
 let inputComunicacion = 0;
 
 
@@ -291,7 +292,13 @@ const guardarComunicacion  = async e => {
 
 }
 
+window.ApiIndex = () => {
+    var url = `/sicomar/reporte`;
+    window.location.href = url;
+}
+
 traerComunicaciones()
 buttonAgregarComunicacion.addEventListener('click', e => agregarInputsComunicaciones(e));
 buttonQuitarComunicacion.addEventListener('click', quitarInputsComunicacion)
 formComunicacion.addEventListener('submit', guardarComunicacion)
+back.addEventListener('click', ApiIndex );

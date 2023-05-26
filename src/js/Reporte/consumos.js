@@ -5,11 +5,12 @@ import { lenguaje } from "../lenguaje";
 import Swal from "sweetalert2";
 
 
-//const formMotores = document.getElementById('formMotores');
+
 const formConsumos = document.getElementById('formConsumos');
 const divConsumos = document.getElementById('divConsumos');
 const buttonAgregarConsumos = document.querySelector('#buttonAgregarConsumos');
 const buttonQuitarConsumos = document.querySelector('#buttonQuitarConsumos');
+const back = document.getElementById('back');
 let inputConsumos = 0;
 
 const traer_consumo = async (evento) => {
@@ -202,10 +203,16 @@ const guardarConsumos = async e => {
 
 }
 
+window.ApiIndex = () => {
+    var url = `/sicomar/reporte`;
+    window.location.href = url;
+}
+
 traer_consumo()
 buttonAgregarConsumos.addEventListener('click', agregarInputsConsumos);
 buttonQuitarConsumos.addEventListener('click', quitarInputsConsumos);
 formConsumos.addEventListener('submit', guardarConsumos)
+back.addEventListener('click', ApiIndex );
 
 
 
