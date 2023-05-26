@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Model\Derrota;
 use Model\Novedades;
+use Model\Inteligencia;
 
 use Model\Lecciones;
 use MVC\Router;
@@ -54,92 +55,58 @@ class InteligenciaController
 
 
     
-    public static function BuscarMedios()
-    {
-        getHeadersApi();
-     
-        try {
-
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_medios_comunicacion where medio_situacion = 1  ");
-
-            if($datos ){
-
-                echo json_encode($datos);
-
-            }
-
-        } catch (Exception $e) {
-            echo json_encode(["error" => $e->getMessage()]);
-        }
-    }
 
 
     
-    public static function BuscarReceptores()
-    {
-        getHeadersApi();
-     
-        try {
-
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_receptor_comunicacion where rec_situacion = 1 ");
-
-            if($datos ){
-
-                echo json_encode($datos);
-
-            }
-
-        } catch (Exception $e) {
-            echo json_encode(["error" => $e->getMessage()]);
-        }
-    }
 
 
 
 
-    public static function GuardarLeccionesAPI()
+    public static function GuardarInteligenciaAPI()
     {
 
         getHeadersApi();
 
         // echo json_encode($_POST);
+
         // exit;
 
         try {
 
-            $recomendaciones = $_POST['recomendaciones'];
+            $informacion = $_POST['informacion'];
             $id_ope = $_POST['id_ope'];
     
             // descomponer arrays
-            $recomendaciones_array = explode(",", $recomendaciones);
+            $informacion_array = explode(",", $informacion);
 
 
        
-            $num_elementos = count($recomendaciones_array);
+            $num_elementos = count($informacion_array);
 
-            $datos = Lecciones::fetchArray("SELECT * FROM codemar_recomendaciones where rec_operacion = $id_ope and rec_situacion = 1  
+            $datos = Lecciones::fetchArray("SELECT * FROM codemar_informacion where info_operacion = $id_ope and info_situacion = 1  
            ");
             if ($datos) {
                 foreach ($datos as $key => $value) {
-                    $cambio = new Lecciones([
-                        'rec_id' => $value['rec_id'],
-                        'rec_operacion' => $value['rec_operacion'],
-                        'rec_recomendacion' => $value['rec_recomendacion'],
-                        'rec_situacion'  => "0"
+                    $cambio = new Inteligencia([
+                        'info_id' => $value['info_id'],
+                        'info_operacion' => $value['info_operacion'],
+                        'info_descripcion' => $value['info_descripcion'],
+                        'info_situacion' => "0"
                     ]);
+                    
                     $cambiar = $cambio->guardar();
                 }
             }
 
 for ($i = 0; $i < $num_elementos; $i++) {
-            $valor_recomendaciones = $recomendaciones_array[$i];
+            $valor_info = $informacion_array[$i];
       
       
 
-            $recomendaciones = new Lecciones([
-                'rec_operacion' => $id_ope,
-                'rec_recomendacion' => $valor_recomendaciones,
-                'rec_situacion' => "1"
+            $recomendaciones = new Inteligencia([
+                'info_operacion' => $id_ope,
+                'info_descripcion' => $valor_info,
+                'info_situacion' => "1"
             ]);
 
             $guardado = $recomendaciones->guardar();
@@ -147,7 +114,7 @@ for ($i = 0; $i < $num_elementos; $i++) {
 
         if ($guardado) {
             echo json_encode([
-                "mensaje" => "Lecciones guardadadas",
+                "mensaje" => "Informacion guardadada correctamente",
                 "codigo" => 1,
             ]);
         } else {

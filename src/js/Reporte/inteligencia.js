@@ -33,7 +33,7 @@ const traer_Inteligencia = async (evento) => {
 
     const respuesta = await fetch(url, config);
     const informacion = await respuesta.json();
-    console.log(informacion)
+    //console.log(informacion)
 
 
     if(informacion){
@@ -106,23 +106,79 @@ const quitarInputsInformacion = e => {
     }
 }
 
-const guardarInformacion = (e) => {
+const guardarInformacion = async e => {
     e.preventDefault();
+    const llevar = document.getElementById('ope_id').value;
 
     if(validarFormulario(formInformacion)){
-        let idOperacion = formInformacion.codigoOperacion6.value;
+      
         let informacion = [];
         let inputInformacion = formInformacion.querySelectorAll("[id^='informacion']");
         inputInformacion.forEach(input => {
             informacion = [...informacion, input.value ]
         })
 
-        xajax_guardarInformacion(informacion, idOperacion);
-    }else{
-        alertToast("warning", "Debe ingresar todos los campos")
-    }
 
+
+        const url = '/sicomar/API/reporte/inteligencia/GuardarInf'
+        const body = new FormData();
+        const headers = new Headers();
+
+        body.append('informacion', informacion)
+        body.append('id_ope', llevar)
+        headers.append("X-Requested-With", "fetch");
+
+        const config = {
+            method: 'POST',
+            headers,
+            body
+        }
+
+        const respuesta = await fetch(url, config);
+        const data = await respuesta.json();
+        console.log(data);
+        const { mensaje, codigo, detalle } = data;
+        let icon = "";
+        switch (codigo) {
+            case 1:
+                icon = "success"
+
+                traer_Inteligencia()
+                break;
+
+            case 0:
+                icon = "error"
+
+                break;
+            case 4:
+                icon = "error"
+                console.log(detalle)
+                // buscarTipo();
+
+                break;
+
+            default:
+                break;
+        }
+
+        Toast.fire({
+            icon: icon,
+            title: mensaje,
+        })
+
+
+
+
+    } else {
+        Toast.fire({
+            icon: 'warning',
+            title: 'Debe llenar todos los Campos, verifique sus datos'
+        })
+    }
 }
+
+
+
 buttonAgregarInformacion.addEventListener('click', agregarInputsInformacion );
 buttonQuitarInformacion.addEventListener('click', quitarInputsInformacion)
 formInformacion.addEventListener('submit', guardarInformacion)

@@ -105,15 +105,7 @@ const agregarInputsNovedades = async (e, novedadbd = '', fechahorabd = '') => {
 }
 
 
-// const quitarInputsNovedades = e => {
-//     e && e.preventDefault();
 
-//     if(inputNovedades > 0){
-//         console.log(inputNovedades)
-//         inputNovedades--
-//         divNovedades.removeChild(divNovedades.lastElementChild);
-//     }
-// }
 
 const quitarInputsNovedades = e => {
     e && e.preventDefault();

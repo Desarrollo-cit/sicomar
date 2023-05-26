@@ -65,6 +65,7 @@ $router->post('/API/reporte/lecciones/GuardarLec', [LeccionesController::class, 
 //Inteligencia
 $router->get('/reporte/inteligencia', [InteligenciaController::class,'index']);
 $router->get('/API/reporte/inteligencia/BusInteligencia', [InteligenciaController::class, 'Buscarinteligencia'] );
+$router->post('/API/reporte/inteligencia/GuardarInf', [InteligenciaController::class, 'GuardarInteligenciaAPI'] );
 
 
 $router->comprobarRutas();
