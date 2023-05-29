@@ -35,31 +35,21 @@ class InteligenciaController
     public static function Buscarinteligencia()
     {
         getHeadersApi();
-            $valor = $_GET['id'];
-            // echo json_encode($valor);
-            // exit;
+        $valor = $_GET['id'];
+        // echo json_encode($valor);
+        // exit;
         try {
 
-        $datos = Derrota::fetchArray("SELECT * FROM  codemar_informacion where info_operacion =  $valor and info_situacion = 1 ");
+            $datos = Derrota::fetchArray("SELECT * FROM  codemar_informacion where info_operacion =  $valor and info_situacion = 1 ");
 
-            if($datos ){
+            if ($datos) {
 
                 echo json_encode($datos);
-
             }
-
         } catch (Exception $e) {
             echo json_encode(["error" => $e->getMessage()]);
         }
     }
-
-
-    
-
-
-    
-
-
 
 
     public static function GuardarInteligenciaAPI()
@@ -75,12 +65,12 @@ class InteligenciaController
 
             $informacion = $_POST['informacion'];
             $id_ope = $_POST['id_ope'];
-    
+
             // descomponer arrays
             $informacion_array = explode(",", $informacion);
 
 
-       
+
             $num_elementos = count($informacion_array);
 
             $datos = Lecciones::fetchArray("SELECT * FROM codemar_informacion where info_operacion = $id_ope and info_situacion = 1  
@@ -93,42 +83,42 @@ class InteligenciaController
                         'info_descripcion' => $value['info_descripcion'],
                         'info_situacion' => "0"
                     ]);
-                    
+
                     $cambiar = $cambio->guardar();
                 }
             }
 
-for ($i = 0; $i < $num_elementos; $i++) {
-            $valor_info = $informacion_array[$i];
-      
-      
+            for ($i = 0; $i < $num_elementos; $i++) {
+                $valor_info = $informacion_array[$i];
 
-            $recomendaciones = new Inteligencia([
-                'info_operacion' => $id_ope,
-                'info_descripcion' => $valor_info,
-                'info_situacion' => "1"
-            ]);
 
-            $guardado = $recomendaciones->guardar();
-        }
 
-        if ($guardado) {
+                $recomendaciones = new Inteligencia([
+                    'info_operacion' => $id_ope,
+                    'info_descripcion' => $valor_info,
+                    'info_situacion' => "1"
+                ]);
+
+                $guardado = $recomendaciones->guardar();
+            }
+
+            if ($guardado) {
+                echo json_encode([
+                    "mensaje" => "Informacion guardadada correctamente",
+                    "codigo" => 1,
+                ]);
+            } else {
+                echo json_encode([
+                    "mensaje" => "Error, Verifique sus datos",
+                    "codigo" => 0,
+                ]);
+            }
+        } catch (Exception $e) {
             echo json_encode([
-                "mensaje" => "Informacion guardadada correctamente",
-                "codigo" => 1,
-            ]);
-        } else {
-            echo json_encode([
-                "mensaje" => "Error, Verifique sus datos",
-                "codigo" => 0,
+                "detalle" => $e->getMessage(),
+                "mensaje" => "Ocurrió un error en la base de datos.",
+                "codigo" => 4,
             ]);
         }
-    } catch (Exception $e) {
-        echo json_encode([
-            "detalle" => $e->getMessage(),
-            "mensaje" => "Ocurrió un error en la base de datos.",
-            "codigo" => 4,
-        ]);
     }
-}
 }

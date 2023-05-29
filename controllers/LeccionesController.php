@@ -3,12 +3,10 @@
 namespace Controllers;
 
 use Model\Derrota;
-use Model\Novedades;
-
 use Model\Lecciones;
 use MVC\Router;
 use Exception;
-use Model\Comunicaciones;
+
 
 class LeccionesController
 {
@@ -34,67 +32,21 @@ class LeccionesController
     public static function BuscarLecciones()
     {
         getHeadersApi();
-            $valor = $_GET['id'];
-            // echo json_encode($valor);
-            // exit;
+        $valor = $_GET['id'];
+        // echo json_encode($valor);
+        // exit;
         try {
 
-        $datos = Derrota::fetchArray("SELECT * FROM  codemar_recomendaciones where rec_operacion =  $valor and rec_situacion = 1 ");
+            $datos = Derrota::fetchArray("SELECT * FROM  codemar_recomendaciones where rec_operacion =  $valor and rec_situacion = 1 ");
 
-            if($datos ){
+            if ($datos) {
 
                 echo json_encode($datos);
-
             }
-
         } catch (Exception $e) {
             echo json_encode(["error" => $e->getMessage()]);
         }
     }
-
-
-    
-    public static function BuscarMedios()
-    {
-        getHeadersApi();
-     
-        try {
-
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_medios_comunicacion where medio_situacion = 1  ");
-
-            if($datos ){
-
-                echo json_encode($datos);
-
-            }
-
-        } catch (Exception $e) {
-            echo json_encode(["error" => $e->getMessage()]);
-        }
-    }
-
-
-    
-    public static function BuscarReceptores()
-    {
-        getHeadersApi();
-     
-        try {
-
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_receptor_comunicacion where rec_situacion = 1 ");
-
-            if($datos ){
-
-                echo json_encode($datos);
-
-            }
-
-        } catch (Exception $e) {
-            echo json_encode(["error" => $e->getMessage()]);
-        }
-    }
-
-
 
 
     public static function GuardarLeccionesAPI()
@@ -109,12 +61,12 @@ class LeccionesController
 
             $recomendaciones = $_POST['recomendaciones'];
             $id_ope = $_POST['id_ope'];
-    
+
             // descomponer arrays
             $recomendaciones_array = explode(",", $recomendaciones);
 
 
-       
+
             $num_elementos = count($recomendaciones_array);
 
             $datos = Lecciones::fetchArray("SELECT * FROM codemar_recomendaciones where rec_operacion = $id_ope and rec_situacion = 1  
@@ -131,37 +83,37 @@ class LeccionesController
                 }
             }
 
-for ($i = 0; $i < $num_elementos; $i++) {
-            $valor_recomendaciones = $recomendaciones_array[$i];
-      
-      
+            for ($i = 0; $i < $num_elementos; $i++) {
+                $valor_recomendaciones = $recomendaciones_array[$i];
 
-            $recomendaciones = new Lecciones([
-                'rec_operacion' => $id_ope,
-                'rec_recomendacion' => $valor_recomendaciones,
-                'rec_situacion' => "1"
-            ]);
 
-            $guardado = $recomendaciones->guardar();
-        }
 
-        if ($guardado) {
+                $recomendaciones = new Lecciones([
+                    'rec_operacion' => $id_ope,
+                    'rec_recomendacion' => $valor_recomendaciones,
+                    'rec_situacion' => "1"
+                ]);
+
+                $guardado = $recomendaciones->guardar();
+            }
+
+            if ($guardado) {
+                echo json_encode([
+                    "mensaje" => "Lecciones guardadadas",
+                    "codigo" => 1,
+                ]);
+            } else {
+                echo json_encode([
+                    "mensaje" => "Error, Verifique sus datos",
+                    "codigo" => 0,
+                ]);
+            }
+        } catch (Exception $e) {
             echo json_encode([
-                "mensaje" => "Lecciones guardadadas",
-                "codigo" => 1,
-            ]);
-        } else {
-            echo json_encode([
-                "mensaje" => "Error, Verifique sus datos",
-                "codigo" => 0,
+                "detalle" => $e->getMessage(),
+                "mensaje" => "Ocurrió un error en la base de datos.",
+                "codigo" => 4,
             ]);
         }
-    } catch (Exception $e) {
-        echo json_encode([
-            "detalle" => $e->getMessage(),
-            "mensaje" => "Ocurrió un error en la base de datos.",
-            "codigo" => 4,
-        ]);
     }
-}
 }

@@ -12,7 +12,7 @@ const divRecomendaciones = document.getElementById('divRecomendaciones');
 const buttonAgregarRecomendaciones = document.querySelector('#buttonAgregarRecomendaciones');
 const buttonQuitarRecomendaciones = document.querySelector('#buttonQuitarRecomendaciones');
 let inputRecomendaciones = 0;
-
+const back = document.getElementById('back');
 
 const traer_lecciones = async (evento) => {
     evento && evento.preventDefault();
@@ -177,7 +177,14 @@ const guardarRecomendaciones = async e => {
 
 }
 
+window.ApiIndex = () => {
+    var url = `/sicomar/reporte`;
+    window.location.href = url;
+}
+
+
 traer_lecciones()
 buttonAgregarRecomendaciones.addEventListener('click', agregarInputsRecomendaciones );
 buttonQuitarRecomendaciones.addEventListener('click', quitarInputsRecomendaciones)
 formRecomendaciones.addEventListener('submit', guardarRecomendaciones)
+back.addEventListener('click', ApiIndex );

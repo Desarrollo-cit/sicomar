@@ -25,6 +25,7 @@ $router->get('/', [AppController::class,'index']);
 //reporte
 $router->get('/reporte', [ReporteController::class,'index']);
 $router->get('/API/reporte/BusDatos', [ReporteController::class, 'BuscarDatosAPI'] );
+$router->get('/API/reporte/CambioSit', [ReporteController::class, 'CambioSituacionAPI'] );
 
 
 

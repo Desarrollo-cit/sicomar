@@ -11,43 +11,44 @@ const formInformacion = document.getElementById('formInformacion');
 const divInformacion = document.getElementById('divInformacion');
 const buttonAgregarInformacion = document.querySelector('#buttonAgregarInformacion');
 const buttonQuitarInformacion = document.querySelector('#buttonQuitarInformacion');
+const back = document.getElementById('back');
 let inputInformacion = 0;
 
 
 const traer_Inteligencia = async (evento) => {
     evento && evento.preventDefault();
-   
+
     try {
-      
-    divInformacion.innerHTML= ""
-    inputInformacion = 0;
-    const llevar = document.getElementById('ope_id').value;
-  
-    const url = `/sicomar/API/reporte/inteligencia/BusInteligencia?id=${llevar}`
-    const headers = new Headers();
-    headers.append("X-requested-With", "fetch");
 
-    const config = {
-        method: 'GET',
-    }
+        divInformacion.innerHTML = ""
+        inputInformacion = 0;
+        const llevar = document.getElementById('ope_id').value;
 
-    const respuesta = await fetch(url, config);
-    const informacion = await respuesta.json();
-    //console.log(informacion)
+        const url = `/sicomar/API/reporte/inteligencia/BusInteligencia?id=${llevar}`
+        const headers = new Headers();
+        headers.append("X-requested-With", "fetch");
 
-
-    if(informacion){
-        while (inputInformacion > 0) {
-            quitarInputsInformacion()
+        const config = {
+            method: 'GET',
         }
-        informacion.forEach( r => {
-            agregarInputsInformacion(null, r.info_descripcion)
-        });
+
+        const respuesta = await fetch(url, config);
+        const informacion = await respuesta.json();
+        //console.log(informacion)
+
+
+        if (informacion) {
+            while (inputInformacion > 0) {
+                quitarInputsInformacion()
+            }
+            informacion.forEach(r => {
+                agregarInputsInformacion(null, r.info_descripcion)
+            });
+        }
     }
-}
- catch (error) {
-    console.log(error);
-}
+    catch (error) {
+        console.log(error);
+    }
 }
 
 
@@ -62,8 +63,8 @@ const agregarInputsInformacion = async (e, informacionbd = '') => {
     const label1 = document.createElement('label')
 
 
-    divRow.classList.add("row", "justify-content-center" ,"border" ,"rounded", "py-2" ,"mb-2");
-   
+    divRow.classList.add("row", "justify-content-center", "border", "rounded", "py-2", "mb-2");
+
     divCol1.classList.add("col-lg-12");
 
 
@@ -96,12 +97,13 @@ const agregarInputsInformacion = async (e, informacionbd = '') => {
 
 
 }
+
 const quitarInputsInformacion = e => {
     e && e.preventDefault();
-    if(inputInformacion > 0){
+    if (inputInformacion > 0) {
         inputInformacion--
         divInformacion.removeChild(divInformacion.lastElementChild);
-    }else{
+    } else {
         alertToast('warning', 'No puede eliminar más')
     }
 }
@@ -110,12 +112,12 @@ const guardarInformacion = async e => {
     e.preventDefault();
     const llevar = document.getElementById('ope_id').value;
 
-    if(validarFormulario(formInformacion)){
-      
+    if (validarFormulario(formInformacion)) {
+
         let informacion = [];
         let inputInformacion = formInformacion.querySelectorAll("[id^='informacion']");
         inputInformacion.forEach(input => {
-            informacion = [...informacion, input.value ]
+            informacion = [...informacion, input.value]
         })
 
 
@@ -136,7 +138,7 @@ const guardarInformacion = async e => {
 
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
-        console.log(data);
+        //console.log(data);
         const { mensaje, codigo, detalle } = data;
         let icon = "";
         switch (codigo) {
@@ -177,10 +179,15 @@ const guardarInformacion = async e => {
     }
 }
 
+window.ApiIndex = () => {
+    var url = `/sicomar/reporte`;
+    window.location.href = url;
+}
 
 
-buttonAgregarInformacion.addEventListener('click', agregarInputsInformacion );
+buttonAgregarInformacion.addEventListener('click', agregarInputsInformacion);
 buttonQuitarInformacion.addEventListener('click', quitarInputsInformacion)
 formInformacion.addEventListener('submit', guardarInformacion)
+back.addEventListener('click', ApiIndex);
 
 traer_Inteligencia()

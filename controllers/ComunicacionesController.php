@@ -34,61 +34,55 @@ class ComunicacionesController
     public static function BuscarComun()
     {
         getHeadersApi();
-            $valor = $_GET['id'];
-            // echo json_encode($valor);
-            // exit;
+        $valor = $_GET['id'];
+        // echo json_encode($valor);
+        // exit;
         try {
 
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_comunicaciones where com_operacion = $valor and com_situacion = 1 ");
+            $datos = Derrota::fetchArray("SELECT * FROM codemar_comunicaciones where com_operacion = $valor and com_situacion = 1 ");
 
-            if($datos ){
+            if ($datos) {
 
                 echo json_encode($datos);
-
             }
-
         } catch (Exception $e) {
             echo json_encode(["error" => $e->getMessage()]);
         }
     }
 
 
-    
+
     public static function BuscarMedios()
     {
         getHeadersApi();
-     
+
         try {
 
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_medios_comunicacion where medio_situacion = 1  ");
+            $datos = Derrota::fetchArray("SELECT * FROM codemar_medios_comunicacion where medio_situacion = 1  ");
 
-            if($datos ){
+            if ($datos) {
 
                 echo json_encode($datos);
-
             }
-
         } catch (Exception $e) {
             echo json_encode(["error" => $e->getMessage()]);
         }
     }
 
 
-    
+
     public static function BuscarReceptores()
     {
         getHeadersApi();
-     
+
         try {
 
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_receptor_comunicacion where rec_situacion = 1 ");
+            $datos = Derrota::fetchArray("SELECT * FROM codemar_receptor_comunicacion where rec_situacion = 1 ");
 
-            if($datos ){
+            if ($datos) {
 
                 echo json_encode($datos);
-
             }
-
         } catch (Exception $e) {
             echo json_encode(["error" => $e->getMessage()]);
         }
@@ -111,13 +105,13 @@ class ComunicacionesController
             $receptores = $_POST['receptores'];
             $observaciones = $_POST['observaciones'];
             $id_ope = $_POST['id_ope'];
-    
+
             // descomponer arrays
             $medios_array = explode(",", $medios);
             $calidades_array = explode(",", $calidades);
             $receptores_array = explode(",", $receptores);
             $observaciones_array = explode(",", $observaciones);
-    
+
             $num_elementos = count($medios_array);
 
             $datos = Comunicaciones::fetchArray("SELECT * from codemar_comunicaciones where com_situacion = 1 and com_operacion = $id_ope");
@@ -136,43 +130,43 @@ class ComunicacionesController
                 }
             }
 
-for ($i = 0; $i < $num_elementos; $i++) {
-            $valor_medio = $medios_array[$i];
-            $valor_calidad = $calidades_array[$i];
-            $valor_receptor = $receptores_array[$i];
-            $valor_observacion = $observaciones_array[$i];
+            for ($i = 0; $i < $num_elementos; $i++) {
+                $valor_medio = $medios_array[$i];
+                $valor_calidad = $calidades_array[$i];
+                $valor_receptor = $receptores_array[$i];
+                $valor_observacion = $observaciones_array[$i];
 
-            $consumos = new Comunicaciones([
-                'com_operacion' => $id_ope,
-                'com_insumo' => $valor_medio,
-                'com_cantidad' => $valor_calidad,
-                'com_medio' => $valor_medio,
-                'com_calidad' => $valor_calidad,
-                'com_receptor' => $valor_receptor,
-                'com_observacion' => $valor_observacion,
-                'com_situacion' => "1"
-            ]);
+                $consumos = new Comunicaciones([
+                    'com_operacion' => $id_ope,
+                    'com_insumo' => $valor_medio,
+                    'com_cantidad' => $valor_calidad,
+                    'com_medio' => $valor_medio,
+                    'com_calidad' => $valor_calidad,
+                    'com_receptor' => $valor_receptor,
+                    'com_observacion' => $valor_observacion,
+                    'com_situacion' => "1"
+                ]);
 
-            $guardado = $consumos->guardar();
-        }
+                $guardado = $consumos->guardar();
+            }
 
-        if ($guardado) {
+            if ($guardado) {
+                echo json_encode([
+                    "mensaje" => "Comunicaciones guardadas",
+                    "codigo" => 1,
+                ]);
+            } else {
+                echo json_encode([
+                    "mensaje" => "Error, Verifique sus datos",
+                    "codigo" => 0,
+                ]);
+            }
+        } catch (Exception $e) {
             echo json_encode([
-                "mensaje" => "Consumos guardados",
-                "codigo" => 1,
-            ]);
-        } else {
-            echo json_encode([
-                "mensaje" => "Error, Verifique sus datos",
-                "codigo" => 0,
+                "detalle" => $e->getMessage(),
+                "mensaje" => "Ocurrió un error en la base de datos.",
+                "codigo" => 4,
             ]);
         }
-    } catch (Exception $e) {
-        echo json_encode([
-            "detalle" => $e->getMessage(),
-            "mensaje" => "Ocurrió un error en la base de datos.",
-            "codigo" => 4,
-        ]);
     }
-}
 }
