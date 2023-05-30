@@ -64,5 +64,54 @@ class EstadisticasController {
         }
     }
 
+    public static function operacionesComandoApi(){
+        getHeadersApi();
+
+        $inicio = str_replace('T',' ', $_GET['inicio']);
+        $fin = str_replace('T',' ', $_GET['fin']);
+        try {
+            $tipos = ActiveRecord::fetchArray("SELECT * from codemar_tipos_operaciones where tipo_situacion = 1 AND tipo_id != 10");
+            $dependencias = ActiveRecord::fetchArray("SELECT distinct ope_dependencia, dep_desc_ct from codemar_operaciones inner join mdep on ope_dependencia = dep_llave where ope_sit = 4 order by dep_desc_ct");
+            $data = [];
+            $labels = [];
+            $cantidades = [];
+            $i = 0;
+            foreach ($tipos as $key => $tipo ) {
+                
+                $tipo_id = $tipo['tipo_id'];
+                
+                $labels[]= $tipo['tipo_desc'];
+                foreach ($dependencias as $dependencia) {
+                    $dep_llave =  $dependencia['ope_dependencia'];
+                    $nombreDep = trim($dependencia['dep_desc_ct']);
+                    $sql = "SELECT count(*) as cantidad from codemar_operaciones where ope_sit = 4 and ope_tipo = $tipo_id and ope_nacional = 'N' and ope_dependencia = $dep_llave";
+                    if($inicio != ''){
+                        $sql.= " and ope_fecha_zarpe >= '$inicio' "; 
+                    }
+                    if($fin != ''){
+                        $sql.= " and ope_fecha_zarpe <= '$fin' "; 
+                    }
+                    $operaciones = ActiveRecord::fetchArray($sql);
+                    $cantidades[$nombreDep][]= (int) $operaciones[0]['cantidad'];
+                }
+                $i++;
+            }
+            $data = [
+                'labels' => $labels,
+                'cantidades' => $cantidades
+            ];
+    
+        
+            echo json_encode($data);
+        } catch (Exception $e) {
+            echo json_encode([
+                "detalle" => $e->getMessage(),       
+                "mensaje" => "$sql",
+    
+                "codigo" => 4,
+            ]);
+        }
+    }
+
 
 }

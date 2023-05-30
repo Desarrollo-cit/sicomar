@@ -25,6 +25,7 @@ $router->get('/API/internacionales/colocarInfo', [InternacionalesController::cla
 $router->get('/estadisticas', [EstadisticasController::class,'index']);
 $router->get('/API/estadisticas/mapa', [EstadisticasController::class,'operacionesMapaApi']);
 $router->get('/API/estadisticas/consumos', [EstadisticasController::class,'operacionesConsumosApi']);
+$router->get('/API/estadisticas/comando', [EstadisticasController::class,'operacionesComandoApi']);
 
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
