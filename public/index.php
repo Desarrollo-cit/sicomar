@@ -7,6 +7,7 @@ require_once __DIR__ . '/../includes/app.php';
 
 use MVC\Router;
 use Controllers\AppController;
+use Controllers\EstadisticasController;
 use Controllers\InternacionalesController;
 $router = new Router();
 $router->setBaseURL('/' . $_ENV['APP_NAME']);
@@ -19,6 +20,11 @@ $router->post('/API/internacionales/modificar', [InternacionalesController::clas
 $router->post('/API/internacionales/eliminar', [InternacionalesController::class,'eliminar']);
 $router->get('/API/internacionales/buscar', [InternacionalesController::class,'buscarAPI']);
 $router->get('/API/internacionales/colocarInfo', [InternacionalesController::class,'colocarInfo']);
+
+/**ESTADISTICAS */
+$router->get('/estadisticas', [EstadisticasController::class,'index']);
+$router->get('/API/estadisticas/mapa', [EstadisticasController::class,'operacionesMapaApi']);
+$router->get('/API/estadisticas/consumos', [EstadisticasController::class,'operacionesConsumosApi']);
 
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
