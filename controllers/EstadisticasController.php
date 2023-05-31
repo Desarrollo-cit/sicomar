@@ -36,6 +36,48 @@ class EstadisticasController {
             ]);
         }
     }
+    public static function operacionesTopApi(){
+        getHeadersApi();
+        $inicio = str_replace('T',' ', $_GET['inicio']);
+        $fin = str_replace('T',' ', $_GET['fin']);
+        try {
+            $sql = "SELECT first 5 distinct asi_catalogo, trim(gra_desc_ct) || ' ' || trim (per_ape1) || ' ' || trim (per_ape2[1]) || '.' as nombre , count(*) as cantidad FROM codemar_asig_personal inner join mper on asi_catalogo = per_catalogo  inner join grados on per_grado = gra_codigo inner join codemar_operaciones on ope_id = asi_operacion where asi_sit = 1 ";
+            if($inicio != ''){
+                $sql.= " and ope_fecha_zarpe >= '$inicio' "; 
+            }
+            if($fin != ''){
+                $sql.= " and ope_fecha_zarpe <= '$fin' "; 
+            }
+
+            $sql.= " group by asi_catalogo, nombre order by cantidad desc ";
+            $top = ActiveRecord::fetchArray($sql);
+            $data = [];
+            $labels = [];
+            $cantidades = [];
+        
+            foreach ($top as $key => $puesto ) {
+                
+    
+                $labels[]= $puesto['nombre'];
+                $cantidades[]= $puesto['cantidad'];
+            
+            }
+            $data = [
+                'labels' => $labels,
+                'cantidades' => $cantidades
+            ];
+    
+        
+            echo json_encode($data);
+        } catch (Exception $e) {
+            echo json_encode([
+                "detalle" => $e->getMessage(),       
+                "mensaje" => "Ocurrió un error en base de datos",
+    
+                "codigo" => 4,
+            ]);
+        }
+    }
     public static function operacionesConsumosApi(){
         getHeadersApi();
 
@@ -107,6 +149,83 @@ class EstadisticasController {
             echo json_encode([
                 "detalle" => $e->getMessage(),       
                 "mensaje" => "$sql",
+    
+                "codigo" => 4,
+            ]);
+        }
+    }
+
+    public static function operacionesMensualesApi(){
+        getHeadersApi();
+        $inicio = $_GET['inicio'];
+        $year = $inicio != '' ? date('Y',  strtotime($inicio)) : 'year(current)';
+        try {
+            $sql = "SELECT
+            distinct dep_desc_ct,
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 1 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as enero,
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 2 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as febrero, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 3 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as marzo, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 4 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as abril, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 5 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as mayo, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 6 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as junio, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 7 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as julio, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 8 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as agosto, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 9 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as septiembre, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 10 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as octubre, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 11 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as noviembre, 
+            (
+                select count (*) from codemar_operaciones b where month(b.ope_fecha_zarpe) = 12 and a.ope_dependencia = b.ope_dependencia and b.ope_sit = 4 and b.ope_nacional = 'N' and year(b.ope_fecha_zarpe) = $year
+            ) as diciembre
+            
+            
+            FROM CODEMAR_OPERACIONES a inner join mdep on a.ope_dependencia = dep_llave order by dep_desc_ct";
+            $operaciones = ActiveRecord::fetchArray($sql);
+            $data = [];
+            foreach ($operaciones as $key => $operacion) {
+                $data['labels'][] = trim($operacion['dep_desc_ct']);
+                $data['cantidades'][] = [
+                    $operacion['enero'],
+                    $operacion['febrero'],
+                    $operacion['marzo'],
+                    $operacion['abril'],
+                    $operacion['mayo'],
+                    $operacion['junio'],
+                    $operacion['julio'],
+                    $operacion['agosto'],
+                    $operacion['septiembre'],
+                    $operacion['octubre'],
+                    $operacion['noviembre'],
+                    $operacion['diciembre'],
+                ];
+    
+            }
+            echo json_encode($data);
+        } catch (Exception $e) {
+            echo json_encode([
+                "detalle" => $e->getMessage(),       
+                "mensaje" => "Ocurrió un error en base de datos",
     
                 "codigo" => 4,
             ]);

@@ -26,6 +26,8 @@ $router->get('/estadisticas', [EstadisticasController::class,'index']);
 $router->get('/API/estadisticas/mapa', [EstadisticasController::class,'operacionesMapaApi']);
 $router->get('/API/estadisticas/consumos', [EstadisticasController::class,'operacionesConsumosApi']);
 $router->get('/API/estadisticas/comando', [EstadisticasController::class,'operacionesComandoApi']);
+$router->get('/API/estadisticas/mensuales', [EstadisticasController::class,'operacionesMensualesApi']);
+$router->get('/API/estadisticas/top', [EstadisticasController::class,'operacionesTopApi']);
 
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador

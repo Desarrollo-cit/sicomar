@@ -61,7 +61,7 @@ const dataMapa = async (inicio = '', fin = '') => {
             max: 15,
             data
         };
-
+        // console.log(testData);
         heatmapLayer.setData(testData);
 
 
@@ -78,7 +78,7 @@ const getConsumos = async (inicio = '', fin = '') => {
         const config = { method: "GET" }
         const response = await fetch(url, config);
         const dataBD = await response.json()
-        console.log(dataBD);
+        // console.log(dataBD);
 
         if (window.grafico) {
             window.grafico.destroy()
@@ -125,7 +125,7 @@ const getConsumos = async (inicio = '', fin = '') => {
             );
         } else {
             Toast.fire({
-                title: 'No se reportar registros',
+                title: 'No se reportan registros',
                 icon: 'info'
             })
         }
@@ -144,7 +144,7 @@ const getOperaciones = async (inicio = '', fin = '') => {
     const config = { method: "GET" }
     const response = await fetch(url, config);
     const info = await response.json()
-    console.log(info)
+    // console.log(info)
     // return
     window.myChart && window.myChart.destroy()
 
@@ -215,9 +215,146 @@ const getOperaciones = async (inicio = '', fin = '') => {
     // console.log(info);
 }
 
+const getOperacionesMensuales = async (inicio = '') => {
+    const url = `/sicomar/API/estadisticas/mensuales?inicio=${inicio}`
+    const config = { method : "GET" }
+    const response = await fetch(url, config);
+    const info = await response.json()
+  
+    info.length < 1 && alertToast('info','No se reportan registros') 
+  
+    let datasets = [];
+    const {labels, cantidades} = info;
+  
+    // return
+  
+    for (let index = 0; index < labels.length; index++) {
+      datasets = [ ... datasets , {
+        label: labels[index],
+        data: cantidades[index],
+        fill: false,
+        backgroundColor: chartColors[index],
+        borderColor:  chartColors[index],
+        tension: 0.2
+      }]
+      
+    }
+    
+    const canvas = document.getElementById('chartMeses');
+    const ctx = canvas.getContext('2d');
+    if(window.myChartMeses){
+    //   console.log(window.myChartMeses);
+      window.myChartMeses.destroy()
+    } 
+      
+    
+    const labelsTitulos = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+    const data = {
+      labels: labelsTitulos,
+      datasets
+    };
+    const configChart = {
+      type: 'line',
+      data: data,
+      options: {
+        plugins: {
+          title: {
+              display: true,
+              text: 'Operaciones por Comando'
+          }
+        }
+      }
+    };
+  
+    window.myChartMeses = new Chart(ctx, configChart);
+    window.myChartMeses.update()
+  
+    // console.log(info);
+  }
+
+  const getOperacionesTop = async (inicio = '', fin ='') => {
+    const url = `/sicomar/API/estadisticas/top?inicio=${inicio}&fin=${fin}`
+    const config = { method : "GET" }
+    const response = await fetch(url, config);
+    const info = await response.json()
+  
+    // console.log(info);
+    // return;
+  
+    info.length < 1 && alertToast('info','No se reportan registros') 
+    
+  
+    // console.log(info);
+    // return
+    
+    const canvas = document.getElementById('chartTop');
+    const ctx = canvas.getContext('2d');
+    window.myChartTop && window.myChartTop.destroy()
+    
+    let {labels, cantidades} = info;
+  
+    let dataSetsLabels = labels;
+    let dataSetsValues = cantidades
+  
+  
+  
+  
+    let datasets = []
+  
+    for (let index = 0; index < dataSetsLabels.length; index++) {
+      datasets = [...datasets, {
+        label: dataSetsLabels[index],
+        data: dataSetsValues[index],
+        backgroundColor: chartColors[index],
+        borderColor:  chartColors[index],
+        borderWidth: 1
+      }]
+      
+    }
+    let chartInfo = {
+      type: 'bar',
+      data: {
+        labels,
+        datasets : [{
+          label: 'TOP',
+          data: cantidades,
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(75, 192, 192)',
+            'rgb(255, 205, 86)',
+            'rgb(201, 203, 207)',
+            'rgb(54, 162, 235)'
+          ]
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        plugins: {
+          title: {
+              display: true,
+              text: 'TOP PERSONAL OPERATIVO'
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      }
+    }
+  
+  
+    window.myChartTop = new Chart(ctx, chartInfo);
+    window.myChartTop.update()
+  
+    // console.log(info);
+  }
+
 dataMapa();
 getConsumos();
 getOperaciones();
+getOperacionesMensuales();
+getOperacionesTop();
 
 const filtrarInformacion = async (e) => {
     e.preventDefault();
@@ -226,8 +363,8 @@ const filtrarInformacion = async (e) => {
     dataMapa(inicio, fin);
     getConsumos(inicio, fin)
     getOperaciones(inicio, fin)
-    // getOperacionesMensuales(inicio);
-    // getOperacionesTop(inicio, fin)
+    getOperacionesMensuales(inicio);
+    getOperacionesTop(inicio, fin)
 
 
 }
