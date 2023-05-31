@@ -6,6 +6,14 @@ module.exports = {
   entry: {
     'js/app' : './src/js/app.js',
     'js/inicio' : './src/js/inicio.js',
+    'js/Reporte/index' : './src/js/Reporte/index.js',
+    'js/Reporte/derrota' : './src/js/Reporte/derrota.js',
+    'js/Reporte/motores' : './src/js/Reporte/motores.js',
+    'js/Reporte/consumos' : './src/js/Reporte/consumos.js',
+    'js/Reporte/comunicaciones' : './src/js/Reporte/comunicaciones.js',
+    'js/Reporte/novedades' : './src/js/Reporte/novedades.js',
+    'js/Reporte/lecciones' : './src/js/Reporte/lecciones.js',
+    'js/Reporte/inteligencia' : './src/js/Reporte/inteligencia.js',
     'js/internacionales/index' : './src/js/internacionales/index.js',
   },
   output: {
