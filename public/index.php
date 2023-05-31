@@ -15,11 +15,19 @@ use Controllers\ComunicacionesController;
 use Controllers\InteligenciaController;
 use Controllers\NovedadesController;
 use Controllers\LeccionesController;
-
+use Controllers\InternacionalesController;
 $router = new Router();
 $router->setBaseURL('/' . $_ENV['APP_NAME']);
 
 $router->get('/', [AppController::class,'index']);
+$router->get('/internacionales', [InternacionalesController::class,'index']);
+$router->get('/API/internacionales/catalogo', [InternacionalesController::class,'getCatalogo']);
+$router->post('/API/internacionales/guardar', [InternacionalesController::class,'guardar']);
+$router->post('/API/internacionales/modificar', [InternacionalesController::class,'modificar']);
+$router->post('/API/internacionales/eliminar', [InternacionalesController::class,'eliminar']);
+$router->get('/API/internacionales/buscar', [InternacionalesController::class,'buscarAPI']);
+$router->get('/API/internacionales/colocarInfo', [InternacionalesController::class,'colocarInfo']);
+
 
 
 //reporte

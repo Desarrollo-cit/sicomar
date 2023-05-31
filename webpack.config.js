@@ -14,6 +14,7 @@ module.exports = {
     'js/Reporte/novedades' : './src/js/Reporte/novedades.js',
     'js/Reporte/lecciones' : './src/js/Reporte/lecciones.js',
     'js/Reporte/inteligencia' : './src/js/Reporte/inteligencia.js',
+    'js/internacionales/index' : './src/js/internacionales/index.js',
   },
   output: {
     filename: '[name].js',
