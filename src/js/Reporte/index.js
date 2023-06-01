@@ -7,7 +7,7 @@ import { lenguaje } from "../lenguaje";
 import Swal from "sweetalert2";
 
 const divTabla = document.getElementById('divTabla');
-// let tablaReporte = new Datatable('#TablaReporte');
+
 window.limpiar = () => {
     tablaReporte.clear();
 }
@@ -122,86 +122,7 @@ const BuscarDatos = async (evento) => {
        }
 
 
-        // tablaReporte.destroy();
-        // let contador = 1;
-        // tablaReporte = new Datatable('#TablaReporte', {
-        //     language: lenguaje,
-        //     data: data,
-        //     columns: [
-
-        //         {
-        //             data: 'id',
-        //             width: '5%',
-        //             render: () => {
-        //                 return contador++;
-        //             }
-        //         },
-
-        //         {
-        //             data: 'ope_identificador',
-        //             width: '20%'
-
-        //         },
-        //         {
-        //             data: 'derrota',
-        //             width: '9.37%',
-        //             'render': (data, type, row, meta) => {
-        //                 return `<button class='btn btn-success'  onclick='ApiDerrota("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )' > <i class='bi bi-cursor'></i></button>`
-        //             }
-        //         },
-
-        //         {
-        //             data: 'motores',
-        //             width: '9.37%',
-        //             'render': (data, type, row, meta) => {
-        //                 return `<button class='btn btn-outline-info' onclick='ApiMotores("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )' ><i class='bi bi-gear-wide-connected'></i></button>`
-        //             }
-        //         },
-        //         {
-        //             data: 'consumos',
-        //             width: '9.37%',
-        //             'render': (data, type, row, meta) => {
-        //                 return `<button class='btn btn-outline-info' onclick='ApiConsumos("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )' ><i class='bi bi-boxes'></i></button>`
-        //             }
-        //         },
-        //         {
-        //             data: 'comunicaciones',
-        //             width: '9.37%',
-        //             'render': (data, type, row, meta) => {
-        //                 return `<button class='btn btn-outline-info' onclick='ApiComunicaciones("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )' ><i class='bi bi-broadcast-pin'></i></button>`
-        //             }
-        //         },
-        //         {
-        //             data: 'novedades',
-        //             width: '9.37%',
-        //             'render': (data, type, row, meta) => {
-        //                 return `<button class='btn btn-outline-info' onclick='ApiNovedades("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )'><i class='bi bi-file-earmark-ruled'></i></button>`
-        //             }
-        //         },
-        //         {
-        //             data: 'lecciones',
-        //             width: '9.37%',
-        //             'render': (data, type, row, meta) => {
-        //                 return `<button class='btn btn-outline-info' onclick='ApiLecciones("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )'><i class='bi bi-file-earmark-text'></i></button>`
-        //             }
-        //         },
-        //         {
-        //             data: 'inteligencia',
-        //             width: '9.37%',
-        //             'render': (data, type, row, meta) => {
-        //                 return `<button class='btn btn-outline-info' onclick='ApiInteligencia("${row['ope_id']}", "${row['ope_identificador']}", "${row['ope_fecha_zarpe']}" )'><i class='bi bi-binoculars'></i></button>`
-        //             }
-        //         },
-        //         {
-        //             data: 'cambiar',
-        //             width: '9.37%',
-        //             'render': (data, type, row, meta) => {
-        //                 return `<button class='btn btn-success' onclick='ApiCambio("${row['ope_id']}", "${row['ope_identificador']}" )'><i class='bi bi-arrow-right-circle'></i></button>`
-        //             }
-        //         },
-        //     ]
-        // })
-
+  
     } catch (error) {
         console.log(error);
     }

@@ -24,7 +24,7 @@
                     <th>COMUNICACIONES</th>
                     <th>NOVEDADES</th>
                     <th>LECCIONES APRENDIDAS</th>
-                    <th>INDORMACION DE INT</th>
+                    <th>INFORMACION DE INTELIGENCIA</th>
                     <th>FINALIZAR</th>
                 </tr>
             </thead>

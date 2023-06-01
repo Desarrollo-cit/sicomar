@@ -58,7 +58,7 @@ try{
                     'ope_reutilizar' => $value['ope_reutilizar'],
                     'ope_distancia' => $value['ope_distancia'],
                     'ope_nacional' => $value['ope_nacional'],
-                    'ope_sit' =>  "0"
+                    'ope_sit' =>  "2"
                 ]);
                 $cambiar = $cambio->guardar();
             }

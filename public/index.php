@@ -16,6 +16,8 @@ use Controllers\InteligenciaController;
 use Controllers\NovedadesController;
 use Controllers\LeccionesController;
 use Controllers\InternacionalesController;
+use Controllers\ValidacionRController;
+
 $router = new Router();
 $router->setBaseURL('/' . $_ENV['APP_NAME']);
 
@@ -75,6 +77,13 @@ $router->post('/API/reporte/lecciones/GuardarLec', [LeccionesController::class, 
 $router->get('/reporte/inteligencia', [InteligenciaController::class,'index']);
 $router->get('/API/reporte/inteligencia/BusInteligencia', [InteligenciaController::class, 'Buscarinteligencia'] );
 $router->post('/API/reporte/inteligencia/GuardarInf', [InteligenciaController::class, 'GuardarInteligenciaAPI'] );
+
+
+// validar reporte de patrulla
+$router->get('/validacionR', [ValidacionRController::class,'index']);
+$router->get('/API/validacionR/BusDatos', [ValidacionRController::class, 'BuscarDatosAPI'] );
+$router->get('/API/validacionR/BusInformacion', [ValidacionRController::class, 'BuscarInformacionAPI'] );
+
 
 
 $router->comprobarRutas();

@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="identificador" name="identificador" value="<?php echo $decoded_identificador; ?>">
+                            <input type="text" class="form-control" id="identificador" name="identificador" value="<?php echo $decoded_identificador; ?>" readonly>
 
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="fecha_zarpe" name="fecha_zarpe" value="<?php echo $ope_fecha_zarpe; ?>">
+                            <input type="text" class="form-control" id="fecha_zarpe" name="fecha_zarpe" value="<?php echo $decoded_fecha_zarpe; ?> " readonly>
 
                         </div>
                     </div>

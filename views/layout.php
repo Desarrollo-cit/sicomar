@@ -36,9 +36,9 @@
                         <li><a class="dropdown-item nav-link text-white " href="#"><i class="ms-lg-0 ms-2 bi bi-file-earmark-text me-2"></i>Hoja de zarpe</a></li>
                         <li><a class="dropdown-item nav-link text-white " href="#"><i class="ms-lg-0 ms-2 bi bi-card-list me-2"></i>Ver zarpes</a></li>
                         <li><a class="dropdown-item nav-link text-white " href="/sicomar/reporte"> <i class="ms-lg-0 ms-2 bi bi-activity me-2"></i>Reporte de patrulla</a></li>
-                        <li><a class="dropdown-item nav-link text-white " href="#"><i class="ms-lg-0 ms-2 bi bi-person-check me-2"></i>Validar reporte</a></li>
+                        <li><a class="dropdown-item nav-link text-white " href="/sicomar/validacionR"><i class="ms-lg-0 ms-2 bi bi-person-check me-2"></i>Validar reporte</a></li>
                         <li><a class="dropdown-item nav-link text-white " href="#"><i class="ms-lg-0 ms-2 bi bi-ui-checks me-2"></i>Validar operación</a></li>
-                        <li><a class="dropdown-item nav-link text-white " href="#"><i class="ms-lg-0 ms-2 bi bi-globe-americas me-2"></i>Internacionales</a></li>
+                        <li><a class="dropdown-item nav-link text-white " href="/sicomar/internacionales"><i class="ms-lg-0 ms-2 bi bi-globe-americas me-2"></i>Internacionales</a></li>
                         <li><a class="dropdown-item nav-link text-white " href="#"><i class="ms-lg-0 ms-2 bi bi-globe-americas me-2"></i>Validar internacional</a></li>  
                     </ul>
                 </div> 
