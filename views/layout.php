@@ -49,7 +49,7 @@
                     <ul class="dropdown-menu  dropdown-menu-dark nav-index " id="dropwdownRevision">
                         <!-- <h6 class="dropdown-header">Información</h6> -->
                         <li><a class="dropdown-item nav-link text-white " href="#"><i class="ms-lg-0 ms-2 bi bi-file-earmark-person me-2"></i>Perfil operativo</a></li>
-                        <li><a class="dropdown-item nav-link text-white " href="#"> <i class="ms-lg-0 ms-2 bi bi-graph-up-arrow me-2"></i>Estadísticas</a></li>
+                        <li><a class="dropdown-item nav-link text-white " href="/sicomar/estadisticas"> <i class="ms-lg-0 ms-2 bi bi-graph-up-arrow me-2"></i>Estadísticas</a></li>
                         <li><a class="dropdown-item nav-link text-white " href="#"> <i class="ms-lg-0 ms-2 bi bi-file-earmark-post me-2"></i>Perfil de Unidad</a></li>
                     
                     

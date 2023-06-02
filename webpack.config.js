@@ -15,7 +15,9 @@ module.exports = {
     'js/Reporte/lecciones' : './src/js/Reporte/lecciones.js',
     'js/Reporte/inteligencia' : './src/js/Reporte/inteligencia.js',
     'js/internacionales/index' : './src/js/internacionales/index.js',
+    'js/estadisticas/index' : './src/js/estadisticas/index.js',
     'js/validacionR/index' : './src/js/ValidacionR/index.js',
+
   },
   output: {
     filename: '[name].js',

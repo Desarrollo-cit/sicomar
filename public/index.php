@@ -7,6 +7,7 @@ require_once __DIR__ . '/../includes/app.php';
 
 use MVC\Router;
 use Controllers\AppController;
+use Controllers\EstadisticasController;
 use Controllers\ReporteController;
 use Controllers\DerrotaController;
 use Controllers\MotoresController;
@@ -29,6 +30,14 @@ $router->post('/API/internacionales/modificar', [InternacionalesController::clas
 $router->post('/API/internacionales/eliminar', [InternacionalesController::class,'eliminar']);
 $router->get('/API/internacionales/buscar', [InternacionalesController::class,'buscarAPI']);
 $router->get('/API/internacionales/colocarInfo', [InternacionalesController::class,'colocarInfo']);
+
+/**ESTADISTICAS */
+$router->get('/estadisticas', [EstadisticasController::class,'index']);
+$router->get('/API/estadisticas/mapa', [EstadisticasController::class,'operacionesMapaApi']);
+$router->get('/API/estadisticas/consumos', [EstadisticasController::class,'operacionesConsumosApi']);
+$router->get('/API/estadisticas/comando', [EstadisticasController::class,'operacionesComandoApi']);
+$router->get('/API/estadisticas/mensuales', [EstadisticasController::class,'operacionesMensualesApi']);
+$router->get('/API/estadisticas/top', [EstadisticasController::class,'operacionesTopApi']);
 
 
 
