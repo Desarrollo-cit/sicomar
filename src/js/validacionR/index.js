@@ -38,15 +38,20 @@ let tablaReporte = new Datatable('#dataTable', {
             "width": "10%"
         },
         {
-            data: "id",
-            "render": (data, type, row, meta) => `<button class='btn btn-danger' onclick='rechazarReporte(${data})' ><i class='bi bi-x-circle'></i></button>`,
-            "width": "10%"
+            data: 'rechazo',
+            width: '9.37%',
+            'render': (data, type, row, meta) => {
+                return `<button class='btn btn-danger' onclick='ApiRechazo("${row['ope_id']}")'><i class='bi bi-x-circle'></i></button>`
+            }
         },
         {
-            data: "id",
-            "render": (data, type, row, meta) => `<button class='btn btn-success' onclick='validarReporte(${data})' ><i class='bi bi-check-circle'></i></button>`,
-            "width": "10%"
+            data: 'cambiar',
+            width: '9.37%',
+            'render': (data, type, row, meta) => {
+                return `<button class='btn btn-success' onclick='ApiCambio("${row['ope_id']}")'><i class='bi bi-check-circle'></i></button>`
+            }
         },
+
     ],
 })
 
@@ -70,7 +75,7 @@ const BuscarDatos = async (evento) => {
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
 
-        console.log(data);
+       // console.log(data);
 
         tablaReporte.clear().draw();
         if (data) {
@@ -296,12 +301,19 @@ const map = L.map('map', {
     zoom: 7
 })
 
+// const icon = L.icon({
+//     iconUrl: '../assets/img/barquito.png',
+//     iconSize:     [35,48],
+//     iconAnchor:   [12, 28],
+// });
+
+
+
 const icon = L.icon({
-    iconUrl: '../assets/img/battleship.png',
+    iconUrl: './public/images/barquito.png',
     iconSize:     [35,48],
     iconAnchor:   [12, 28],
 });
-
 
 const LimpiarMapa = () => {
     map.eachLayer(layer =>{markers.removeLayer(layer)})
@@ -338,17 +350,7 @@ const calcucarDistanciaTotal = async (id) => {
     return total.toFixed(2);
 }
 
-// const getDistancia = (lat1,lon1,lat2,lon2) => {
-//     rad = function(x) {return x*Math.PI/180;}
-//     let R = 6378.137; //Radio de la tierra en km
-//     let dLat = rad( lat2 - lat1 );
-//     let dLong = rad( lon2 - lon1 );
-//     let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
-//     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-//     let d = R * c;
-//     let dmillas = d * 1.852
-//     return dmillas; //Retorna tres decimales
-// }
+
 
 
 const getDistancia = (lat1, lon1, lat2, lon2) => {
@@ -370,6 +372,127 @@ const getDistancia = (lat1, lon1, lat2, lon2) => {
     let dmillas = d * 1.852; // Factor de conversión de km a millas
     return dmillas.toFixed(3); // Retorna tres decimales
   };
+
+
+
+  window.ApiCambio = (ope_id) => {
+
+    Swal.fire({
+        title: 'Confirmación',
+        icon: 'warning',
+        text: '¿Esta seguro que desea validar esta operacion?',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, aprobar.'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+
+            const url = `/sicomar/API/validacionR/CambioSit?id=${ope_id}`  
+            const config = {
+                method: 'GET',
+            }
+
+            const respuesta = await fetch(url, config);
+            const data = await respuesta.json();
+            console.log(data)
+   
+            const { mensaje, codigo, detalle } = data;
+            let icon = "";
+            switch (codigo) {
+                case 1:
+                    icon = "success"
+                    BuscarDatos()
+                    break;
+               
+                case 0:
+                    icon = "error"
+        
+                    break;
+                case 4:
+                    icon = "error"
+                    console.log(detalle)
+                    
+        
+                    break;
+        
+                default:
+                    break;
+            }
+        
+            Toast.fire({
+                icon: icon,
+                title: mensaje,
+            })
+
+            
+    
+        }
+    })
+}
+
+
+window.ApiRechazo = (ope_id) => {
+
+    Swal.fire({
+        title: 'Confirmación',
+        icon: 'error',
+        text: '¿Esta seguro que desea rechazar esta operacion?',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, rechazar.'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+
+            const url = `/sicomar/API/validacionR/CambioRec?id=${ope_id}`  
+            const config = {
+                method: 'GET',
+            }
+
+            const respuesta = await fetch(url, config);
+            const data = await respuesta.json();
+            console.log(data)
+   
+            const { mensaje, codigo, detalle } = data;
+            let icon = "";
+            switch (codigo) {
+                case 1:
+                    icon = "success"
+                    BuscarDatos()
+                    break;
+               
+                case 0:
+                    icon = "error"
+        
+                    break;
+                case 4:
+                    icon = "error"
+                    console.log(detalle)
+                    
+        
+                    break;
+        
+                default:
+                    break;
+            }
+        
+            Toast.fire({
+                icon: icon,
+                title: mensaje,
+            })
+
+            
+    
+        }
+    })
+}
+
+
+
+
+
+
 
 
 BuscarDatos()

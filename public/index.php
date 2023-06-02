@@ -83,7 +83,8 @@ $router->post('/API/reporte/inteligencia/GuardarInf', [InteligenciaController::c
 $router->get('/validacionR', [ValidacionRController::class,'index']);
 $router->get('/API/validacionR/BusDatos', [ValidacionRController::class, 'BuscarDatosAPI'] );
 $router->get('/API/validacionR/BusInformacion', [ValidacionRController::class, 'BuscarInformacionAPI'] );
-
+$router->get('/API/validacionR/CambioSit', [ValidacionRController::class, 'CambioSituacionAPI'] );
+$router->get('/API/validacionR/CambioRec', [ValidacionRController::class, 'RechazoSituacionAPI'] );
 
 
 $router->comprobarRutas();

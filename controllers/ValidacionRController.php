@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Model\Derrota;
+use Model\Operaciones;
 
 use MVC\Router;
 use Exception;
@@ -31,6 +32,10 @@ class ValidacionRController
 
             if ($datos) {
                 echo json_encode($datos);
+            } else {
+                echo json_encode([
+                    "codigo" => 1,
+                ]);
             }
         } catch (Exception $e) {
             echo json_encode(["error" => $e->getMessage()]);
@@ -77,11 +82,8 @@ class ValidacionRController
 
         try {
             getHeadersApi();
-            $datos = Derrota::fetchArray("
-    SELECT trim(gra_desc_ct) || ' ' || trim(per_nom1) || ' ' || trim(per_nom2) || ' ' || trim(per_ape1) || ' ' || trim(per_ape2) as nombre, per_catalogo as catalogo, asi_id FROM codemar_asig_personal inner join mper on  per_catalogo = asi_catalogo inner join grados on per_grado = gra_codigo where asi_sit = 1 and asi_operacion = $operacion order by per_grado, per_catalogo 
+            $datos = Derrota::fetchArray(" SELECT trim(gra_desc_ct) || ' ' || trim(per_nom1) || ' ' || trim(per_nom2) || ' ' || trim(per_ape1) || ' ' || trim(per_ape2) as nombre, per_catalogo as catalogo, asi_id FROM codemar_asig_personal inner join mper on  per_catalogo = asi_catalogo inner join grados on per_grado = gra_codigo where asi_sit = 1 and asi_operacion = $operacion order by per_grado, per_catalogo 
     ");
-
-
 
             if ($datos != null) {
                 $personal = [];
@@ -101,7 +103,7 @@ class ValidacionRController
     }
 
 
-// buscar unidades
+    // buscar unidades
     public static function BuscarUnidad($operacion)
     {
         getHeadersApi();
@@ -206,10 +208,10 @@ class ValidacionRController
                 $novedad = [];
                 foreach ($datos as $vuelta) {
                     $novedad[] = [
-                        'fecha' => strtoupper(strftime( '%d%b%G',strtotime($vuelta['nov_fechahora']))),
-                        'hora' => date('Hi',strtotime($vuelta['nov_fechahora'])),
+                        'fecha' => strtoupper(strftime('%d%b%G', strtotime($vuelta['nov_fechahora']))),
+                        'hora' => date('Hi', strtotime($vuelta['nov_fechahora'])),
                         'novedad' => $vuelta['nov_novedad'],
-                                 ];
+                    ];
                 }
             } else {
             }
@@ -239,7 +241,7 @@ class ValidacionRController
                         'insumo' => $vuelta['insumo'],
                         'cantidad' => $vuelta['con_cantidad'],
                         'unidad' => $vuelta['unidad'],
-                   
+
                     ];
                 }
             } else {
@@ -266,7 +268,7 @@ class ValidacionRController
                 $recomendaciones = [];
                 foreach ($datos as $vuelta) {
                     $recomendaciones[] = [
-                        'recomendacion' => $vuelta['rec_recomendacion'],                  
+                        'recomendacion' => $vuelta['rec_recomendacion'],
                     ];
                 }
             } else {
@@ -277,32 +279,32 @@ class ValidacionRController
         }
     }
 
-//inteligencia
+    //inteligencia
 
-public static function BuscarInteligencia($operacion)
-{
-    getHeadersApi();
-
-    try {
+    public static function BuscarInteligencia($operacion)
+    {
         getHeadersApi();
-        $datos = Derrota::fetchArray("SELECT * FROM codemar_informacion where info_operacion = $operacion and info_situacion = 1");
+
+        try {
+            getHeadersApi();
+            $datos = Derrota::fetchArray("SELECT * FROM codemar_informacion where info_operacion = $operacion and info_situacion = 1");
 
 
 
-        if ($datos != null) {
-            $inteligencia = [];
-            foreach ($datos as $vuelta) {
-                $inteligencia[] = [
-                    'informacion' => $vuelta['info_descripcion'],                  
-                ];
+            if ($datos != null) {
+                $inteligencia = [];
+                foreach ($datos as $vuelta) {
+                    $inteligencia[] = [
+                        'informacion' => $vuelta['info_descripcion'],
+                    ];
+                }
+            } else {
             }
-        } else {
+            return ($inteligencia);
+        } catch (Exception $e) {
+            //  echo json_encode(["error"=>$e->getMessage()]);
         }
-        return ($inteligencia);
-    } catch (Exception $e) {
-        //  echo json_encode(["error"=>$e->getMessage()]);
     }
-}
 
 
 
@@ -343,131 +345,59 @@ public static function BuscarInteligencia($operacion)
             $data['novedades'] = $novedades;
             $data['recomendaciones'] = $recomendaciones;
             $data['inteligencia'] = $inteligencia;
-    
+
             echo json_encode($data);
-
-
-          
         } catch (Exception $e) {
 
             echo json_encode(["error" => $e->getMessage()]);
         }
     }
 
-    public static function GuardarAPI()
+
+    public static function CambioSituacionAPI()
     {
 
         getHeadersApi();
-
-        // echo json_encode($_POST);
-        // exit;
+        $id = $_GET["id"];
 
 
         try {
+            $datos = Operaciones::fetchArray("SELECT * FROM codemar_operaciones WHERE ope_id = $id");
 
-
-            $der_coodigo = $_POST['id'];
-            //$der_coodigos = $_POST['puntos'];
-            $der_ope = $_POST['puntos'];
-
-
-            $datos = Derrota::fetchArray("SELECT * FROM codemar_derrota  WHERE der_ope = $der_coodigo AND der_situacion = 1");
             if ($datos) {
+
+
                 foreach ($datos as $key => $value) {
-
-                    $cambio = new Derrota([
-
-                        'der_id' => $value['der_id'],
-                        'der_ope' => $value['der_ope'],
-                        'der_latitud' => $value['der_latitud'],
-                        'der_longitud' => $value['der_longitud'],
-                        'der_fecha' => $value['der_fecha'],
-                        'der_situacion' =>  "0"
-
+                    $cambio = new Operaciones([
+                        'ope_id' => $value['ope_id'],
+                        'ope_tipo' => $value['ope_tipo'],
+                        'ope_fecha_zarpe' => $value['ope_fecha_zarpe'],
+                        'ope_fecha_atraque' => $value['ope_fecha_atraque'],
+                        'ope_situacion' => $value['ope_situacion'],
+                        'ope_mision' => $value['ope_mision'],
+                        'ope_ejecucion' => $value['ope_ejecucion'],
+                        'ope_identificador' => $value['ope_identificador'],
+                        'ope_dependencia' => $value['ope_dependencia'],
+                        'ope_reutilizar' => $value['ope_reutilizar'],
+                        'ope_distancia' => $value['ope_distancia'],
+                        'ope_nacional' => $value['ope_nacional'],
+                        'ope_sit' =>  "3"
                     ]);
                     $cambiar = $cambio->guardar();
                 }
             }
 
-
-            foreach ($der_ope as $val) {
-                $datos = explode(',', $val);
-                $latitud = $datos[0];
-                $longitud = $datos[1];
-                $fecha = $datos[2];
-
-                $Ingreso = new Derrota([
-
-                    'der_ope' =>        $der_coodigo,
-                    'der_latitud' =>    $latitud,
-                    'der_longitud' =>   $longitud,
-                    'der_fecha' =>      $fecha,
-                    'der_situacion' =>  "1"
-
-                ]);
-                $guardado = $Ingreso->guardar();
-            }
-
-            if ($guardado) {
-
+            if ($cambiar) {
                 echo json_encode([
-
-                    "codigo" => 7,
+                    "mensaje" => "Operacion aprobada",
+                    "codigo" => 1,
                 ]);
             } else {
                 echo json_encode([
-
-                    "codigo" => 2,
+                    "mensaje" => "Error, Verifique sus datos",
+                    "codigo" => 0,
                 ]);
             }
-
-            //     $der_coodigo = $_POST['id'];
-            //     //$der_coodigos = $_POST['puntos'];
-            //     $der_ope =$_POST['puntos'];
-            //     $der_id =$_POST['der_id'];
-            // $cuantosId = count($der_id);
-
-            // $val_id = 0;
-            // for ($i=0; $i < $cuantosId; $i++) { 
-            //     # code...
-            // foreach ($der_ope as $val) {
-            //     $datos = explode(',', $val);
-            //     $latitud = $datos[0];
-            //     $longitud = $datos[1];
-            //     $fecha = $datos[2];
-            // // echo json_encode($der_id[$i]);
-            // // exit;
-
-            //     $Ingreso = new Derrota([
-            //         'der_id' => $der_id[$i],
-            //         'der_ope' =>        $der_coodigo,
-            //         'der_latitud' =>    $latitud,
-            //         'der_longitud' =>   $longitud,
-            //         'der_fecha' =>      $fecha,
-            //         'der_situacion' =>  "1"
-
-            //     ]);
-            //     $guardado = $Ingreso->guardar(); 
-
-
-            // }
-            // }
-            // if ($guardado) {
-
-            //     echo json_encode([
-
-            //         "codigo" => 7,
-            //     ]);
-
-            // } else {
-            //     echo json_encode([
-
-            //         "codigo" => 2,
-            //     ]);
-            // }
-
-
-
         } catch (Exception $e) {
             echo json_encode([
                 "detalle" => $e->getMessage(),
@@ -476,4 +406,60 @@ public static function BuscarInteligencia($operacion)
             ]);
         }
     }
+
+
+
+public static function RechazoSituacionAPI()
+{
+
+    getHeadersApi();
+    $id = $_GET["id"];
+
+
+    try {
+        $datos = Operaciones::fetchArray("SELECT * FROM codemar_operaciones WHERE ope_id = $id");
+
+        if ($datos) {
+
+
+            foreach ($datos as $key => $value) {
+                $cambio = new Operaciones([
+                    'ope_id' => $value['ope_id'],
+                    'ope_tipo' => $value['ope_tipo'],
+                    'ope_fecha_zarpe' => $value['ope_fecha_zarpe'],
+                    'ope_fecha_atraque' => $value['ope_fecha_atraque'],
+                    'ope_situacion' => $value['ope_situacion'],
+                    'ope_mision' => $value['ope_mision'],
+                    'ope_ejecucion' => $value['ope_ejecucion'],
+                    'ope_identificador' => $value['ope_identificador'],
+                    'ope_dependencia' => $value['ope_dependencia'],
+                    'ope_reutilizar' => $value['ope_reutilizar'],
+                    'ope_distancia' => $value['ope_distancia'],
+                    'ope_nacional' => $value['ope_nacional'],
+                    'ope_sit' =>  "1"
+                ]);
+                $cambiar = $cambio->guardar();
+            }
+        }
+
+        if ($cambiar) {
+            echo json_encode([
+                "mensaje" => "Operacion rechazada",
+                "codigo" => 1,
+            ]);
+        } else {
+            echo json_encode([
+                "mensaje" => "Error, Verifique sus datos",
+                "codigo" => 0,
+            ]);
+        }
+    } catch (Exception $e) {
+        echo json_encode([
+            "detalle" => $e->getMessage(),
+            "mensaje" => "Ocurrió un error en la base de datos.",
+            "codigo" => 4,
+        ]);
+    }
+}
+
 }
