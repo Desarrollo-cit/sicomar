@@ -17,6 +17,7 @@ use Controllers\NovedadesController;
 use Controllers\LeccionesController;
 use Controllers\InternacionalesController;
 use Controllers\ValidacionRController;
+use Controllers\ValidacionOController;
 
 $router = new Router();
 $router->setBaseURL('/' . $_ENV['APP_NAME']);
@@ -85,6 +86,14 @@ $router->get('/API/validacionR/BusDatos', [ValidacionRController::class, 'Buscar
 $router->get('/API/validacionR/BusInformacion', [ValidacionRController::class, 'BuscarInformacionAPI'] );
 $router->get('/API/validacionR/CambioSit', [ValidacionRController::class, 'CambioSituacionAPI'] );
 $router->get('/API/validacionR/CambioRec', [ValidacionRController::class, 'RechazoSituacionAPI'] );
+
+
+
+$router->get('/validacionO', [ValidacionOController::class,'index']);
+$router->get('/API/validacionO/BusDatos', [ValidacionOController::class, 'BuscarDatosAPI'] );
+$router->get('/API/validacionO/BusInformacion', [ValidacionOController::class, 'BuscarInformacionAPI'] );
+$router->get('/API/validacionO/CambioSit', [ValidacionOController::class, 'CambioSituacionAPI'] );
+$router->get('/API/validacionO/CambioRec', [ValidacionOController::class, 'RechazoSituacionAPI'] );
 
 
 $router->comprobarRutas();

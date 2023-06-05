@@ -9,14 +9,14 @@ use MVC\Router;
 use Exception;
 use Model\Ingreso;
 
-class ValidacionRController
+class ValidacionOController
 {
 
     public static function index(Router $router)
     {
 
 
-        $router->render('validacionR/index', []);
+        $router->render('validacionO/index', []);
     }
 
     //hace el data table
@@ -27,8 +27,7 @@ class ValidacionRController
         try {
             getHeadersApi();
             $datos = Derrota::fetchArray("SELECT * from codemar_operaciones INNER JOIN codemar_tipos_operaciones on tipo_id = ope_tipo  
-                where ope_dependencia = (select org_dependencia from mper inner join morg on per_plaza = org_plaza 
-                  where per_catalogo = USER) and ope_sit = 2 order by ope_id asc");
+                where ope_dependencia = (select org_dependencia from mper inner join morg on per_plaza = org_plaza where per_catalogo = USER) and ope_sit = 3 order by ope_id asc");
 
             if ($datos) {
                 echo json_encode($datos);
@@ -42,6 +41,9 @@ class ValidacionRController
         }
     }
 
+
+
+    // consulta puntos
 
 
     public static function BuscarPuntos($operacion)
@@ -324,8 +326,6 @@ class ValidacionRController
 
 
 
-
-
     //retornar informacion
     public static function BuscarInformacionAPI()
     {
@@ -398,7 +398,7 @@ class ValidacionRController
                         'ope_reutilizar' => $value['ope_reutilizar'],
                         'ope_distancia' => $value['ope_distancia'],
                         'ope_nacional' => $value['ope_nacional'],
-                        'ope_sit' =>  "3"
+                        'ope_sit' =>  "4"
                     ]);
                     $cambiar = $cambio->guardar();
                 }
@@ -453,7 +453,7 @@ public static function RechazoSituacionAPI()
                     'ope_reutilizar' => $value['ope_reutilizar'],
                     'ope_distancia' => $value['ope_distancia'],
                     'ope_nacional' => $value['ope_nacional'],
-                    'ope_sit' =>  "1"
+                    'ope_sit' =>  "2"
                 ]);
                 $cambiar = $cambio->guardar();
             }
