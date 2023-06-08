@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 
 const divTabla = document.getElementById('tabla');
 const modalElement = document.getElementById('modalReporte')
+const form = document.getElementById('reporte')
 // let punto = [];
 // let idDerrota = [];
 let distancia = 0;
@@ -102,7 +103,7 @@ modalElement.addEventListener('show.bs.modal', async (event) => {
 
     const boton = event.relatedTarget;
     const id = boton.dataset.operacion;
-    console.log(id)
+   // console.log(id)
 
     const tablaInformacion = document.getElementById('tablaInformacion')
     const tablaDerrota = document.getElementById('tablaDerrota')
@@ -125,58 +126,55 @@ modalElement.addEventListener('show.bs.modal', async (event) => {
 
     const respuesta = await fetch(url, config);
     const informacion = await respuesta.json();
-    console.log(informacion)
+   // console.log(informacion)
 
 
-
+    form.reset()
     LimpiarMapa();
 
+
     const { identificador, atraque, zarpe, tipo, puntos, personal, unidades, motores, consumos, comunicaciones, novedades, recomendaciones, inteligencia } = informacion
-    console.log(puntos);
-    //dibujar puntos
 
 
     let index = 0;
-    let puntosArray = []
+    let puntosArray = [];
+    
 
- 
+    while (tablaDerrota.rows.length > 1) {
+        tablaDerrota.deleteRow(-1);
+    }
+    
     if (puntos.length === 0) {
-  
+
         const rowSinpuntos = tablaDerrota.insertRow();
         rowSinpuntos.innerHTML = `<td colspan='7'>Sin datos</td>`;
     } else {
-
-
-
-    puntos.forEach(punto => {
-        let dataPunto = [punto.latitud, punto.longitud, punto.fecha]
-        puntosArray = [...puntosArray, dataPunto]
-        let marker = L.marker(dataPunto, { icon }).addTo(markers);
-        marker.bindPopup(`<b>Punto ${index + 1}</b><br>Latitud: ${punto.latitud}<br>Longitud: ${punto.longitud}<br>Fecha: ${punto.fecha}`);
-        index++;
-    });
-    L.polyline(puntosArray, { color: 'teal' }).addTo(markers);
-    markers.addTo(map)
-    let distancia = 0;
-    while (tablaDerrota.rows.length > 1) {
-        tablaDerrota.deleteRow(-1)
-    }
-    let contador = 1;
-    // console.log(puntosArray);
-
-
-    for (let i = 0; i < puntosArray.length - 1; i++) {
-
-        const row = tablaDerrota.insertRow();
-        row.innerHTML = `<td>${contador}</td><td>${puntosArray[i][0]}</td><td>${puntosArray[i][1]}</td><td>${puntosArray[i][2]}</td><td>${parseFloat(distancia).toFixed(2)}</td>`
-        distancia += getDistancia(puntosArray[i][0], puntosArray[i][1], puntosArray[i + 1][0], puntosArray[i + 1][1])
-        contador++
-    }
-    const rowFinal = tablaDerrota.insertRow();
-    rowFinal.innerHTML = `<td>${contador}</td><td>${puntosArray[puntosArray.length - 1][0]}</td><td>${puntosArray[puntosArray.length - 1][1]}</td><td>${puntosArray[puntosArray.length - 1][2]}</td><td>${parseFloat(distancia).toFixed(2)}</td>`
-    const rowTotal = tablaDerrota.insertRow();
-    rowTotal.innerHTML = `<td class='fw-bold' colspan='4'>DISTANCIA TOTAL</td><td class='fw-bold'>${parseFloat(distancia).toFixed(2)}</td>`
-
+        puntos.forEach(punto => {
+            let dataPunto = [punto.latitud, punto.longitud, punto.fecha];
+            puntosArray = [...puntosArray, dataPunto];
+            let marker = L.marker(dataPunto, { icon }).addTo(markers);
+            marker.bindPopup(`<b>Punto ${index + 1}</b><br>Latitud: ${punto.latitud}<br>Longitud: ${punto.longitud}<br>Fecha: ${punto.fecha}`);
+            index++;
+        });
+    
+        L.polyline(puntosArray, { color: 'teal' }).addTo(markers);
+        markers.addTo(map);
+        
+        let distancia = 0;
+        let contador = 1;
+    
+        for (let i = 0; i < puntosArray.length - 1; i++) {
+            const row = tablaDerrota.insertRow();
+            row.innerHTML = `<td>${contador}</td><td>${puntosArray[i][0]}</td><td>${puntosArray[i][1]}</td><td>${puntosArray[i][2]}</td><td>${parseFloat(distancia).toFixed(2)}</td>`;
+            distancia += getDistancia(puntosArray[i][0], puntosArray[i][1], puntosArray[i + 1][0], puntosArray[i + 1][1]);
+            contador++;
+        }
+    
+        const rowFinal = tablaDerrota.insertRow();
+        rowFinal.innerHTML = `<td>${contador}</td><td>${puntosArray[puntosArray.length - 1][0]}</td><td>${puntosArray[puntosArray.length - 1][1]}</td><td>${puntosArray[puntosArray.length - 1][2]}</td><td>${parseFloat(distancia).toFixed(2)}</td>`;
+        
+        const rowTotal = tablaDerrota.insertRow();
+        rowTotal.innerHTML = `<td class='fw-bold' colspan='4'>DISTANCIA TOTAL</td><td class='fw-bold'>${parseFloat(distancia).toFixed(2)}</td>`;
     }
     //INFORMACION PRINCIPAL
     while (tablaInformacion.rows.length > 1) {
@@ -220,22 +218,22 @@ modalElement.addEventListener('show.bs.modal', async (event) => {
     }
 
 
-    
+
     if (motores.length === 0) {
-  
+
         const rowSinMotores = tablaMotores.insertRow();
         rowSinMotores.innerHTML = `<td colspan='7'>Sin datos</td>`;
     } else {
 
 
 
-    contador = 1;
-    motores.forEach(motor => {
-        const row = tablaMotores.insertRow();
-        row.innerHTML = `<td>${contador}</td><td>${motor.serie}</td><td>${motor.horas}</td><td>${motor.rpm}</td><td>${motor.fallas}</td><td>${motor.observaciones}</td>`
-        contador++
-    })
-}
+        contador = 1;
+        motores.forEach(motor => {
+            const row = tablaMotores.insertRow();
+            row.innerHTML = `<td>${contador}</td><td>${motor.serie}</td><td>${motor.horas}</td><td>${motor.rpm}</td><td>${motor.fallas}</td><td>${motor.observaciones}</td>`
+            contador++
+        })
+    }
 
     //COMUNICACIONES
     while (tablaComunicaciones.rows.length > 1) {
@@ -243,16 +241,16 @@ modalElement.addEventListener('show.bs.modal', async (event) => {
     }
 
     if (comunicaciones.length === 0) {
-  
+
         const rowSinComunicaciones = tablaComunicaciones.insertRow();
         rowSinComunicaciones.innerHTML = `<td colspan='6'>Sin datos</td>`;
     } else {
-    contador = 1;
-    comunicaciones.forEach(comunicacion => {
-        const row = tablaComunicaciones.insertRow();
-        row.innerHTML = `<td>${contador}</td><td>${comunicacion.medio}</td><td>${comunicacion.receptor}</td><td>QRK${comunicacion.calidad}</td>`
-        contador++
-    })
+        contador = 1;
+        comunicaciones.forEach(comunicacion => {
+            const row = tablaComunicaciones.insertRow();
+            row.innerHTML = `<td>${contador}</td><td>${comunicacion.medio}</td><td>${comunicacion.receptor}</td><td>QRK${comunicacion.calidad}</td>`
+            contador++
+        })
     }
     //CONSUMOS
     while (tablaConsumos.rows.length > 1) {
@@ -314,12 +312,12 @@ modalElement.addEventListener('show.bs.modal', async (event) => {
 
 
 
-    recomendaciones.forEach(recomendacion => {
-        const row = tablaRecomendaciones.insertRow();
-        row.innerHTML = `<td>${contador}</td><td>${recomendacion.recomendacion}</td>`
-        contador++
-    })
-}
+        recomendaciones.forEach(recomendacion => {
+            const row = tablaRecomendaciones.insertRow();
+            row.innerHTML = `<td>${contador}</td><td>${recomendacion.recomendacion}</td>`
+            contador++
+        })
+    }
     //INTELIGENCIA
     while (tablaInteligencia.rows.length > 1) {
         tablaInteligencia.deleteRow(-1);
@@ -331,13 +329,13 @@ modalElement.addEventListener('show.bs.modal', async (event) => {
         rowSininteligencia.innerHTML = `<td colspan='2'>Sin datos</td>`;
     } else {
 
-    contador = 1;
-    inteligencia.forEach(fila => {
-        const row = tablaInteligencia.insertRow();
-        row.innerHTML = `<td>${contador}</td><td>${fila.informacion}</td>`
-        contador++
-    })
-}
+        contador = 1;
+        inteligencia.forEach(fila => {
+            const row = tablaInteligencia.insertRow();
+            row.innerHTML = `<td>${contador}</td><td>${fila.informacion}</td>`
+            contador++
+        })
+    }
 
     // console.log(novedades);
 
@@ -345,10 +343,12 @@ modalElement.addEventListener('show.bs.modal', async (event) => {
     setTimeout(function () {
         map.invalidateSize();
     }, 500);
+    if (puntos.length === 0) {
 
-    map.setView(new L.LatLng(informacion.puntos[0].latitud, informacion.puntos[0].longitud), 8);
-    // map.setZoom(8);
 
+        map.setView(new L.LatLng(informacion.puntos[0].latitud, informacion.puntos[0].longitud), 8);
+        // map.setZoom(8);
+    }
 })
 const markers = L.layerGroup()
 const map = L.map('map', {
@@ -390,11 +390,19 @@ const grayScale = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{
 
 
 const calcucarDistanciaTotal = async (id) => {
+   // console.log(id)
     let total = 0;
-    let url = `puntos.php?id=${id}`
-    let config = { method: "GET" }
-    response = await fetch(url, config);
-    let puntos = await response.json()
+    const url = `/sicomar/API/validacionO/GetDistancia?id=${id}`
+    const config = {
+        method: 'GET',
+    }
+
+    const respuesta = await fetch(url, config);
+    const puntos = await respuesta.json();
+    console.log(puntos)
+
+
+
 
     for (let i = 0; i < puntos.length - 1; i++) {
 
@@ -408,25 +416,19 @@ const calcucarDistanciaTotal = async (id) => {
 
 
 
-const getDistancia = (lat1, lon1, lat2, lon2) => {
-    const rad = (x) => {
-        return x * Math.PI / 180;
-    };
-
-    let R = 6378.137; // Radio de la tierra en km
-    let dLat = rad(lat2 - lat1);
-    let dLong = rad(lon2 - lon1);
-    let a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(rad(lat1)) *
-        Math.cos(rad(lat2)) *
-        Math.sin(dLong / 2) *
-        Math.sin(dLong / 2);
-    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+const getDistancia = (lat1,lon1,lat2,lon2) => {
+ const   rad = function(x) {return x*Math.PI/180;}
+    let R = 6378.137; //Radio de la tierra en km
+    let dLat = rad( lat2 - lat1 );
+    let dLong = rad( lon2 - lon1 );
+    let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     let d = R * c;
-    let dmillas = d * 1.852; // Factor de conversión de km a millas
-    return dmillas.toFixed(3); // Retorna tres decimales
-};
+    let dmillas = d * 1.852
+    return dmillas; //Retorna tres decimales
+}
+
+
 
 
 
@@ -443,14 +445,20 @@ window.ApiCambio = (ope_id) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
 
-            const url = `/sicomar/API/validacionO/CambioSit?id=${ope_id}`
+
+let distancia = await calcucarDistanciaTotal(ope_id)
+//console.log(distancia);
+
+
+            const url = `/sicomar/API/validacionO/CambioSit?id=${ope_id}&distancia=${distancia}`
             const config = {
                 method: 'GET',
             }
 
             const respuesta = await fetch(url, config);
             const data = await respuesta.json();
-            console.log(data)
+           // console.log(data)
+  
 
             const { mensaje, codigo, detalle } = data;
             let icon = "";

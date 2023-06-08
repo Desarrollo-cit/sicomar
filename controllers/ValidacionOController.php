@@ -41,6 +41,39 @@ class ValidacionOController
         }
     }
 
+    public static function DistanciaTotalAPI()
+    {
+        getHeadersApi();
+        $id = $_GET['id'];
+        // echo json_encode($id);
+        // exit;
+
+        try {
+
+            $datos = Derrota::fetchArray("SELECT der_latitud, der_longitud, der_fecha from codemar_derrota where der_ope = $id and der_situacion != 0");
+
+
+
+            if ($datos != null) {
+
+                $data = [];
+                foreach ($datos as $punto) {
+                    $data[] = [
+                        "latitud" => $punto['der_latitud'],
+                        "longitud" => $punto['der_longitud'],
+                    ];
+                }
+
+                echo json_encode($data);
+            } else {
+                echo json_encode([]);
+            }
+        } catch (Exception $e) {
+            return  [];
+        }
+    }
+
+
 
 
     // consulta puntos
@@ -51,7 +84,7 @@ class ValidacionOController
         getHeadersApi();
 
         try {
-            getHeadersApi();
+
             $datos = Derrota::fetchArray("SELECT * FROM codemar_derrota  WHERE der_ope = $operacion AND der_situacion = 1");
 
 
@@ -66,12 +99,11 @@ class ValidacionOController
                     ];
                 }
             } else {
-               return  [];
+                return  [];
             }
             return ($puntos);
         } catch (Exception $e) {
-           return  [];
-         
+            return  [];
         }
     }
 
@@ -95,13 +127,12 @@ class ValidacionOController
 
                     ];
                 }
-            }  else {
-               return  [];
+            } else {
+                return  [];
             }
             return ($personal);
         } catch (Exception $e) {
-           return  [];
-         
+            return  [];
         }
     }
 
@@ -126,13 +157,12 @@ class ValidacionOController
 
                     ];
                 }
-            }  else {
-               return  [];
+            } else {
+                return  [];
             }
             return ($unidad);
         } catch (Exception $e) {
-           return  [];
-         
+            return  [];
         }
     }
 
@@ -159,12 +189,11 @@ class ValidacionOController
                     ];
                 }
             } else {
-               return  [];
+                return  [];
             }
             return ($motores);
         } catch (Exception $e) {
-           return  [];
-         
+            return  [];
         }
     }
 
@@ -191,12 +220,11 @@ class ValidacionOController
                     ];
                 }
             } else {
-               return  [];
+                return  [];
             }
             return ($comunicaciones);
         } catch (Exception $e) {
-           return  [];
-         
+            return  [];
         }
     }
 
@@ -223,12 +251,11 @@ class ValidacionOController
                     ];
                 }
             } else {
-               return  [];
+                return  [];
             }
             return ($novedad);
         } catch (Exception $e) {
-           return  [];
-         
+            return  [];
         }
     }
 
@@ -256,12 +283,11 @@ class ValidacionOController
                     ];
                 }
             } else {
-               return  [];
+                return  [];
             }
             return ($consumos);
         } catch (Exception $e) {
-           return  [];
-         
+            return  [];
         }
     }
 
@@ -284,13 +310,12 @@ class ValidacionOController
                         'recomendacion' => $vuelta['rec_recomendacion'],
                     ];
                 }
-            }  else {
-               return  [];
+            } else {
+                return  [];
             }
             return ($recomendaciones);
         } catch (Exception $e) {
-           return  [];
-         
+            return  [];
         }
     }
 
@@ -313,13 +338,12 @@ class ValidacionOController
                         'informacion' => $vuelta['info_descripcion'],
                     ];
                 }
-            }  else {
-               return  [];
+            } else {
+                return  [];
             }
             return ($inteligencia);
         } catch (Exception $e) {
-           return  [];
-         
+            return  [];
         }
     }
 
@@ -376,6 +400,8 @@ class ValidacionOController
 
         getHeadersApi();
         $id = $_GET["id"];
+        $distancia = $_GET["distancia"];
+     
 
 
         try {
@@ -396,7 +422,7 @@ class ValidacionOController
                         'ope_identificador' => $value['ope_identificador'],
                         'ope_dependencia' => $value['ope_dependencia'],
                         'ope_reutilizar' => $value['ope_reutilizar'],
-                        'ope_distancia' => $value['ope_distancia'],
+                        'ope_distancia' => $distancia,
                         'ope_nacional' => $value['ope_nacional'],
                         'ope_sit' =>  "4"
                     ]);
@@ -426,57 +452,56 @@ class ValidacionOController
 
 
 
-public static function RechazoSituacionAPI()
-{
+    public static function RechazoSituacionAPI()
+    {
 
-    getHeadersApi();
-    $id = $_GET["id"];
-
-
-    try {
-        $datos = Operaciones::fetchArray("SELECT * FROM codemar_operaciones WHERE ope_id = $id");
-
-        if ($datos) {
+        getHeadersApi();
+        $id = $_GET["id"];
 
 
-            foreach ($datos as $key => $value) {
-                $cambio = new Operaciones([
-                    'ope_id' => $value['ope_id'],
-                    'ope_tipo' => $value['ope_tipo'],
-                    'ope_fecha_zarpe' => $value['ope_fecha_zarpe'],
-                    'ope_fecha_atraque' => $value['ope_fecha_atraque'],
-                    'ope_situacion' => $value['ope_situacion'],
-                    'ope_mision' => $value['ope_mision'],
-                    'ope_ejecucion' => $value['ope_ejecucion'],
-                    'ope_identificador' => $value['ope_identificador'],
-                    'ope_dependencia' => $value['ope_dependencia'],
-                    'ope_reutilizar' => $value['ope_reutilizar'],
-                    'ope_distancia' => $value['ope_distancia'],
-                    'ope_nacional' => $value['ope_nacional'],
-                    'ope_sit' =>  "2"
-                ]);
-                $cambiar = $cambio->guardar();
+        try {
+            $datos = Operaciones::fetchArray("SELECT * FROM codemar_operaciones WHERE ope_id = $id");
+
+            if ($datos) {
+
+
+                foreach ($datos as $key => $value) {
+                    $cambio = new Operaciones([
+                        'ope_id' => $value['ope_id'],
+                        'ope_tipo' => $value['ope_tipo'],
+                        'ope_fecha_zarpe' => $value['ope_fecha_zarpe'],
+                        'ope_fecha_atraque' => $value['ope_fecha_atraque'],
+                        'ope_situacion' => $value['ope_situacion'],
+                        'ope_mision' => $value['ope_mision'],
+                        'ope_ejecucion' => $value['ope_ejecucion'],
+                        'ope_identificador' => $value['ope_identificador'],
+                        'ope_dependencia' => $value['ope_dependencia'],
+                        'ope_reutilizar' => $value['ope_reutilizar'],
+                        'ope_distancia' => $value['ope_distancia'],
+                        'ope_nacional' => $value['ope_nacional'],
+                        'ope_sit' =>  "2"
+                    ]);
+                    $cambiar = $cambio->guardar();
+                }
             }
-        }
 
-        if ($cambiar) {
+            if ($cambiar) {
+                echo json_encode([
+                    "mensaje" => "Operacion rechazada",
+                    "codigo" => 1,
+                ]);
+            } else {
+                echo json_encode([
+                    "mensaje" => "Error, Verifique sus datos",
+                    "codigo" => 0,
+                ]);
+            }
+        } catch (Exception $e) {
             echo json_encode([
-                "mensaje" => "Operacion rechazada",
-                "codigo" => 1,
-            ]);
-        } else {
-            echo json_encode([
-                "mensaje" => "Error, Verifique sus datos",
-                "codigo" => 0,
+                "detalle" => $e->getMessage(),
+                "mensaje" => "Ocurrió un error en la base de datos.",
+                "codigo" => 4,
             ]);
         }
-    } catch (Exception $e) {
-        echo json_encode([
-            "detalle" => $e->getMessage(),
-            "mensaje" => "Ocurrió un error en la base de datos.",
-            "codigo" => 4,
-        ]);
     }
-}
-
 }

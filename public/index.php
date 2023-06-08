@@ -103,6 +103,7 @@ $router->get('/API/validacionO/BusDatos', [ValidacionOController::class, 'Buscar
 $router->get('/API/validacionO/BusInformacion', [ValidacionOController::class, 'BuscarInformacionAPI'] );
 $router->get('/API/validacionO/CambioSit', [ValidacionOController::class, 'CambioSituacionAPI'] );
 $router->get('/API/validacionO/CambioRec', [ValidacionOController::class, 'RechazoSituacionAPI'] );
+$router->get('/API/validacionO/GetDistancia', [ValidacionOController::class, 'DistanciaTotalAPI'] );
 
 
 $router->comprobarRutas();

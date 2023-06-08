@@ -138,58 +138,45 @@ modalElement.addEventListener('show.bs.modal', async (event) => {
 
 
     let index = 0;
-    let puntosArray = []
+    let puntosArray = [];
+    
 
- 
+    while (tablaDerrota.rows.length > 1) {
+        tablaDerrota.deleteRow(-1);
+    }
+    
     if (puntos.length === 0) {
-  
+
         const rowSinpuntos = tablaDerrota.insertRow();
         rowSinpuntos.innerHTML = `<td colspan='7'>Sin datos</td>`;
     } else {
-
-
-
-    puntos.forEach(punto => {
-        let dataPunto = [punto.latitud, punto.longitud, punto.fecha]
-        puntosArray = [...puntosArray, dataPunto]
-        let marker = L.marker(dataPunto, { icon }).addTo(markers);
-        marker.bindPopup(`<b>Punto ${index + 1}</b><br>Latitud: ${punto.latitud}<br>Longitud: ${punto.longitud}<br>Fecha: ${punto.fecha}`);
-        index++;
-    });
-    L.polyline(puntosArray, { color: 'teal' }).addTo(markers);
-    markers.addTo(map)
-    let distancia = 0;
-    while (tablaDerrota.rows.length > 1) {
-        tablaDerrota.deleteRow(-1)
+        puntos.forEach(punto => {
+            let dataPunto = [punto.latitud, punto.longitud, punto.fecha];
+            puntosArray = [...puntosArray, dataPunto];
+            let marker = L.marker(dataPunto, { icon }).addTo(markers);
+            marker.bindPopup(`<b>Punto ${index + 1}</b><br>Latitud: ${punto.latitud}<br>Longitud: ${punto.longitud}<br>Fecha: ${punto.fecha}`);
+            index++;
+        });
+    
+        L.polyline(puntosArray, { color: 'teal' }).addTo(markers);
+        markers.addTo(map);
+        
+        let distancia = 0;
+        let contador = 1;
+    
+        for (let i = 0; i < puntosArray.length - 1; i++) {
+            const row = tablaDerrota.insertRow();
+            row.innerHTML = `<td>${contador}</td><td>${puntosArray[i][0]}</td><td>${puntosArray[i][1]}</td><td>${puntosArray[i][2]}</td><td>${parseFloat(distancia).toFixed(2)}</td>`;
+            distancia += getDistancia(puntosArray[i][0], puntosArray[i][1], puntosArray[i + 1][0], puntosArray[i + 1][1]);
+            contador++;
+        }
+    
+        const rowFinal = tablaDerrota.insertRow();
+        rowFinal.innerHTML = `<td>${contador}</td><td>${puntosArray[puntosArray.length - 1][0]}</td><td>${puntosArray[puntosArray.length - 1][1]}</td><td>${puntosArray[puntosArray.length - 1][2]}</td><td>${parseFloat(distancia).toFixed(2)}</td>`;
+        
+        const rowTotal = tablaDerrota.insertRow();
+        rowTotal.innerHTML = `<td class='fw-bold' colspan='4'>DISTANCIA TOTAL</td><td class='fw-bold'>${parseFloat(distancia).toFixed(2)}</td>`;
     }
-    let contador = 1;
-    // console.log(puntosArray);
-
-
-    for (let i = 0; i < puntosArray.length - 1; i++) {
-
-        const row = tablaDerrota.insertRow();
-        row.innerHTML = `<td>${contador}</td><td>${puntosArray[i][0]}</td><td>${puntosArray[i][1]}</td><td>${puntosArray[i][2]}</td><td>${parseFloat(distancia).toFixed(2)}</td>`
-        distancia += getDistancia(puntosArray[i][0], puntosArray[i][1], puntosArray[i + 1][0], puntosArray[i + 1][1])
-        contador++
-    }
-    const rowFinal = tablaDerrota.insertRow();
-    rowFinal.innerHTML = `<td>${contador}</td><td>${puntosArray[puntosArray.length - 1][0]}</td><td>${puntosArray[puntosArray.length - 1][1]}</td><td>${puntosArray[puntosArray.length - 1][2]}</td><td>${parseFloat(distancia).toFixed(2)}</td>`
-    const rowTotal = tablaDerrota.insertRow();
-    rowTotal.innerHTML = `<td class='fw-bold' colspan='4'>DISTANCIA TOTAL</td><td class='fw-bold'>${parseFloat(distancia).toFixed(2)}</td>`
-
-    }
-    //INFORMACION PRINCIPAL
-    while (tablaInformacion.rows.length > 1) {
-        tablaInformacion.deleteRow(-1);
-    }
-    const row = tablaInformacion.insertRow();
-    const zarpeFecha = new Date(zarpe)
-    const atraqueFecha = new Date(atraque)
-
-    row.innerHTML = `<td>${identificador}</td><td>${tipo}</td><td>${zarpeFecha.toLocaleString()}</td><td>${atraqueFecha.toLocaleString()}</td>`
-
-
     //PERSONAL
 
     while (tablaPersonal.rows.length > 1) {
@@ -409,27 +396,17 @@ const calcucarDistanciaTotal = async (id) => {
 
 
 
-
-const getDistancia = (lat1, lon1, lat2, lon2) => {
-    const rad = (x) => {
-      return x * Math.PI / 180;
-    };
-  
-    let R = 6378.137; // Radio de la tierra en km
-    let dLat = rad(lat2 - lat1);
-    let dLong = rad(lon2 - lon1);
-    let a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(rad(lat1)) *
-        Math.cos(rad(lat2)) *
-        Math.sin(dLong / 2) *
-        Math.sin(dLong / 2);
-    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    let d = R * c;
-    let dmillas = d * 1.852; // Factor de conversión de km a millas
-    return dmillas.toFixed(3); // Retorna tres decimales
-  };
-
+const getDistancia = (lat1,lon1,lat2,lon2) => {
+    const   rad = function(x) {return x*Math.PI/180;}
+       let R = 6378.137; //Radio de la tierra en km
+       let dLat = rad( lat2 - lat1 );
+       let dLong = rad( lon2 - lon1 );
+       let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+       let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+       let d = R * c;
+       let dmillas = d * 1.852
+       return dmillas; //Retorna tres decimales
+   }
 
 
   window.ApiCambio = (ope_id) => {
@@ -445,6 +422,7 @@ const getDistancia = (lat1, lon1, lat2, lon2) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
 
+            
             const url = `/sicomar/API/validacionR/CambioSit?id=${ope_id}`  
             const config = {
                 method: 'GET',
