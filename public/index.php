@@ -27,6 +27,7 @@ $router->get('/API/zarpes/verRegistro', [ZarpesController::class, 'verRegistroAp
 $router->get('/API/zarpes/imprimirRegistro', [ZarpesController::class, 'imprimirRegistroApi']);
 $router->get('/API/zarpes/colocarInformacion', [ZarpesController::class, 'colocar']);
 
+
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();
 
