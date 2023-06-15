@@ -1,5 +1,12 @@
 <div class="container-fluid pt-5">
     <div class="row justify-content-center mb-3">
+
+    <div class="row mb-3 justify-content-end">
+                <div class="col-lg-2 d-grid mb-lg-0 mb-2">
+                        <a href="../sicomar/zarpes" type="button" class="btn btn-info" id="btnVer"><i class="bi bi-eye-fill"></i>Ver Zarpes</a>
+                </div>
+            </div>
+
         <form class="col-lg-10 p-5 border bg-light rounded" id="formZarpe">
             <input type="hidden" name="codigo" id="codigo">
             <div class="row justify-content-between mb-3">
@@ -62,7 +69,7 @@
                 <div class="col-lg-3">
                     <label for="tipoEmb">Tipo Embarcacion</label>
 
-                    <select name="tipoEmb" id="tipoEmb" selected class="form-control">
+                    <select name="asi_unidad" id="asi_unidad" selected class="form-control">
                         <option value="">Seleccione...</option>
                         <?php foreach ($embarcacion as $rmbarcacion) { ?>
                             <option value="<?= $rmbarcacion['emb_id']  ?>"><?= $rmbarcacion['emb_nombre'] ?></option>
@@ -94,7 +101,7 @@
                    
                         <button type="submit" class="btn btn-success" id="btnGuardar"><i class="bi bi-save me-2"></i>Guardar</button>
                  
-                        <button type="button" class="btn btn-warning" id="btnModificar"><i class="bi bi-save me-2"></i>Modificar</button>
+                        <!-- <button type="button" class="btn btn-warning" id="btnModificar"><i class="bi bi-save me-2"></i>Modificar</button> -->
                 
                 </div>
             </div>
@@ -103,7 +110,3 @@
 
     <script src="<?= asset('./build/js/operaciones/index.js') ?>"></script>
 </div>
-
-</body>
-
-</html>

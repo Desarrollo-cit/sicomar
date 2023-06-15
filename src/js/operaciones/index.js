@@ -17,6 +17,7 @@ const agregarInputsorden = document.getElementById('agregarInputsorden');
 const quitarInputsorden = document.getElementById('quitarInputsorden');
 const btnGuardar = document.getElementById('btnGuardar');
 const formZarpe = document.querySelector('#formZarpe');
+const divAsignados = document.querySelector('#divAsignados');
 
 
 document.addEventListener('DOMContentLoaded', ()=> {
@@ -115,17 +116,21 @@ const agregarInputsPersonal = async (e) => {
 
 
 const quitarInputsOrden = () => {
-    const checks = document.querySelectorAll('input[type="number"]')
-    //    console.log(checks);
-   let cantidadSegunda = cantidad;
-//    console.log(cantidadInputs);
 
-if (cantidad > 0) {
-divPuntosOrden.removeChild(divPuntosOrden.lastElementChild);
-cantidad--;
+    if (cantidad > 1) {
+    divPuntosOrden.removeChild(divPuntosOrden.lastElementChild);
+    cantidad--;
+    }else{
+        Toast.fire({
+            icon: 'error',
+            title: 'Debe de ingresar al menos una persona',
+            timer: 5000
+        })
+    }
+    
 }
-  
-}
+
+
 const buscardatos = async (e) => {
 
     let catalogo = e.target.value
@@ -237,14 +242,14 @@ const guardarOperaciones = async e => {
             const respuesta = await fetch(url, config);
             const data = await respuesta.json();
             console.log(data);
-
+           
             const { mensaje, codigo, detalle } = data;
             // const resultado = data.resultado;
             let icon = "";
             switch (codigo) {
                 case 1:
                     icon = "success"
-                    recargarModalArmas(formZarpe.topico.value)
+                    // recargarModalArmas(formZarpe.topico.value)
                     break;
                 case 2:
                     icon = "warning"
@@ -283,83 +288,9 @@ const guardarOperaciones = async e => {
 
 }
 
-
-
-// const guardarOperaciones = async (evento) => {
-//     evento.preventDefault();
-
-//     let formularioValido = validarFormulario(formZarpe, ['id']);
-//     if (!formularioValido) {
-//         Toast.fire({
-//             icon: 'warning',
-//             title: 'Debe llenar todos los campos'
-//         })
-//         return;
-//     }
-
-
-
-//     try {
-//         //Crear el cuerpo de la consulta
-//         const url = '/sicomar/API/operaciones/guardar'
-
-//         const body = new FormData(formZarpe);
-//         body.delete('id');
-//         const headers = new Headers();
-//         headers.append("X-Requested-With", "fetch");
-
-//         const config = {
-//             method: 'POST',
-//             headers,
-//             body
-//         }
-
-//         const respuesta = await fetch(url, config);
-//         const data = await respuesta.json();
-//         console.log(data);
-//         const { mensaje, codigo, detalle } = data;
-//         // const resultado = data.resultado;
-//         let icon = "";
-//         switch (codigo) {
-//             case 1:
-//                 icon = "success"
-//                 formZarpe.reset();
-               
-//                 break;
-//             case 2:
-//                 icon = "warning"
-//                 formZarpe.reset();
-
-//                 break;
-//             case 3:
-//                 icon = "error"
-
-//                 break;
-//             case 4:
-//                 icon = "error"
-//                 console.log(detalle)
-
-//                 break;
-
-//             default:
-//                 break;
-//         }
-
-//         Toast.fire({
-//             icon: icon,
-//             title: mensaje,
-//         })
-
-
-//        // buscararmas()
-
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
-
-
-// inputCatalogo.addEventListener('change', buscarCatalogo);
+if(cantidad == 0){
+    agregarInputsPersonal()
+}
 agregarInputsorden.addEventListener('click', agregarInputsPersonal)
 quitarInputsorden.addEventListener('click', quitarInputsOrden)
 btnGuardar.addEventListener('click', guardarOperaciones)
