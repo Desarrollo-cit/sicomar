@@ -19,14 +19,16 @@ const divAsignados = document.querySelector('#divAsignados');
 const modal = new Modal(document.getElementById('myModal'));
 const elementModalModificar = document.getElementById('modalModifica');
 const modalModifica = new Modal(elementModalModificar);
-const modalVer = new Modal(document.getElementById('modalVer'));
-const modalImprimir = new Modal(document.getElementById('modalImprimir'));
+
+// const modalImprimir = new Modal(document.getElementById('modalImprimir'));
 const situacion = document.getElementById('ope_situacion');
 const divTabla2 = document.getElementById('tabla1');
 let tabla_resultados = new Datatable('#tabla_resultados');
 const agregarInputsorden = document.getElementById('agregarInputsorden');
 // const divPuntosOrden = document.getElementById('divpuntosdeorden');
 const quitarInputsorden = document.getElementById('quitarInputsorden');
+const modalElement = document.getElementById('modalReporte')
+
 
 const btnCancelar = document.getElementById('btnCancelar')
 const divTabla = document.getElementById('divTabla');
@@ -211,7 +213,7 @@ const buscarZarpes = async (evento) => {
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
 
-       // console.log(data);
+       console.log(data);
 
 
         tablaZarpes.destroy();
@@ -283,13 +285,13 @@ const buscarZarpes = async (evento) => {
                     "render": (data, type, row, meta) => `<button class='btn btn-info' onclick="ImprimirRegistro(${row.id})"><i class='bi bi-printer'></i></button>`,
                     "width": "5%"
                 },
-
-
                 {
-                    data: "ope_id",
-                    "render": (data, type, row, meta) => `<button class='btn btn-primary' onclick="verRegistro(${row.id})"><i class='bi bi-eye'></i></button>`,
-                    "width": "5%"
+                    data: "id",
+                    "render": (data, type, row, meta) => `<button class='btn btn-primary' data-operacion="${data}" data-bs-toggle='modal' data-bs-target='#modalReporte'><i class='bi bi-eye'></button>`,
+                    "width": "10%"
                 },
+
+         
                 {
                     data: "ope_id",
                     "render": (data, type, row, meta) => `<button class='btn btn-warning' onclick="colocarInformacion(${row.id})"><i class='bi bi-pencil-square'></i></button>`,

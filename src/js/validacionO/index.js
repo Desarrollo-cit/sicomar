@@ -103,7 +103,7 @@ modalElement.addEventListener('show.bs.modal', async (event) => {
 
     const boton = event.relatedTarget;
     const id = boton.dataset.operacion;
-   // console.log(id)
+    console.log(id)
 
     const tablaInformacion = document.getElementById('tablaInformacion')
     const tablaDerrota = document.getElementById('tablaDerrota')

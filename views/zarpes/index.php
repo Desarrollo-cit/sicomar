@@ -225,10 +225,13 @@
 </div>
 
 <!----------------------------------------------------------- MODAL VER REGISTRO ------------------------------------------------------------------------->
-<div class="modal fade" id="modalVer" tabindex="-1" role="dialog" aria-labelledby="infomodalReporte" aria-hidden="true">
+<!-- modal validacion -->
+
+<div class="modal fade" id="modalReporte" tabindex="-1" role="dialog" aria-labelledby="infomodalReporte" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen" role="document">
             <div class="modal-content">
                 <div class="modal-header ">
+                    <form id="reporte">
                     <h2 class="modal-title " id="infomodalReporte">Información del reporte de patrulla</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -244,11 +247,12 @@
                                 <div class="col">
                                 <h4 class="text-center">Derrota navegada</h4>
                                     <table class="table table-bordered table-condensed text-center" id="tablaDerrota">
-                                        <thead>
+                                        <thead class="table-dark" >
                                             <tr>
                                                 <th>NO.</th>
                                                 <th>LATITUD</th>
                                                 <th>LONGITUD</th>
+                                                <th>FECHA/HORA</th>
                                                 <th>DISTANCIA (MN)</th>
                                             </tr>
                                         </thead>
@@ -261,7 +265,7 @@
                             <div class="row">
                                 <div class="col table-responsive">
                                     <table class="table table-bordered table-condensed" id="tablaInformacion">
-                                        <thead>
+                                        <thead class="table-dark" >
                                             <tr>
                                                 <th>IDENTIFICADOR</th>
                                                 <th>TIPO</th>
@@ -281,7 +285,7 @@
                                 
                                     <h4 class="text-center">Personal asignado</h4>
                                     <table class="table table-bordered table-condensed text-center" id="tablaPersonal">
-                                        <thead>
+                                        <thead class="table-dark" >
                                             <tr>
                                                 <th>NO.</th>
                                                 <th>CATÁLOGO</th>
@@ -296,7 +300,7 @@
                                             
                                     <h4 class="text-center">Unidades asignadas</h4>
                                     <table class="table table-bordered table-condensed text-center" id="tablaUnidades">
-                                        <thead>
+                                        <thead class="table-dark" >
                                             <tr>
                                                 <th>NO.</th>
                                                 <th>TIPO</th>
@@ -313,7 +317,7 @@
                                 <div class="col-lg-6">
                                     <h4 class="text-center">Motores</h4>
                                     <table class="table table-bordered table-condensed text-center" id="tablaMotores">
-                                        <thead>
+                                        <thead class="table-dark" >
                                             <tr>
                                                 <th>NO.</th>
                                                 <th>MOTOR</th>
@@ -328,7 +332,7 @@
                                 <div class="col-lg-6">
                                     <h4 class="text-center">Comunicaciones</h4>
                                     <table class="table table-bordered table-condensed text-center" id="tablaComunicaciones">
-                                        <thead>
+                                        <thead class="table-dark" >
                                             <tr>
                                                 <th>NO.</th>
                                                 <th>MEDIO</th>
@@ -343,7 +347,7 @@
                                 <div class="col">
                                     <h4 class="text-center">Consumos</h4>
                                     <table class="table table-bordered table-condensed text-center" id="tablaConsumos">
-                                        <thead >
+                                        <thead class="table-dark" >
                                             <tr>
                                                 <th>NO.</th>
                                                 <th>INSUMO</th>
@@ -357,7 +361,7 @@
                                 <div class="col">
                                     <h4 class="text-center">Novedades</h4>
                                     <table class="table table-bordered table-condensed text-center" id="tablaNovedades">
-                                        <thead>
+                                        <thead class="table-dark" >
                                             <tr>
                                                 <th>HORA</th>
                                                 <th>NOVEDAD</th>
@@ -370,7 +374,7 @@
                                 <div class="col">
                                     <h4 class="text-center">Recomendaciones</h4>
                                     <table class="table table-bordered table-condensed text-center" id="tablaRecomendaciones">
-                                        <thead>
+                                        <thead class="table-dark" >
                                             <tr>
                                                 <th>NO.</th>
                                                 <th>RECOMENDACIÓN</th>
@@ -380,7 +384,22 @@
                                     </table>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="text-center">Inteligencia</h4>
+                                    <table class="table table-bordered table-condensed text-center" id="tablaInteligencia">
+                                        <thead class="table-dark" >
+                                            <tr>
+                                                <th>NO.</th>
+                                                <th>INFORMACIÓN</th>
+                                        
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
+                        </form>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -390,55 +409,5 @@
         </div>
     </div>
 
-<!----------------------------------------------------------- MODAL IMPRIMIR ------------------------------------------------------------------------->
-<div class="modal" id="modalImprimir">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">IMPRIMIR</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body container">
-
-                <div class="modal-body container ">
-                    <form id="PersonasAsig" class="badge-light p-1 ">
-                        <!-- <input type="hidden" name="codigo" id="codigo"> -->
-                        <div class="row mb-2 justify-content-center text-center" id="tabla1">
-                    <div class="col-lg-12 col-lg-12 table-responsive ">
-                        <table id='tabla_resultados' class='table table-hover table-condensed table-bordered w-100'>
-                            <thead class='table-dark'>
-                                <tr>
-                                    <th>NO.</th>
-                                    <th>CATALOGO</th>
-                                    <th>NOMBRE</th>
-                          
-
-
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-
-
-                    </div>
-                </div>
-            </form>
-        </div>    
-    </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
 <script src="build/js/zarpes/index.js"></script>
+<script src="<?= asset('/build/js/validacionO/index.js') ?>"></script>

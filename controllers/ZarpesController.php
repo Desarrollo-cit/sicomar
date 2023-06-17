@@ -101,7 +101,7 @@ class ZarpesController
 
 
 
-////EMPIEZA LA PUTA FUNCION DE MODIFICAR/////
+////EMPIEZA LA FUNCION DE MODIFICAR/////
 
     public static function modificar()
     {
