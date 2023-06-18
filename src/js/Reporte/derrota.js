@@ -7,10 +7,7 @@ import { Toast } from '../funciones';
 const modalPuntos = new Modal(document.getElementById('modalPuntos'), {})
 const formPuntos = document.querySelector('#formPuntos')
 const spanDistancia = document.querySelector('#distancia');
-const btnLimpiar = document.querySelector('#btnLimpiar');
-const btnModificar = document.querySelector('#btnModificar');
-const btnBuscar = document.querySelector('#btnBuscar');
-const btnGuardar = document.querySelector('#btnGuardar');
+const back = document.getElementById('back');
 const formulario = document.querySelector('#formDerrota')
 let puntos = [];
 let idDerrota = [];
@@ -19,8 +16,8 @@ let distancia = 0;
 
 const iniciarModulo = () => {
     // buscarPaises();
-   btnModificar.style.display = 'none'
-    btnModificar.parentElement.style.display = 'none'
+//    btnModificar.style.display = 'none'
+//     btnModificar.parentElement.style.display = 'none'
     //btnGuardar.style.display = 'block'
     // btnModificar.parentElement.style.display = 'block'
 
@@ -79,7 +76,7 @@ const onMapClick = e => {
 const agregarPunto = (e) => {
     e.preventDefault();
 
-    console.log(puntos)
+   // console.log(puntos)
     const fecha = document.getElementById('fecha').value;
     // console.log(fecha)
     if (fecha) {
@@ -173,7 +170,7 @@ const deletePunto = (e, id) => {
     puntos.splice(id, 1);
     agregarPuntos(puntos)
     agrearPuntosTabla(puntos)
-    console.log(id);
+   // console.log(id);
 
 
 
@@ -202,7 +199,7 @@ const guardarDerrota = async e => {
     try {
 
         if (puntos.length > 0) {
-            console.log(puntos);
+         //   console.log(puntos);
             const url = '/sicomar/API/reporte/derrota/GuardarDatos'
 
             const body = new FormData(formulario);
@@ -223,7 +220,7 @@ const guardarDerrota = async e => {
 
             const respuesta = await fetch(url, config);
             const data = await respuesta.json();
-            console.log(data);
+          //  console.log(data);
             if (data.codigo == 7) {
                 Toast.fire({
                     icon: 'success',
@@ -263,7 +260,7 @@ const colocarInformacion = async (evento) => {
 
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
-        console.log(data);
+        //console.log(data);
         if (data.codigo == 2) {
 
          
@@ -305,11 +302,19 @@ const colocarInformacion = async (evento) => {
     }
 }
 
-console.log(puntos);
+
+window.ApiIndex = () => {
+    var url = `/sicomar/reporte`;
+    window.location.href = url;
+}
+
+
+
+//console.log(puntos);
 colocarInformacion()
 iniciarModulo();
 map.on("click", onMapClick)
 formPuntos.addEventListener('submit', agregarPunto)
-btnModificar.addEventListener('click', guardarDerrota)
+back.addEventListener('click', ApiIndex);
 formulario.addEventListener('submit', guardarDerrota)
 
