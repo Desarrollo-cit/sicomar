@@ -7,6 +7,8 @@ require_once __DIR__ . '/../includes/app.php';
 
 use MVC\Router;
 use Controllers\AppController;
+use Controllers\OperacionesController;
+use Controllers\ZarpesController;
 use Controllers\EstadisticasController;
 use Controllers\ReporteController;
 use Controllers\DerrotaController;
@@ -21,7 +23,7 @@ use Controllers\ValidacionRController;
 use Controllers\ValidacionOController;
 
 $router = new Router();
-$router->setBaseURL('/' . $_ENV['APP_NAME']);
+$router->setBaseURL('/sicomar');
 
 $router->get('/', [AppController::class,'index']);
 $router->get('/internacionales', [InternacionalesController::class,'index']);
@@ -106,4 +108,20 @@ $router->get('/API/validacionO/CambioRec', [ValidacionOController::class, 'Recha
 $router->get('/API/validacionO/GetDistancia', [ValidacionOController::class, 'DistanciaTotalAPI'] );
 
 
+$router->get('/operaciones',[OperacionesController::class,'index']);
+$router->get('/API/operaciones/catalogo', [OperacionesController::class , 'catalogoAPI']);
+$router->post('/API/operaciones/guardar', [OperacionesController::class, 'guardarApi']);
+
+$router->get('/zarpes',[ZarpesController::class,'index']);
+$router->get('/API/zarpes/buscar', [ZarpesController::class, 'buscarApi']);
+$router->post('/API/zarpes/eliminarRegistro', [ZarpesController::class, 'eliminar']);
+$router->post('/API/zarpes/modificar', [ZarpesController::class, 'modificar']);
+$router->get('/API/zarpes/buscarPer', [ZarpesController::class, 'buscarPersonasApi']);
+$router->get('/API/zarpes/verRegistro', [ZarpesController::class, 'verRegistroApi']);
+$router->get('/API/zarpes/imprimirRegistro', [ZarpesController::class, 'imprimirRegistroApi']);
+$router->get('/API/zarpes/colocarInformacion', [ZarpesController::class, 'colocar']);
+
+
+// Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();
+

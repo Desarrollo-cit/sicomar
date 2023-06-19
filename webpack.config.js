@@ -6,6 +6,8 @@ module.exports = {
   entry: {
     'js/app' : './src/js/app.js',
     'js/inicio' : './src/js/inicio.js',
+    'js/operaciones/index' : './src/js/operaciones/index.js',
+    'js/zarpes/index' : './src/js/zarpes/index.js',
     'js/Reporte/index' : './src/js/Reporte/index.js',
     'js/Reporte/derrota' : './src/js/Reporte/derrota.js',
     'js/Reporte/motores' : './src/js/Reporte/motores.js',

@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class Operacion extends ActiveRecord{
+class Zarpes extends ActiveRecord{
 
     protected static $tabla = 'codemar_operaciones'; //nombre de la tablaX
     protected static $idTabla = 'ope_id'; //nombre de la tablaX
@@ -30,11 +30,11 @@ class Operacion extends ActiveRecord{
         $this->ope_fecha_zarpe = $args['ope_fecha_zarpe'] ?? '';
         $this->ope_fecha_atraque = $args['ope_fecha_atraque'] ?? '';
         // $this->ope_situacion = $args['ope_situacion'] ?? '';
-        $this->ope_situacion = utf8_decode( str_replace("'", "\"", preg_replace("[\n|\r|\n\r]", "", htmlspecialchars($args['ope_situacion'])))) ?? '';
+        $this->ope_situacion = utf8_decode( preg_replace("[\n|\r|\n\r]", "", htmlspecialchars($args['ope_situacion']))) ?? '';
         // $this->ope_mision = $args['ope_mision'] ?? '';
-        $this->ope_mision = utf8_decode( str_replace("'", "\"", preg_replace("[\n|\r|\n\r]", "", htmlspecialchars($args['ope_mision'])))) ?? '';
+        $this->ope_mision = utf8_decode( preg_replace("[\n|\r|\n\r]", "", htmlspecialchars($args['ope_mision']))) ?? '';
         // $this->ope_ejecucion = $args['ope_ejecucion'] ?? '';
-        $this->ope_ejecucion = utf8_decode( str_replace("'", "\"", preg_replace("[\n|\r|\n\r]", "", htmlspecialchars($args['ope_ejecucion'])))) ?? '';
+        $this->ope_ejecucion = utf8_decode( preg_replace("[\n|\r|\n\r]", "", htmlspecialchars($args['ope_ejecucion']))) ?? '';
         $this->ope_identificador = $args['ope_identificador'] ?? '';
         $this->ope_dependencia = $args['ope_dependencia'] ?? '';
         $this->ope_reutilizar = $args['ope_reutilizar'] ?? '';

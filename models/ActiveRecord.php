@@ -61,6 +61,7 @@ class ActiveRecord {
         return array_shift( $resultado ) ;
     }
 
+
     // Obtener Registro
     public static function get($limite) {
         $query = "SELECT * FROM " . static::$tabla . " LIMIT ${limite}";
@@ -101,6 +102,8 @@ class ActiveRecord {
 
         // Resultado de la consulta
         $resultado = self::$db->exec($query);
+        // return $query;
+      
 
         return [
            'resultado' =>  $resultado,
@@ -136,7 +139,7 @@ class ActiveRecord {
     public function eliminar() {
         $query = "UPDATE "  . static::$tabla . " SET situacion = 0 WHERE id = " . self::$db->quote($this->id);
         $resultado = self::$db->exec($query);
-        return $resultado;
+        return $resultado;     
     }
 
     public static function consultarSQL($query) {
