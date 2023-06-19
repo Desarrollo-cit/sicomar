@@ -1,7 +1,7 @@
 <?php 
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once __DIR__ . '/../includes/app.php';
 
 
@@ -13,6 +13,7 @@ use Controllers\DerrotaController;
 use Controllers\MotoresController;
 use Controllers\ConsumosController;
 use Controllers\ComunicacionesController;
+use Controllers\ImpresionController;
 use Controllers\InteligenciaController;
 use Controllers\NovedadesController;
 use Controllers\LeccionesController;
@@ -39,6 +40,8 @@ $router->get('/API/estadisticas/comando', [EstadisticasController::class,'operac
 $router->get('/API/estadisticas/mensuales', [EstadisticasController::class,'operacionesMensualesApi']);
 $router->get('/API/estadisticas/top', [EstadisticasController::class,'operacionesTopApi']);
 
+/*IMPRESIÓN HOJA DE ZARPE*/
+$router->get('/impresion/hoja-zarpe', [ImpresionController::class,'index']);
 
 
 //reporte
