@@ -1,4 +1,4 @@
-import { Dropdown } from "bootstrap";
+
 import { validarFormulario, Toast } from "../funciones";
 import Datatable from 'datatables.net-bs5';
 import { lenguaje } from "../lenguaje";
@@ -11,7 +11,6 @@ import 'tinymce/icons/default'
 import 'tinymce/plugins/advlist'
 import 'tinymce/plugins/lists'
 import 'tinymce/models/dom/model'
-
 
 const formZarpe = document.getElementById('formZarpe');
 const btnModificar = document.getElementById('btnModificar');
@@ -276,13 +275,13 @@ const buscarZarpes = async (evento) => {
                 },
 
                 {
-                    data: "ope_id",
+                    data: "id",
                     "render": (data, type, row, meta) => `<button class='btn btn-success' onclick="verPersonal(${row.id})"><i class='bi bi-people-fill'></i></button>`,
                     "width": "5%"
                 },
                 {
-                    data: "ope_id",
-                    "render": (data, type, row, meta) => `<button class='btn btn-info' onclick="ImprimirRegistro(${row.id})"><i class='bi bi-printer'></i></button>`,
+                    data: "id",
+                    "render": (data, type, row, meta) => `<a class='btn btn-info' href='/sicomar/impresion/hoja-zarpe?ope_id=${data}'><i class='bi bi-printer'></i></a>`,
                     "width": "5%"
                 },
                 {

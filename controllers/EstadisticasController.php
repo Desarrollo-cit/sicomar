@@ -16,7 +16,7 @@ class EstadisticasController {
         $inicio = str_replace('T',' ', $_GET['inicio']);
         $fin = str_replace('T',' ', $_GET['fin']);
         try {
-            $sql = "SELECT round(der_latitud, 2) as lat , round(der_longitud,2) as lng, count (*) as count from codemar_operaciones inner join codemar_derrota on der_ope = ope_id where ope_sit = 1 and der_situacion = 1 ";
+            $sql = "SELECT round(der_latitud, 2) as lat , round(der_longitud,2) as lng, count (*) as count from codemar_operaciones inner join codemar_derrota on der_ope = ope_id where ope_sit = 4 and der_situacion = 1 ";
             if($inicio != ''){
                 $sql.= " and ope_fecha_zarpe >= '$inicio' "; 
             }

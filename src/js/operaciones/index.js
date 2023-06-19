@@ -9,7 +9,6 @@ import { validarFormulario, Toast } from "../funciones";
 import Datatable from 'datatables.net-bs5';
 import { lenguaje } from "../lenguaje";
 import Swal from "sweetalert2";
-
 const inputCatalogo = document.getElementById('catalogo');
 const inputNombre = document.getElementById('nombre');
 const divPuntosOrden = document.getElementById('divpuntosdeorden');

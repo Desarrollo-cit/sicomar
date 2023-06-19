@@ -56,7 +56,7 @@ const dataMapa = async (inicio = '', fin = '') => {
         const config = { method: "GET" }
         const response = await fetch(url, config);
         const data = await response.json()
-        // console.log(data);
+        console.log(data);
         var testData = {
             max: 15,
             data

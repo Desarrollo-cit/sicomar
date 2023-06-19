@@ -409,5 +409,5 @@
         </div>
     </div>
 
-<script src="build/js/zarpes/index.js"></script>
-<script src="<?= asset('/build/js/validacionO/index.js') ?>"></script>
+<script src="<?= asset('build/js/zarpes/index.js') ?>"></script>
+<script src="<?= asset('build/js/validacionO/index.js') ?>"></script>
